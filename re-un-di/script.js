@@ -1,0 +1,83 @@
+(function () {
+  'use strict';
+  var I18N = {"lv": {"title": "Apdares darbi, remonts un būvdarbi Olainē | RE un DI", "desc": "SIA „RE un DI”, Olaine: iekšējā apdare, dzīvokļu un māju remonts, ēku būvdarbi, būvdarbu vadīšana un būvuzraudzība. Tālrunis +371 26 440 645.", "menu": "Izvēlne", "close": "Aizvērt izvēlni", "nav_pakalpojumi": "Pakalpojumi", "nav_kvalitate": "Kvalitāte", "nav_ka-stradajam": "Kā strādājam", "nav_uznemums": "Uzņēmums", "nav_kontakti": "Kontakti", "a_hero": "Meistars ar garu līmeņrādi pārbauda ģipškartona sienu", "a_s1": "Siena tiek krāsota ar rulli zaļganā tonī", "a_s2": "Flīzētājs uzklāj līmi uz grīdas", "a_s3": "Virtuve remonta laikā ar kāpnēm un flīzēm", "a_s4": "Koka jumta konstrukcija uz gāzbetona bloku sienām būvniecības laikā", "a_s5": "Divi cilvēki būvobjektā pārskata rasējumus", "a_s6": "Speciālists ar ķiveri pārbauda bloku sienu būvobjektā", "a_level": "Divi cilvēki pie sienas pārbauda līmeņrādi", "a_map": "Olaines un Rīgas apkārtnes karte", "bis_tag": "Joma BIS reģistrā", "ch0_h": "Pamatne", "ch0_p": "Virsma ir sausa, tīra un stingra, pirms uz tās liek apmetumu, līmi vai krāsu.", "ch1_h": "Līmenis un vertikāle", "ch1_p": "Sienas, griestus un grīdas pārbaudām ar līmeņrādi un latu, nevis uz aci.", "ch2_h": "Stūri un šuves", "ch2_p": "Taisni stūri, aizpildītas šuves un kārtīgas pārejas starp dažādiem materiāliem.", "ch3_h": "Segtie darbi", "ch3_p": "Caurules, vadi un hidroizolācija tiek pārbaudīti, pirms tos aizsedz.", "ch4_h": "Nodošana", "ch4_p": "Kopā apskatām telpu, pierakstām piezīmes un tās izlabojam.", "st0_h": "Zvans vai vēstule", "st0_p": "Pastāstiet, kur atrodas objekts un kas jādara. Ja ir projekts vai fotogrāfijas, pievienojiet tās.", "st1_h": "Apskate", "st1_p": "Atbraucam, apskatām objektu un precizējam darbu apjomu un materiālus.", "st2_h": "Tāme un līgums", "st2_p": "Sagatavojam tāmi un termiņus. Pēc saskaņošanas visu nostiprinām līgumā.", "st3_h": "Darbi un nodošana", "st3_p": "Veicam darbus, uzturam kārtību objektā un nododam gatavu telpu vai ēku.", "rq0_k": "Nosaukums", "rq0_v": "SIA „RE un DI”", "rq1_k": "Reģistrācijas numurs", "rq1_v": "40103778383", "rq2_k": "Reģistrēts", "rq2_v": "09.04.2014", "rq3_k": "Būvkomersanta reģ. Nr.", "rq3_v": "17207, kopš 22.03.2022", "rq4_k": "Joma (BIS)", "rq4_v": "Ēku būvdarbu vadīšana un būvuzraudzība", "rq5_k": "Juridiskā adrese", "rq5_v": "Zemgales iela 8-42, Olaine, Olaines nov., <span class=\"nw\">LV-2114</span>", "skip": "Pāriet uz saturu", "write": "Uzrakstīt", "badge": "Būvkomersantu reģistrā", "badge_n": "Nr. 17207", "fan1": "Sienas", "fan2": "Griesti", "fan3": "Grīdas", "kicker": "Olaine · Apdare · Būvdarbi", "h1": "Gludas sienas, kārtīgi <em>būvdarbi</em>.", "lead": "SIA „RE un DI” no Olaines veic iekšējās apdares un remonta darbus, būvē ēkas, vada būvdarbus un veic būvuzraudzību. Pastāstiet par savu objektu, un mēs atbildēsim ar priekšlikumu.", "cta2": "Uzrakstīt par objektu", "f1k": "Uzņēmums reģistrēts", "f2k": "Būvkomersanta reģ. Nr.", "f3k": "Juridiskā adrese", "f3v": "Olaine", "f4k": "Darbinieki 2024. g. (VID)", "s_l": "Pakalpojumi", "s_h": "Ko mēs darām", "s_sub": "Apdares un remonta darbi dzīvokļos, mājās un darba telpās, kā arī ēku būvdarbi, to vadīšana un uzraudzība. Ja jūsu darbs nav sarakstā, pajautājiet.", "g1": "Apdare un remonts", "svc0_h": "Sienas un griesti", "svc0_p": "Apmetums, špaktelēšana, slīpēšana un krāsošana. Ģipškartona sienas, starpsienas un piekārtie griesti.", "svc1_h": "Grīdas un flīzes", "svc1_p": "Grīdu izlīdzināšana, flīzēšana virtuvē un vannas istabā, grīdas segumu ieklāšana.", "svc2_h": "Dzīvokļu un māju remonts", "svc2_p": "Telpas atjaunošana kopumā: no demontāžas un sagatavošanas līdz tīrai telpai, kurā var ievākties.", "g2": "Būvdarbi un uzraudzība", "svc3_h": "Ēku būvdarbi", "svc3_p": "Ēku būvniecība, pārbūve un atjaunošana: no konstrukcijām līdz iekšējai apdarei.", "svc4_h": "Būvdarbu vadīšana", "svc4_p": "Organizējam darbus objektā: secību, cilvēkus, materiālus un termiņus. Kārtojam būvdarbu žurnālu un segto darbu aktus.", "svc5_h": "Būvuzraudzība", "svc5_p": "Pārstāvam pasūtītāju: pārbaudām, vai darbi atbilst projektam, normatīviem un līgumam, un fiksējam defektus.", "q_l": "Kvalitāte", "q_h": "Katrs slānis pārbaudīts, pirms tiek likts nākamais", "q_sub": "Apdarē liela daļa darba vēlāk vairs nav redzama. Tāpēc to pārbaudām pa posmiem, nevis tikai beigās.", "h_l": "Kā strādājam", "h_h": "Četri soļi līdz gatavam darbam", "u_l": "Uzņēmums", "u_p": "Uzņēmums reģistrēts 2014. gada 9. aprīlī, juridiskā adrese ir Olainē. Kopš 2022. gada 22. marta esam būvkomersantu reģistrā (reģ. Nr. 17207) ar jomu ēku būvdarbu vadīšana un būvuzraudzība. 2024. gadā uzņēmumā strādāja 6 darbinieki.", "r_h": "Rekvizīti", "pin1": "Olaine", "pin2": "Rīga", "m_h": "Atrodamies Olainē", "m_p": "Ja jūsu objekts ir Olainē, Olaines novadā, Rīgā vai Pierīgā, zvaniet vai rakstiet. Par citām vietām vienosimies.", "m_link": "Atvērt karti", "k_l": "Kontakti", "k_h": "Pastāstiet par savu objektu", "k_p": "Kas jādara, kur atrodas objekts un kad vēlaties sākt. Atbildēsim un vienosimies par apskati.", "k_mail": "E-pasts", "k_addr": "Juridiskā adrese", "k_area": "Kur strādājam", "k_a1": "Olaine", "k_a2": "Olaines novads", "k_a3": "Rīga", "k_a4": "Pierīga", "k_a_p": "Par citām vietām vienosimies.", "f_h": "Uzrakstiet mums", "f_name": "Vārds", "f_contact": "Tālrunis vai e-pasts", "f_msg": "Objekts un darbi", "f_ph": "Piemēram: divistabu dzīvoklis Olainē, jāapmet un jānokrāso sienas, virtuvē jāieklāj flīzes", "f_send": "Sūtīt", "f_fine": "Pēc nospiešanas atvērsies jūsu e-pasta programma ar sagatavotu vēstuli.", "foot": "Apdares darbi, remonts, ēku būvdarbi, būvdarbu vadīšana un būvuzraudzība. Olaine.", "foot_top": "Uz augšu", "f_err_name": "Lūdzu, ierakstiet vārdu.", "f_err_contact": "Lūdzu, norādiet tālruni vai e-pastu.", "f_err_msg": "Lūdzu, īsi aprakstiet objektu.", "f_l_name": "Vārds: ", "f_l_contact": "Kontakts: ", "f_subj": "Pieprasījums: apdares vai būvdarbi"}, "ru": {"title": "Отделочные работы, ремонт и строительство в Олайне | RE un DI", "desc": "SIA „RE un DI”, Олайне: внутренняя отделка, ремонт квартир и домов, строительство зданий, руководство строительными работами и стройнадзор. Телефон +371 26 440 645.", "menu": "Меню", "close": "Закрыть меню", "nav_pakalpojumi": "Услуги", "nav_kvalitate": "Качество", "nav_ka-stradajam": "Как работаем", "nav_uznemums": "О компании", "nav_kontakti": "Контакты", "a_hero": "Мастер проверяет гипсокартонную стену длинным уровнем", "a_s1": "Стену красят валиком в зеленоватый тон", "a_s2": "Плиточник наносит клей на пол", "a_s3": "Кухня во время ремонта, стремянка и плитка", "a_s4": "Деревянная стропильная система на стенах из газобетонных блоков во время стройки", "a_s5": "Двое на объекте просматривают чертежи", "a_s6": "Специалист в каске проверяет стену из блоков на объекте", "a_level": "Двое проверяют уровень у стены", "a_map": "Карта окрестностей Олайне и Риги", "bis_tag": "Сфера в реестре BIS", "ch0_h": "Основание", "ch0_p": "Поверхность сухая, чистая и прочная, прежде чем на неё ляжет штукатурка, клей или краска.", "ch1_h": "Уровень и вертикаль", "ch1_p": "Стены, потолки и полы проверяем уровнем и правилом, а не на глаз.", "ch2_h": "Углы и швы", "ch2_p": "Ровные углы, заполненные швы и аккуратные стыки разных материалов.", "ch3_h": "Скрытые работы", "ch3_p": "Трубы, проводка и гидроизоляция проверяются до того, как их закроют.", "ch4_h": "Сдача", "ch4_p": "Вместе осматриваем помещение, записываем замечания и исправляем их.", "st0_h": "Звонок или письмо", "st0_p": "Расскажите, где находится объект и что нужно сделать. Если есть проект или фотографии, приложите их.", "st1_h": "Осмотр", "st1_p": "Приезжаем, смотрим объект, уточняем объём работ и материалы.", "st2_h": "Смета и договор", "st2_p": "Готовим смету и сроки. После согласования всё закрепляем в договоре.", "st3_h": "Работы и сдача", "st3_p": "Выполняем работы, держим порядок на объекте и сдаём готовое помещение или здание.", "rq0_k": "Название", "rq0_v": "SIA „RE un DI”", "rq1_k": "Регистрационный номер", "rq1_v": "40103778383", "rq2_k": "Зарегистрировано", "rq2_v": "09.04.2014", "rq3_k": "Рег. № строительного предприятия", "rq3_v": "17207, с 22.03.2022", "rq4_k": "Сфера (BIS)", "rq4_v": "Руководство строительством зданий и стройнадзор", "rq5_k": "Юридический адрес", "rq5_v": "Zemgales iela 8-42, Olaine, Olaines nov., <span class=\"nw\">LV-2114</span>", "skip": "Перейти к содержанию", "write": "Написать", "badge": "В реестре строительных предприятий", "badge_n": "№ 17207", "fan1": "Стены", "fan2": "Потолки", "fan3": "Полы", "kicker": "Олайне · Отделка · Строительство", "h1": "Ровные стены, аккуратная <em>стройка</em>.", "lead": "SIA „RE un DI” из Олайне делает внутреннюю отделку и ремонт, строит здания, руководит строительными работами и ведёт стройнадзор. Расскажите о своём объекте, и мы ответим с предложением.", "cta2": "Написать об объекте", "f1k": "Компания зарегистрирована", "f2k": "Рег. № строительного предприятия", "f3k": "Юридический адрес", "f3v": "Олайне", "f4k": "Сотрудников в 2024 г. (СГД)", "s_l": "Услуги", "s_h": "Что мы делаем", "s_sub": "Отделка и ремонт квартир, домов и рабочих помещений, а также строительство зданий, руководство работами и надзор. Если вашей работы нет в списке, спросите.", "g1": "Отделка и ремонт", "svc0_h": "Стены и потолки", "svc0_p": "Штукатурка, шпаклёвка, шлифовка и покраска. Стены и перегородки из гипсокартона, подвесные потолки.", "svc1_h": "Полы и плитка", "svc1_p": "Выравнивание полов, плитка на кухне и в ванной, укладка напольных покрытий.", "svc2_h": "Ремонт квартир и домов", "svc2_p": "Ремонт помещения целиком: от демонтажа и подготовки до чистой комнаты, в которую можно въезжать.", "g2": "Строительство и надзор", "svc3_h": "Строительство зданий", "svc3_p": "Строительство, перестройка и обновление зданий: от конструкций до внутренней отделки.", "svc4_h": "Руководство строительными работами", "svc4_p": "Организуем работы на объекте: порядок, людей, материалы и сроки. Ведём журнал работ и акты скрытых работ.", "svc5_h": "Строительный надзор", "svc5_p": "Представляем заказчика: проверяем, соответствуют ли работы проекту, нормативам и договору, и фиксируем дефекты.", "q_l": "Качество", "q_h": "Каждый слой проверен, прежде чем ляжет следующий", "q_sub": "В отделке большая часть работы потом уже не видна. Поэтому проверяем её по этапам, а не только в конце.", "h_l": "Как работаем", "h_h": "Четыре шага до готовой работы", "u_l": "О компании", "u_p": "Компания зарегистрирована 9 апреля 2014 года, юридический адрес в Олайне. С 22 марта 2022 года мы в реестре строительных предприятий (рег. № 17207) в сфере руководства строительством зданий и строительного надзора. В 2024 году в компании работали 6 сотрудников.", "r_h": "Реквизиты", "pin1": "Олайне", "pin2": "Рига", "m_h": "Мы находимся в Олайне", "m_p": "Если ваш объект в Олайне, Олайнском крае, Риге или пригороде Риги, звоните или пишите. О других местах договоримся.", "m_link": "Открыть карту", "k_l": "Контакты", "k_h": "Расскажите о своём объекте", "k_p": "Что нужно сделать, где объект и когда хотите начать. Ответим и договоримся об осмотре.", "k_mail": "E-mail", "k_addr": "Юридический адрес", "k_area": "Где работаем", "k_a1": "Олайне", "k_a2": "Олайнский край", "k_a3": "Рига", "k_a4": "Пригород Риги", "k_a_p": "О других местах договоримся.", "f_h": "Напишите нам", "f_name": "Имя", "f_contact": "Телефон или e-mail", "f_msg": "Объект и работы", "f_ph": "Например: двухкомнатная квартира в Олайне, оштукатурить и покрасить стены, на кухне положить плитку", "f_send": "Отправить", "f_fine": "После нажатия откроется ваша почтовая программа с готовым письмом.", "foot": "Отделочные работы, ремонт, строительство зданий, руководство работами и стройнадзор. Олайне.", "foot_top": "Наверх", "f_err_name": "Пожалуйста, укажите имя.", "f_err_contact": "Пожалуйста, укажите телефон или e-mail.", "f_err_msg": "Пожалуйста, коротко опишите объект.", "f_l_name": "Имя: ", "f_l_contact": "Контакт: ", "f_subj": "Запрос: отделка или строительные работы"}};
+  var doc = document, root = doc.documentElement;
+  root.classList.add('js');
+  var lang = 'lv';
+  function S(k) { return (I18N[lang] && I18N[lang][k]) || I18N.lv[k] || ''; }
+
+  /* language: LV in the HTML, RU from the dictionary; ?lang=ru opens Russian */
+  function setLang(l, push) {
+    lang = l === 'ru' ? 'ru' : 'lv';
+    root.lang = lang;
+    [].forEach.call(doc.querySelectorAll('[data-t]'), function (el) { el.innerHTML = S(el.getAttribute('data-t')); });
+    [].forEach.call(doc.querySelectorAll('[data-t-alt]'), function (el) { el.alt = S(el.getAttribute('data-t-alt')); });
+    [].forEach.call(doc.querySelectorAll('[data-t-ph]'), function (el) { el.placeholder = S(el.getAttribute('data-t-ph')); });
+    [].forEach.call(doc.querySelectorAll('[data-t-aria]'), function (el) { el.setAttribute('aria-label', S(el.getAttribute('data-t-aria'))); });
+    doc.title = S('title');
+    var md = doc.querySelector('meta[name=description]'); if (md) md.content = S('desc');
+    [].forEach.call(doc.querySelectorAll('.lang button'), function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === lang));
+    });
+    setMenu(hdr.classList.contains('open'));
+    if (push) {
+      try {
+        var u = new URL(location.href);
+        if (lang === 'ru') u.searchParams.set('lang', 'ru'); else u.searchParams.delete('lang');
+        history.replaceState(null, '', u.pathname + u.search + u.hash);
+      } catch (e) {}
+    }
+    root.classList.remove('ru-wait');
+  }
+
+  /* mobile menu */
+  var hdr = doc.getElementById('hdr'), burger = hdr.querySelector('.burger'), mnav = doc.getElementById('mnav');
+  function setMenu(open) {
+    hdr.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.setAttribute('aria-label', open ? S('close') : S('menu'));
+  }
+  burger.addEventListener('click', function () { setMenu(!hdr.classList.contains('open')); });
+  mnav.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && hdr.classList.contains('open')) { setMenu(false); burger.focus(); } });
+  doc.addEventListener('click', function (e) { if (hdr.classList.contains('open') && !hdr.contains(e.target)) setMenu(false); });
+
+  [].forEach.call(doc.querySelectorAll('.lang button'), function (b) {
+    b.addEventListener('click', function () { setLang(b.getAttribute('data-lang'), true); });
+  });
+  var q = null;
+  try { q = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+  if (q === 'ru') setLang('ru', false); else root.classList.remove('ru-wait');
+
+  /* header rule after scrolling */
+  function onScroll() { hdr.classList.toggle('sc', window.scrollY > 8); }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  /* reveal on scroll */
+  var items = [].slice.call(doc.querySelectorAll('.rv'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
+    items.forEach(function (el) { io.observe(el); });
+  } else { items.forEach(function (el) { el.classList.add('in'); }); }
+
+  /* form -> mail program (window.__noNav lets a page test read the address without opening a mail program) */
+  var form = doc.getElementById('cform');
+  if (form) {
+    var err = form.querySelector('.f-err');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var f = form.elements, name = f.name.value.trim(), contact = f.contact.value.trim(), msg = f.msg.value.trim();
+      [f.name, f.contact, f.msg].forEach(function (x) { x.removeAttribute('aria-invalid'); });
+      var okContact = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contact) || contact.replace(/\D/g, '').length >= 7;
+      var bad = name.length < 2 ? [f.name, 'f_err_name'] : (!okContact ? [f.contact, 'f_err_contact'] : (msg.length < 5 ? [f.msg, 'f_err_msg'] : null));
+      if (bad) { bad[0].setAttribute('aria-invalid', 'true'); err.textContent = S(bad[1]); err.hidden = false; bad[0].focus(); return; }
+      err.hidden = true;
+      var body = S('f_l_name') + name + '\n' + S('f_l_contact') + contact + '\n\n' + msg;
+      var url = 'mailto:' + form.getAttribute('data-mail') + '?subject=' + encodeURIComponent(S('f_subj')) + '&body=' + encodeURIComponent(body);
+      window.__mailto = url;
+      if (!window.__noNav) window.location.href = url;
+    });
+  }
+})();
