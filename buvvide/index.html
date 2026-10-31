@@ -551,11 +551,11 @@ html {
   --bvm-muted: #666;
   --bvm-line: #e2e2e2;
   --bvm-soft: #f4f4f4;
-  --bvm-top: 104px;   /* rows 1-2 of the bar: slide away while scrolling down */
+  --bvm-top: 52px;    /* row 1 of the bar: slides away while scrolling down */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   overflow-x: hidden;
-  scroll-padding-top: 172px;  /* in-page jumps never land under the bar */
+  scroll-padding-top: 120px;  /* in-page jumps never land under the bar (row 1 + pinned row) */
 }
 body.main, body {
   min-width: 0 !important;
@@ -612,7 +612,13 @@ html.bvm-ready #bvm-bar { display: block; }
 }
 html.bvm-bar-up #bvm-bar { transform: translateY(calc(-1 * var(--bvm-top))); }
 #bvm-bar .bvm-r1 { display: flex; align-items: center; height: 52px; padding: 0 6px 0 2px; }
-#bvm-bar .bvm-r2 { display: flex; align-items: center; gap: 8px; padding: 0 8px 8px; }
+#bvm-bar .bvm-r2 { display: none; align-items: center; gap: 6px; padding: 0 6px 8px 8px; }
+html.bvm-search-open #bvm-bar .bvm-r2 { display: flex; animation: bvm-drop .18s ease-out; }
+@keyframes bvm-drop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+#bvm-bar .bvm-sclose {
+  flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 8px; background: transparent;
+  color: #fff; font: normal 30px/44px Arial, Helvetica, sans-serif !important; text-align: center;
+}
 #bvm-bar button { -webkit-appearance: none; appearance: none; margin: 0; cursor: pointer; font-family: inherit; }
 #bvm-bar :focus-visible, .bvm-dhead :focus-visible, .bvm-fhead :focus-visible { outline: 3px solid #ffd54a; outline-offset: 1px; }
 
@@ -628,8 +634,14 @@ html.bvm-bar-up #bvm-bar { transform: translateY(calc(-1 * var(--bvm-top))); }
   display: block; width: 120px; height: 44px; margin-left: 2px; flex: 0 0 auto;
   background: url(/mlt_buvvide/design/logo_buvvide3_1.png) left center / contain no-repeat;
 }
+#bvm-bar .bvm-sicon {
+  margin-left: auto; flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; background: transparent; color: #fff;
+}
+#bvm-bar .bvm-sicon svg { width: 25px; height: 25px; }
+html.bvm-search-open #bvm-bar .bvm-sicon { background: rgba(0, 0, 0, .18); }
 #bvm-bar .bvm-cart {
-  margin-left: auto; display: flex; align-items: center; gap: 8px;
+  margin-left: 0; display: flex; align-items: center; gap: 8px;
   min-height: 44px; padding: 0 8px; border-radius: 8px;
   color: #fff !important; text-decoration: none !important;
   font: bold 15px/1 Arial, Helvetica, sans-serif !important; white-space: nowrap;
@@ -645,6 +657,7 @@ html.bvm-bar-up #bvm-bar { transform: translateY(calc(-1 * var(--bvm-top))); }
   background: transparent; color: var(--bvm-ink); font-family: Arial, Helvetica, sans-serif; -webkit-appearance: none; appearance: none;
 }
 #bvm-bar .bvm-search input::placeholder { color: #8a8a8a; }
+#bvm-bar .bvm-search input::-webkit-search-cancel-button, #bvm-bar .bvm-search input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; display: none; }
 #bvm-bar .bvm-search input:focus { outline: none; }
 #bvm-bar .bvm-search:focus-within { box-shadow: 0 0 0 3px #ffd54a; }
 #bvm-bar .bvm-sbtn {
@@ -732,8 +745,8 @@ html:not(.bvm-ready) td.prods_left table.cjst td a, html:not(.bvm-ready) td.home
 
 /* ---------- 4. Category head: breadcrumbs, title, description ---------- */
 table.title_prods, table.title_prods > tbody, table.title_prods > tbody > tr { display: block !important; width: auto !important; height: auto !important; }
-table.title_prods { margin: 8px -12px 4px !important; border-top: 0 !important; max-width: none !important; }
-td.title_prods { display: flex !important; flex-direction: column; padding: 4px 12px 8px !important; }
+table.title_prods { margin: 4px -12px 4px !important; border-top: 0 !important; max-width: none !important; }
+td.title_prods { display: flex !important; flex-direction: column; padding: 2px 12px 8px !important; }
 div.title_prods_frame { position: static !important; order: 1; max-width: none !important; z-index: auto !important; }
 img.title_prods {
   order: 2; float: none !important; display: block; box-sizing: border-box;
@@ -741,9 +754,16 @@ img.title_prods {
   margin: 10px auto 0 !important; background-size: contain !important; background-position: center !important;
 }
 div.title_prods_desc { order: 3; margin-top: 10px !important; }
-table.tray { width: 100% !important; height: auto !important; margin: 0 0 8px !important; border-radius: 6px; }
-td.tray { padding: 2px 8px !important; font-size: 13px !important; line-height: 1.3 !important; white-space: normal !important; }
-a.tray { display: inline-block; padding: 10px 2px; font-size: 13px !important; line-height: 20px !important; white-space: normal !important; }
+/* breadcrumbs: the shop's "&nbsp; » &nbsp;" text is folded away and redrawn tight;
+   each link keeps a 40 px tap box, negative margins stop that box from spreading the lines apart */
+table.tray { width: 100% !important; height: auto !important; margin: 0 0 4px !important; border-radius: 6px; }
+td.tray { padding: 5px 6px !important; font-size: 0 !important; line-height: 0 !important; white-space: normal !important; }
+a.tray {
+  display: inline-block; vertical-align: top; padding: 10px 2px; margin: -5px 0;
+  font-size: 13px !important; line-height: 20px !important; white-space: nowrap !important;
+}
+a.tray * { font-size: inherit !important; line-height: inherit !important; }
+td.tray a.tray ~ a.tray::before { content: "\00bb"; display: inline-block; padding: 0 5px 0 3px; color: #9a9a9a; font-weight: normal; }
 div.title_prods { display: block !important; margin-top: 2px; padding: 10px 14px !important; }
 a.H1prods { display: block; margin: 0 !important; font: bold 22px/1.25 Verdana, Arial, sans-serif !important; color: #111 !important; }
 div.title_prods_desc, div.title_prods_desc * { font-size: 14.5px !important; line-height: 1.45 !important; }
@@ -1080,7 +1100,8 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
 
 /* ---------- 11. Very narrow phones (320–359 px): two values per row ---------- */
 @media (max-width: 359px) {
-  #bvm-bar .bvm-logo { width: 104px; }
+  #bvm-bar .bvm-logo { width: 98px; }
+  #bvm-bar .bvm-sicon { flex-basis: 42px; width: 42px; }
   #bvm-bar .bvm-cart { font-size: 14px !important; padding: 0 4px; }
   #bvm-bar .bvm-r3 > button { gap: 6px; padding: 0 6px; font-size: 15px !important; }
   table.prodBoxTab tr.bvm-prow > td.bvm-c-param { grid-column: span 6; }
@@ -1092,6 +1113,7 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
 
 @media (prefers-reduced-motion: reduce) {
   #bvm-bar, html.bvm-ready .bvm-drawer, html.bvm-ready .bvm-fpanel, #bvm-backdrop, .bvm-fpanel .bvm-acc-i { transition: none !important; }
+  html.bvm-search-open #bvm-bar .bvm-r2 { animation: none !important; }
 }
 
 } /* end of phone media query */
@@ -1134,9 +1156,10 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
   function isMobile() { return !!(mql && mql.matches); }
 
   var ICON_CATS = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M9 6h12M9 12h12M9 18h12"/><rect x="2.5" y="4.5" width="3" height="3" rx=".6" fill="currentColor"/><rect x="2.5" y="10.5" width="3" height="3" rx=".6" fill="currentColor"/><rect x="2.5" y="16.5" width="3" height="3" rx=".6" fill="currentColor"/></svg>';
+  var ICON_SEARCH = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15.5 15.5l5.5 5.5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>';
   var ICON_FILTER = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M3 6h11M18 6h3M3 12h4M11 12h10M3 18h13M20 18h1"/><circle cx="16" cy="6" r="2.2" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="18" cy="18" r="2.2" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>';
 
-  var bar, drawer, fpanel, fbtn, mbtn, kbtn, backdrop, lastFocus = null, prodsDiv = null, accs = [], opener = null;
+  var bar, drawer, fpanel, fbtn, mbtn, kbtn, sbtn, srow, sinp, backdrop, lastFocus = null, prodsDiv = null, accs = [], opener = null;
 
   function el(tag, cls, attrs) {
     var e = d.createElement(tag);
@@ -1156,8 +1179,8 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
   function each(list, fn) { for (var i = 0; i < list.length; i++) fn(list[i], i); }
   function visible(node) { return !!(node.offsetWidth || node.offsetHeight || node.getClientRects().length); }
 
-  /* ---------- bar: rows 1-2 (menu, logo, cart, search) slide away on scroll down,
-     row 3 («Kategorijas», «Filtri») always stays on top ---------- */
+  /* ---------- bar: row 1 (menu, logo, search icon, cart) slides away on scroll down,
+     the «Kategorijas» / «Filtri» row always stays on top; the search field opens on demand ---------- */
   function buildBar() {
     var logoA = d.querySelector('td.HEADMID img.header_logo');
     logoA = logoA ? closest(logoA, 'a') : null;
@@ -1175,16 +1198,23 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
     var logo = el('a', 'bvm-logo', { href: logoA ? logoA.getAttribute('href') : '/' });
     logo.setAttribute('aria-label', 'BUVVide.lv');
     r1.appendChild(logo);
+    sbtn = el('button', 'bvm-sicon', { type: 'button', 'aria-label': 'Meklēšana', 'aria-expanded': 'false', 'aria-controls': 'bvm-srow' });
+    sbtn.innerHTML = ICON_SEARCH;
+    sbtn.addEventListener('click', function () { html.classList.contains('bvm-search-open') ? closeSearch() : openSearch(); });
+    r1.appendChild(sbtn);
     var cart = el('a', 'bvm-cart', { href: cartA ? cartA.getAttribute('href') : './?l=1&sw=vbag' });
     cart.setAttribute('aria-label', 'Grozs: ' + (cartSum || ''));
     cart.appendChild(d.createTextNode(cartSum || 'Grozs'));
     r1.appendChild(cart);
     bar.appendChild(r1);
 
-    var r2 = el('div', 'bvm-r2');
+    // search row: hidden until the magnifier is tapped; searches through the shop's own SearchForm
+    var r2 = el('div', 'bvm-r2', { id: 'bvm-srow' });
+    srow = r2;
     var box = el('div', 'bvm-search', { role: 'search' });
     var inp = el('input', '', { type: 'search', placeholder: 'Meklēšana...', 'aria-label': 'Meklēšana', enterkeyhint: 'search', autocomplete: 'off' });
     inp.value = sv;
+    sinp = inp;
     var go = el('button', 'bvm-sbtn', { type: 'button', 'aria-label': 'Meklēt' });
     function doSearch() {
       var q = inp.value.trim();
@@ -1197,7 +1227,13 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.keyCode === 13) { e.preventDefault(); doSearch(); } });
     box.appendChild(inp); box.appendChild(go);
     r2.appendChild(box);
-
+    var sx = el('button', 'bvm-sclose', { type: 'button', 'aria-label': 'Aizvērt' });
+    sx.appendChild(d.createTextNode('\u00d7'));
+    sx.addEventListener('click', function () { closeSearch(); });
+    r2.appendChild(sx);
+    r2.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' || e.key === 'Esc' || e.keyCode === 27) { e.preventDefault(); e.stopPropagation(); closeSearch(); }
+    });
     bar.appendChild(r2);
 
     var r3 = el('div', 'bvm-r3');
@@ -1220,6 +1256,22 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
     backdrop.addEventListener('click', closeAll);
     d.body.appendChild(backdrop);
     mbtn.addEventListener('click', function () { html.classList.contains('bvm-menu-open') ? closeMenu() : openMenu('menu', mbtn); });
+  }
+
+  function openSearch() {
+    if (!isMobile()) return;
+    closeMenu(true); closeFilters(false, true);
+    html.classList.remove('bvm-bar-up');
+    html.classList.add('bvm-search-open');
+    sbtn.setAttribute('aria-expanded', 'true');
+    sinp.focus();
+    try { var n = sinp.value.length; sinp.setSelectionRange(n, n); } catch (e) { /* type=search in old browsers */ }
+  }
+  function closeSearch(silent) {
+    if (!html.classList.contains('bvm-search-open')) return;
+    html.classList.remove('bvm-search-open');
+    sbtn.setAttribute('aria-expanded', 'false');
+    if (!silent) sbtn.focus({ preventScroll: true });
   }
 
   /* ---------- menu drawer: the shop's own left column + top menu links ---------- */
@@ -1462,7 +1514,7 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
   // mode 'cats': categories only, scrolled to the current one; mode 'menu': top menu + categories
   function openMenu(mode, from) {
     if (!isMobile()) return;
-    closeFilters(false, true);
+    closeFilters(false, true); closeSearch(true);
     opener = from || mbtn;
     var cats = mode === 'cats';
     html.classList.toggle('bvm-cats-mode', cats);
@@ -1486,7 +1538,7 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
   }
   function openFilters() {
     if (!fpanel || !isMobile()) return;
-    closeMenu(true);
+    closeMenu(true); closeSearch(true);
     lastFocus = d.activeElement;
     syncFilters();
     html.classList.add('bvm-filters-open'); lock(true);
@@ -1522,12 +1574,15 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
   function bindGlobal() {
     d.addEventListener('keydown', function (e) {
       var menu = html.classList.contains('bvm-menu-open'), filt = html.classList.contains('bvm-filters-open');
-      if (!menu && !filt) return;
+      if (!menu && !filt) {
+        if ((e.key === 'Escape' || e.key === 'Esc' || e.keyCode === 27) && html.classList.contains('bvm-search-open')) { e.preventDefault(); closeSearch(); }
+        return;
+      }
       if (e.key === 'Escape' || e.key === 'Esc' || e.keyCode === 27) { e.preventDefault(); menu ? closeMenu() : closeFilters(); }
       else if (e.key === 'Tab' || e.keyCode === 9) trapTab(e, menu ? drawer : fpanel);
     });
     d.addEventListener('input', function (e) { if (e.target && e.target.classList && e.target.classList.contains('tab_buy')) syncQty(); });
-    w.addEventListener('pageshow', function () { closeMenu(true); closeFilters(false, true); syncQty(); });
+    w.addEventListener('pageshow', function () { closeMenu(true); closeFilters(false, true); closeSearch(true); syncQty(); });
 
     // finger scroll down: rows 1-2 slide away, «Kategorijas»/«Filtri» stay; finger scroll up: they come back.
     // A jump (anchor, link, script) is not a finger: the bar stays compact so it never covers what was jumped to.
@@ -1537,7 +1592,7 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
       ticking = true;
       (w.requestAnimationFrame || setTimeout)(function () {
         var y = w.pageYOffset || 0, dy = y - lastY;
-        if (isMobile() && !html.classList.contains('bvm-lock')) {
+        if (isMobile() && !html.classList.contains('bvm-lock') && !html.classList.contains('bvm-search-open')) {
           if (y <= 180) html.classList.remove('bvm-bar-up');
           else if (Date.now() < jumpUntil || Math.abs(dy) > 400 || dy > 6) html.classList.add('bvm-bar-up');
           else if (dy < -6) html.classList.remove('bvm-bar-up');
@@ -1555,6 +1610,7 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
       var card = t ? closest(t, 'tr.bvm-prow') : null;
       if (!card) return;
       jumpUntil = Date.now() + 400;
+      closeSearch(true);
       html.classList.add('bvm-bar-up');
       var r3 = bar && bar.querySelector('.bvm-r3');
       w.scrollTo(0, Math.max(0, card.getBoundingClientRect().top + (w.pageYOffset || 0) - (r3 ? r3.offsetHeight : 54) - 8));
@@ -1564,7 +1620,7 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
   }
 
   function onMQ() {
-    if (!isMobile()) { closeMenu(true); closeFilters(false, true); html.classList.remove('bvm-bar-up'); }
+    if (!isMobile()) { closeMenu(true); closeFilters(false, true); closeSearch(true); html.classList.remove('bvm-bar-up'); }
     else each(d.querySelectorAll('tr.bvm-prow'), sharpenImages);
     tameSelects();
   }
