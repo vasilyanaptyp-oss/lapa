@@ -74,7 +74,7 @@
   var cta = document.querySelector('.hero .cta');
   var contact = document.getElementById('kontakti');
   if (!bar || !cta || !('IntersectionObserver' in window)) return;
-  var mq = window.matchMedia('(max-width: 899px)');
+  var mq = window.matchMedia('(max-width: 999px)');
   var ctaVisible = true, contactVisible = false;
   bar.hidden = false;
   function update() {
