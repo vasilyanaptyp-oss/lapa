@@ -255,3 +255,6 @@ body.has-bar .foot{padding-bottom:70px}
   html{scroll-behavior:auto}
   *,*::before,*::after{transition:none!important;animation:none!important}
 }
+
+/* ---------- v5 «Betons»: warm concrete paper instead of white (01.11) ---------- */
+:root{--paper:#CFCAC1;--paper-2:#C1BBB0;--steel:#3F4347;--rule:#AEA79B}
