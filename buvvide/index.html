@@ -528,9 +528,11 @@ $(function() {
 	}
 });
 </script>
-<style type="text/css">.fancybox-margin{margin-right:0px;}</style><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="noindex,nofollow" name="robots"/><style id="bvm-mobile-css">
+<style type="text/css">.fancybox-margin{margin-right:0px;}</style><meta content="noindex,nofollow" name="robots"/><style id="bvm-mobile-css">
 /*!
- * BUVVide.lv: phone layer v1 (mobile.css). Pairs with mobile.js.
+ * BUVVide.lv: phone layer v3 (mobile.css). Pairs with mobile.js. Covers every customer page:
+ * home, catalog, categories, all list views, product, search, compare, cart, order form,
+ * login / registration / password, Kontakti and the other info pages.
  * Every visual rule lives inside the phone media query below, so desktop
  * and tablets keep today's design pixel for pixel. Admin and templates stay as they are.
  * Many !important: the shop's own inline styles and the accessibility widget
@@ -765,10 +767,11 @@ a.tray {
 a.tray * { font-size: inherit !important; line-height: inherit !important; }
 td.tray a.tray ~ a.tray::before { content: "\00bb"; display: inline-block; padding: 0 5px 0 3px; color: #9a9a9a; font-weight: normal; }
 div.title_prods { display: block !important; margin-top: 2px; padding: 10px 14px !important; }
-a.H1prods { display: block; margin: 0 !important; font: bold 22px/1.25 Verdana, Arial, sans-serif !important; color: #111 !important; }
+a.H1prods { display: block; min-height: 40px; padding: 6px 0 6px; box-sizing: border-box; margin: 0 !important; font: bold 22px/1.25 Verdana, Arial, sans-serif !important; color: #111 !important; }
 div.title_prods_desc, div.title_prods_desc * { font-size: 14.5px !important; line-height: 1.45 !important; }
 div.title_prods_desc { overflow-wrap: anywhere; }
 div.title_prods_desc p { margin: 0 0 4px !important; }
+div.title_prods_desc a { padding: 12px 0; }
 div.title_prods_desc img { max-width: 100% !important; height: auto !important; }
 div.title_prods_desc table { width: auto !important; max-width: 100% !important; }
 
@@ -906,47 +909,107 @@ html.bvm-has-qty table.prodBoxTab tr.bvm-actions {
   background: #fff !important; box-shadow: 0 -4px 16px rgba(0, 0, 0, .14);
 }
 
-/* other list views of the same category (Attēli / Parametri / Rindas): fluid, two or one per row */
+/* ---------- 6b. Other list views of the same category: Attēli (2 per row), Parametri and Rindas (cards) ---------- */
 table.ProdsTable_tiles, table.ProdsTable_tiles > tbody, table.ProdsTable_tiles > tbody > tr, td.ProdsTable_tiles,
 table.ProdsTable_rindas, table.ProdsTable_rindas > tbody, table.ProdsTable_rindas > tbody > tr, td.ProdsTable_rindas,
 table.ProdsTable_rezgis, table.ProdsTable_rezgis > tbody, table.ProdsTable_rezgis > tbody > tr, td.ProdsTable_rezgis { display: block !important; width: auto !important; }
-table.ListTable, table.ListTable > tbody { display: block !important; width: auto !important; }
-table.ListTable > tbody > tr { display: flex !important; flex-wrap: wrap; }
-td.ProdsTable_tiles > table, td.ProdsTable_tiles > table > tbody,
-td.ProdsTable_rezgis > table, td.ProdsTable_rezgis > table > tbody { display: block !important; width: auto !important; }
-td.ProdsTable_tiles > table > tbody, td.ProdsTable_rezgis > table > tbody { display: flex !important; flex-wrap: wrap; align-items: stretch; }
+td.ProdsTable_tiles > table, td.ProdsTable_rezgis > table, td.ProdsTable_rindas > table { display: block !important; width: auto !important; border-spacing: 0 !important; }
+td.ProdsTable_tiles > table > tbody, td.ProdsTable_rezgis > table > tbody {
+  display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: auto !important;
+}
+td.ProdsTable_rezgis > table > tbody { grid-template-columns: minmax(0, 1fr); }
+td.ProdsTable_rindas > table > tbody { display: block !important; }
 td.ProdsTable_tiles > table > tbody > tr, td.ProdsTable_rezgis > table > tbody > tr { display: contents !important; }
-td.ProdsTable_tiles > table > tbody > tr > td[colspan], td.ProdsTable_rezgis > table > tbody > tr > td[colspan] { display: block !important; width: 100% !important; }
-td.tiles { display: block !important; width: 50% !important; box-sizing: border-box; padding: 4px !important; height: auto !important; border-right-width: 0 !important; }
-td.rezgis { display: block !important; width: 100% !important; box-sizing: border-box; padding: 6px 0 !important; height: auto !important; border-right-width: 0 !important; border-bottom: 1px solid var(--bvm-line) !important; }
-td.tiles img, td.rezgis img { max-width: 100%; }
-/* inside one product box every layout table stacks; the parameter list stays a two-column table */
+td.ProdsTable_rindas > table > tbody > tr { display: block !important; }
+td.ProdsTable_tiles > table > tbody > tr > td:not(.tiles), td.ProdsTable_rezgis > table > tbody > tr > td:not(.rezgis),
+td.ProdsTable_rindas > table > tbody > tr > td { display: block !important; width: auto !important; grid-column: 1 / -1; }
+td.ProdsTable_tiles > table > tbody > tr > td:not(.tiles):empty, td.ProdsTable_rezgis > table > tbody > tr > td:not(.rezgis):empty { display: none !important; }
+/* one product = one card */
+td.tiles, td.rezgis {
+  display: block !important; width: auto !important; min-width: 0; height: auto !important; box-sizing: border-box;
+  padding: 10px !important; border: 1px solid #d9d9d9 !important; border-radius: 10px; background: #fff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+}
 td.tiles table, td.tiles tbody, td.tiles tr, td.tiles td,
-td.rezgis table, td.rezgis tbody, td.rezgis tr, td.rezgis td { display: block !important; width: auto !important; height: auto !important; }
-td.rezgis table.DescTableRez { display: table !important; width: 100% !important; }
-td.rezgis table.DescTableRez > tbody { display: table-row-group !important; }
-td.rezgis table.DescTableRez tr { display: table-row !important; }
-td.rezgis table.DescTableRez td { display: table-cell !important; font-size: 14px !important; }
-td.tiles td, td.rezgis td { text-align: center; }
-td.rezgis table.DescTableRez td { text-align: left; }
-td.tiles img:not([src$="px.gif"]), td.rezgis img:not([src$="px.gif"]) { width: 100% !important; height: auto !important; }
-td.rezgis img:not([src$="px.gif"]) { width: auto !important; max-width: 200px !important; margin: 0 auto; }
-td.tiles img[src$="px.gif"], td.rezgis img[src$="px.gif"], td.rezgis div[style*="height:60px"], td.rezgis div[style*="height: 60px"] { display: none !important; }
-td.tiles a.prbPName, td.rezgis a.prbPName { font-size: 14px !important; line-height: 1.3 !important; }
-td.tiles input.prbBtnBuy, td.rezgis input.prbBtnBuy, td.tiles input.salidzinat, td.rezgis input.salidzinat { height: 40px !important; min-width: 64px; }
+td.rezgis table, td.rezgis tbody, td.rezgis tr, td.rezgis td { display: block !important; width: auto !important; height: auto !important; padding: 0 !important; background: transparent !important; border: 0 !important; }
+td.tiles table.prodBoxTil, td.rezgis table.prodBoxRez { height: 100% !important; }
+td.tiles table.prodBoxTil > tbody { display: flex !important; flex-direction: column; height: 100%; }
+td.tiles table.prodBoxTil > tbody > tr:last-child { margin-top: auto; }
+td.tiles td, td.rezgis td { text-align: left !important; }
+td.tiles img[src$="px.gif"], td.rezgis img[src$="px.gif"], table.prodBoxRin img[src$="px.gif"], td.rezgis div[style*="height:60px"], td.rezgis div[style*="height: 60px"] { display: none !important; }
+td.tiles img:not([src$="px.gif"]) {
+  display: block; width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; object-fit: contain;
+  border-radius: 6px; background: var(--bvm-soft);
+}
+td.tiles a.prbPName, td.rezgis a.prbPName, table.prodBoxRin a.prbPName {
+  display: block; margin: 8px 0 4px; color: #111 !important; font: bold 15px/1.3 Arial, Helvetica, sans-serif !important; overflow-wrap: anywhere; text-decoration: none !important;
+}
 td.tiles td[nowrap], td.rezgis td[nowrap] { white-space: normal !important; }
-table.prodBoxTil, table.prodBoxRez, table.prodBoxRin, table.DescTableRez, table.DescTableRin { width: 100% !important; }
-table.prodBoxRin > tbody > tr { display: flex !important; flex-wrap: wrap; }
-table.prodBoxRin > tbody > tr > td { display: block !important; width: auto !important; max-width: 100%; }
+td.tiles div.prbPPrice, td.rezgis div.prbPPrice, table.prodBoxRin div.prbPPrice { display: block !important; align-items: flex-start !important; margin: 2px 0 8px; }
+td.tiles div.prbPPrice span, td.rezgis div.prbPPrice span, table.prodBoxRin div.prbPPrice span { font: bold 20px/1.15 Arial, Helvetica, sans-serif !important; color: var(--bvm-orange) !important; }
+td.tiles div.prbPPrice small, td.rezgis div.prbPPrice small, table.prodBoxRin div.prbPPrice small { font-size: 15px !important; }
+td.tiles div.prbPPrice span + span, td.rezgis div.prbPPrice span + span { display: block; font: normal 13px/1.3 Arial, sans-serif !important; color: var(--bvm-muted) !important; }
+/* compare + buy row of a card */
+td.tiles input.cmpCheckb, td.rezgis input.cmpCheckb, table.prodBoxRin input.cmpCheckb { width: 22px; height: 22px; margin: 0 6px 0 0 !important; vertical-align: middle; accent-color: var(--bvm-green); }
+td.tiles input.salidzinat, td.rezgis input.salidzinat, table.prodBoxRin input.salidzinat { height: 40px !important; padding: 0 10px !important; vertical-align: middle; font-size: 14px !important; border-radius: 8px; }
+td.tiles input.prbBtnBuy, td.rezgis input.prbBtnBuy, table.prodBoxRin input.prbBtnBuy {
+  width: 100% !important; height: 44px !important; margin: 8px 0 0 !important; border-radius: 8px !important; font: bold 17px/1 Arial, Helvetica, sans-serif !important;
+}
+td.tiles tr:last-child td > table > tbody > tr, td.rezgis tr:last-child td > table > tbody > tr { display: flex !important; flex-wrap: wrap; align-items: center; }
+td.tiles tr:last-child td > table > tbody > tr > td:last-child { flex: 1 0 100%; }
+/* Parametri: photo + price beside, parameter list as label / value pairs */
+td.rezgis td.prbPNameRez a.prbPName { margin-top: 0; font-size: 16px !important; }
+td.rezgis table.DescTableRez { display: block !important; margin: 6px 0; }
+td.rezgis table.DescTableRez tr { display: grid !important; grid-template-columns: minmax(0, 42%) minmax(0, 1fr); gap: 8px; padding: 6px 0 !important; border-top: 1px solid var(--bvm-line) !important; }
+td.rezgis table.DescTableRez td { font-size: 15px !important; line-height: 1.35 !important; overflow-wrap: anywhere; }
+td.rezgis td.DescFieldRez { color: var(--bvm-muted); font-size: 14px !important; }
+td.rezgis tr:last-child > td > table > tbody > tr { display: flex !important; align-items: flex-start; gap: 12px; }
+td.rezgis tr:last-child > td > table > tbody > tr > td:first-child { flex: 0 0 42%; }
+td.rezgis tr:last-child > td > table > tbody > tr > td:first-child img:not([src$="px.gif"]) { display: block; width: 100% !important; height: auto !important; border-radius: 6px; }
+td.rezgis tr:last-child > td > table > tbody > tr > td:last-child { flex: 1 1 auto; min-width: 0; }
+/* Rindas: one card per product, photo left, name / parameters / price right */
+table.prodBoxRin { display: block !important; width: auto !important; margin: 0 0 12px !important; padding: 10px; box-sizing: border-box;
+  border: 1px solid #d9d9d9 !important; border-radius: 10px; background: #fff !important; box-shadow: 0 1px 3px rgba(0, 0, 0, .06); }
+table.prodBoxRin > tbody { display: block !important; }
+table.prodBoxRin > tbody > tr { display: grid !important; grid-template-columns: 38% minmax(0, 1fr); column-gap: 12px; }
+table.prodBoxRin > tbody > tr > td { display: block !important; width: auto !important; min-width: 0; padding: 0 !important; }
+table.prodBoxRin > tbody > tr > td:empty { display: none !important; }
+table.prodBoxRin > tbody > tr > td:first-child img:not([src$="px.gif"]) { display: block; width: 100% !important; height: auto !important; border-radius: 6px; }
+table.prodBoxRin > tbody > tr > td.prbPPrice { grid-column: 2; }
+table.prodBoxRin > tbody > tr:nth-child(2) > td:first-child:empty + td { grid-column: 1 / -1; }
+table.prodBoxRin > tbody > tr:nth-child(2) > td { grid-column: 1 / -1; }
+table.prodBoxRin a.prbPName { margin-top: 0; }
+table.prodBoxRin table.DescTableRin, table.prodBoxRin table.DescTableRin > tbody { display: block !important; width: auto !important; }
+table.prodBoxRin table.DescTableRin tr { display: block !important; padding: 3px 0; }
+table.prodBoxRin table.DescTableRin td { display: inline !important; padding: 0 !important; font-size: 14px !important; line-height: 1.4 !important; overflow-wrap: anywhere; word-break: break-word; }
+table.prodBoxRin table.DescTableRin, table.prodBoxRin > tbody > tr > td > * { min-width: 0; max-width: 100% !important; }
+table.prodBoxRin td.DescFieldRin { color: var(--bvm-muted); }
+table.prodBoxRin td.DescFieldRin:empty { display: none !important; }
+table.prodBoxRin > tbody > tr:nth-child(2) table, table.prodBoxRin > tbody > tr:nth-child(2) tbody { display: block !important; width: auto !important; }
+table.prodBoxRin > tbody > tr:nth-child(2) table tr { display: flex !important; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 8px; }
+table.prodBoxRin > tbody > tr:nth-child(2) table td { display: block !important; padding: 0 !important; width: auto !important; }
+table.prodBoxRin > tbody > tr:nth-child(2) table td[width="100%"] { display: none !important; }
+table.prodBoxRin > tbody > tr:nth-child(2) table td:last-child { flex: 1 0 100%; }
+table.prodBoxRin, table.prodBoxTil, table.prodBoxRez, table.DescTableRez, table.DescTableRin { max-width: 100% !important; }
+td.ProdsTable_tiles td.TypeDesc, td.ProdsTable_rezgis td.TypeDesc, td.ProdsTable_rindas td.TypeDesc { display: block !important; grid-column: 1 / -1 !important; width: auto !important; padding: 0 0 10px !important; }
+td.ProdsTable_tiles div.TypeDesc, td.ProdsTable_rezgis div.TypeDesc, td.ProdsTable_rindas div.TypeDesc { float: none !important; width: auto !important; max-width: none !important; margin: 0 !important; padding: 10px !important; overflow: hidden; }
+td.ProdsTable_tiles div.TypeDesc, td.ProdsTable_tiles div.TypeDesc *, td.ProdsTable_rezgis div.TypeDesc, td.ProdsTable_rezgis div.TypeDesc *,
+td.ProdsTable_rindas div.TypeDesc, td.ProdsTable_rindas div.TypeDesc * { font-size: 15px !important; line-height: 1.45 !important; }
+td.ProdsTable_tiles div.TypeDesc p, td.ProdsTable_rezgis div.TypeDesc p, td.ProdsTable_rindas div.TypeDesc p { margin: 0 0 4px !important; }
+td.ProdsTable_tiles div.TypeDesc img, td.ProdsTable_rezgis div.TypeDesc img, td.ProdsTable_rindas div.TypeDesc img { float: left; width: 96px !important; height: auto !important; margin: 2px 10px 4px 0 !important; border-radius: 4px; }
+td.ProdsTable_tiles table.Trademark, td.ProdsTable_rezgis table.Trademark, td.ProdsTable_rindas table.Trademark { width: 100% !important; height: auto !important; margin: 14px 0 8px !important; border-radius: 8px !important; }
+td.ProdsTable_tiles td.Trademark, td.ProdsTable_rezgis td.Trademark, td.ProdsTable_rindas td.Trademark { padding: 10px 14px !important; }
+td.ProdsTable_tiles div.Trademark, td.ProdsTable_rezgis div.Trademark, td.ProdsTable_rindas div.Trademark { font-size: 17px !important; line-height: 1.3 !important; }
+td.ProdsTable_tiles tr, td.ProdsTable_rezgis tr, td.ProdsTable_rindas tr { height: auto !important; }
+td.rezgis a:has(> img), table.prodBoxRin a:has(> img) { display: block !important; }
+table.prodBoxRin td.DescFieldRin { padding-right: 5px !important; }
 
-/* subcategory tiles and offer blocks (category start pages, home, search) */
+/* subcategory tiles (category start pages): two per row, the whole tile is one link (styled in section 14) */
 table.SubCats, table.SubCats > tbody { display: block !important; width: auto !important; }
-table.SubCats > tbody > tr { display: flex !important; flex-wrap: wrap; }
-td.subcat { display: block !important; width: 50% !important; box-sizing: border-box; padding: 4px !important; }
+table.SubCats > tbody > tr { display: contents !important; }
+table.SubCats > tbody { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+td.subcat { display: block !important; width: auto !important; box-sizing: border-box; padding: 0 !important; }
 div.SUBCAT, div.subcat_name { width: auto !important; max-width: 100%; }
-table.SpecPied, table.SpecPied > tbody { display: block !important; width: auto !important; }
-table.SpecPied > tbody > tr { display: flex !important; flex-wrap: wrap; }
-td.SpecPied { display: block !important; width: 50% !important; box-sizing: border-box; }
 
 /* "Lūdzam ievērot" notes under the list */
 #productsDIV > table:not([class]) td[style*="padding"] { padding: 12px 0 !important; }
@@ -1039,12 +1102,37 @@ html.bvm-ready .bvm-fpanel tr.bvm-acc-b.bvm-open { display: block !important; }
   font: bold 18px/1 Arial, Helvetica, sans-serif !important; cursor: pointer; -webkit-appearance: none; appearance: none;
 }
 
-/* ---------- 8. Right column on other pages (mini cart, login, hours, brands) ---------- */
+/* ---------- 8. Right column on other pages (mini cart, login, hours, brands, "Ko citi pērk") ---------- */
 td.home_right > *, td.info_right > *, td.prods_right > * { max-width: 100%; }
-td.home_right td, td.info_right td, td.home_right a, td.info_right a { font-size: 14px !important; line-height: 1.45 !important; }
+td.home_right, td.info_right { border-top: 1px solid var(--bvm-line); margin-top: 16px; padding-top: 16px !important; }
+td.home_right > table, td.info_right > table { width: 100% !important; margin: 0 0 14px !important; box-sizing: border-box; }
+td.home_right td, td.info_right td, td.home_right a, td.info_right a { font-size: 15px !important; line-height: 1.45 !important; }
 td.home_right input[type="text"], td.home_right input[type="password"],
-td.info_right input[type="text"], td.info_right input[type="password"] { height: 40px; width: 100% !important; box-sizing: border-box; }
-select.BrandSelForm { width: 100% !important; height: 44px !important; }
+td.info_right input[type="text"], td.info_right input[type="password"] {
+  height: 46px; width: 100% !important; box-sizing: border-box; padding: 0 12px; border: 1px solid #b9b9b9; border-radius: 8px;
+}
+td.home_right input[type="submit"], td.info_right input[type="submit"] { min-height: 44px; min-width: 96px; padding: 0 16px !important; border-radius: 8px; }
+select.BrandSelForm { width: 100% !important; height: 46px !important; border-radius: 8px; padding: 0 8px; }
+td.home_right td > a:not(:has(img)), td.info_right td > a:not(:has(img)) { display: inline-block; padding: 10px 0; min-height: 44px; box-sizing: border-box; }
+td.home_right form a, td.info_right form a { display: inline-block !important; padding: 11px 0 !important; min-height: 44px; box-sizing: border-box; font-size: 15px !important; }
+td.home_right #compareDIV input, td.info_right #compareDIV input, .bvm-drawer #compareDIV input { min-height: 44px; padding: 0 16px !important; border-radius: 8px; }
+#compareDIV td[style*="52px"] { width: 56px !important; height: 56px !important; }
+#compareDIV a[onclick*="CMPdel"] { display: inline-block; }
+/* the shop's working hours box: every line is a link to Kontakti, so every line gets a full tap row */
+html.bvm-ready td.home_right p, html.bvm-ready td.info_right p, html.bvm-ready td.prods_right p,
+html.bvm-ready .bvm-drawer > table p { margin: 0 !important; }
+td.home_right p a, td.info_right p a, .bvm-drawer > table p a, td.prods_right p a { display: inline-block; padding: 10px 0; min-height: 40px; box-sizing: border-box; }
+/* "Ko citi pērk": product rows with a big tap area */
+table.pr_top { width: 100% !important; margin: 0 !important; border-bottom: 1px solid var(--bvm-line); }
+table.pr_top td { padding: 0 !important; vertical-align: middle !important; }
+table.pr_top img:not([src$="px.gif"]) { width: 64px !important; height: auto !important; border-radius: 4px; }
+a.pr_top_cat { display: inline-block !important; padding: 11px 0 !important; min-height: 40px; box-sizing: border-box; font-size: 13px !important; line-height: 18px !important; color: #777 !important; }
+a.pr_top_pname { display: block !important; min-height: 40px; padding: 2px 0; box-sizing: border-box; color: #111 !important; font-size: 15px !important; }
+td.pr_top_pic { width: 72px !important; }
+td.pr_top_pic img[src$="px.gif"], td.pr_top_pic br { display: none !important; }
+td.pr_top_pic > a { display: flex !important; align-items: center; justify-content: center; min-width: 64px; min-height: 64px; }
+/* the mini cart box: the whole box opens the cart */
+td.home_right a[href*="sw=vbag"], td.info_right a[href*="sw=vbag"] { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
 
 /* ---------- 9. Footer, cookie notice, "Top" ---------- */
 td.FOOTMID { padding: 8px 12px 16px !important; }
@@ -1056,47 +1144,507 @@ div.footer_text, div.footer_text *, div.copyright { font-size: 14px !important; 
 td.BOTMID { display: block; padding: 8px 12px 24px !important; }
 table.ratings, table.ratings > tbody { display: block !important; }
 table.ratings > tbody > tr { display: flex !important; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; }
-td.ratings { display: block !important; }
+td.ratings { display: block !important; height: auto !important; }
+td.ratings:empty { display: none !important; }
+td.ratings a { display: inline-flex !important; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+table.footer a, td.FOOTMID a { display: inline-flex; align-items: center; min-height: 40px; min-width: 40px; }
 
-#cookiesInfoBlock span { padding: 14px 14px 4px !important; margin: 8px !important; border-radius: 10px !important; }
-#cookiesInfoBlock .disclaimer p, #cookiesInfoBlock .disclaimer p * { font-size: 13px !important; line-height: 1.45 !important; }
-#cookiesInfoBlock .disclaimer p { margin: 0 34px 0 0 !important; text-align: left; }
-#cookiesInfoBlock span .buttons { padding: 10px 0 !important; }
+/* cookie notice: a compact card at the bottom (3 lines of text, "Vairāk" shows the rest, "Piekrītu" beside it).
+   Their own accept link and "X" keep working; the dark band behind it is gone and taps outside the card reach the page. */
+#cookiesInfoBlock { z-index: 2500 !important; top: auto !important; bottom: 0 !important; height: auto !important;
+  background: transparent !important; pointer-events: none; padding: 0 0 env(safe-area-inset-bottom, 0px) !important; }
+#cookiesInfoBlock > span { pointer-events: auto; display: block !important; position: relative !important; max-width: none !important;
+  margin: 0 8px 8px !important; padding: 10px 50px 8px 12px !important; border-radius: 10px !important; background: #fff !important;
+  box-shadow: 0 -2px 18px rgba(0, 0, 0, .28); text-align: left !important; }
+#cookiesInfoBlock .disclaimer { padding: 0 !important; margin: 0 !important; text-align: left !important; }
+#cookiesInfoBlock .disclaimer p, #cookiesInfoBlock .disclaimer p * { font-size: 13.5px !important; line-height: 1.3 !important; }
+#cookiesInfoBlock .disclaimer p { margin: 0 !important; padding: 0 !important; text-align: left !important; color: #333;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+html.bvm-ck-open #cookiesInfoBlock .disclaimer p { display: block; -webkit-line-clamp: unset; line-clamp: none; max-height: 45vh; overflow-y: auto; }
+#cookiesInfoBlock .disclaimer p a { padding: 12px 0; text-decoration: underline !important; }
+#cookiesInfoBlock span .buttons, #cookiesInfoBlock .buttons { display: flex !important; align-items: center; justify-content: flex-end; gap: 8px;
+  margin: 4px -42px 0 0 !important; padding: 0 !important; }
 #cookiesInfoBlock .buttons a.ico {
-  display: inline-flex; align-items: center; justify-content: center; min-height: 44px; margin: 0 !important; padding: 0 30px !important;
-  border-radius: 8px; background: var(--bvm-green) !important; color: #fff !important; font-size: 16px !important; font-weight: bold;
+  display: inline-flex; align-items: center; justify-content: center; min-height: 40px; margin: 0 !important; padding: 0 22px !important;
+  border-radius: 8px; background: var(--bvm-green) !important; color: #fff !important; font: bold 15px/1 Arial, Helvetica, sans-serif !important;
 }
+#cookiesInfoBlock .bvm-ck-more {
+  display: inline-flex; align-items: center; min-height: 40px; margin: 0 auto 0 0; padding: 0 4px; border: 0; background: transparent;
+  color: var(--bvm-green-d); font: bold 14px/1 Arial, Helvetica, sans-serif !important; text-decoration: underline; cursor: pointer;
+}
+#cookiesInfoBlock .bvm-ck-more:focus-visible, #cookiesInfoBlock a:focus-visible { outline: 3px solid var(--bvm-orange); outline-offset: 1px; }
 #cookiesInfoBlock a.ico.close {
-  display: flex; align-items: center; justify-content: center; top: 4px !important; right: 4px !important; margin: 0 !important;
-  min-width: 44px; min-height: 44px; padding: 0 !important; border-radius: 22px; color: #555 !important; background: #eee !important; font-size: 16px !important;
+  position: absolute !important; display: flex; align-items: center; justify-content: center; top: 4px !important; right: 4px !important; margin: 0 !important;
+  width: 40px; height: 40px; min-width: 40px; min-height: 40px; padding: 0 !important; border-radius: 20px; color: #555 !important; background: #eee !important; font-size: 15px !important;
 }
+/* while the notice is open the sticky buy bar sits above it, and the page can still scroll to its last line */
+html.bvm-lock #cookiesInfoBlock { visibility: hidden; }   /* menu / filters open: the notice waits behind them */
+html.bvm-ready.bvm-ck-on .bvm-buybar { bottom: var(--bvm-ck, 0px); }
+html.bvm-ck-on body { padding-bottom: var(--bvm-ck, 0px) !important; }
+html.bvm-ck-on.bvm-buybar-on body { padding-bottom: calc(var(--bvm-ck, 0px) + 76px) !important; }
 /* the shop's red "Top" button sat on top of the quantity fields; on phones the bar is always reachable instead */
 html.bvm-ready .scrollTop { display: none !important; }
 
-/* ---------- 10. Other page types: basic safety only (full phone design = next stage) ---------- */
-/* home: the 570px banner slider fits the screen */
-#outer_jbanrek_div, #jbanrek, div.banner-body, div.banner-container, div.banner-img { width: auto !important; max-width: 100% !important; height: auto !important; }
+/* ---------- 10. Shared pieces of the other pages ---------- */
+/* page title bar (Kontakti, Meklēšana, Pirkumu grozs, ...) */
+table.title, table.title > tbody, table.title > tbody > tr { display: block !important; width: auto !important; height: auto !important; }
+table.title { margin: 6px 0 8px !important; }
+td.title { display: block !important; width: auto !important; padding: 4px 2px !important; white-space: normal !important; }
+td.title:empty, table.title td:not(.title) { display: none !important; }
+td.title a.H1, a.H1 { display: block !important; min-height: 44px; padding: 8px 0 6px; box-sizing: border-box; color: #111 !important; text-decoration: none !important;
+  font: bold 22px/1.25 Verdana, Arial, sans-serif !important; }
+/* stacking: once mobile.js is running, only tables that are wider than the screen (it marks them bvm-stack) and
+   form tables become one column; small CMS tables (icons with captions, hours) keep their own layout */
+html:not(.bvm-ready) td.info_center table, html:not(.bvm-ready) td.info_center tbody, html:not(.bvm-ready) td.info_center tr, html:not(.bvm-ready) td.info_center td,
+html:not(.bvm-ready) td.home_center table, html:not(.bvm-ready) td.home_center tbody, html:not(.bvm-ready) td.home_center tr, html:not(.bvm-ready) td.home_center td { display: block !important; width: auto !important; max-width: 100%; }
+html.bvm-ready table.bvm-stack:not([style*="display:none"]):not([style*="display: none"]),
+html.bvm-ready table.bvm-stack > tbody,
+html.bvm-ready table.bvm-stack > tbody > tr:not([style*="display:none"]):not([style*="display: none"]),
+html.bvm-ready table.bvm-stack > tbody > tr > td:not([style*="display:none"]):not([style*="display: none"]),
+html.bvm-ready table.bvm-stack > tbody > tr > th:not([style*="display:none"]):not([style*="display: none"]) { display: block !important; width: auto !important; max-width: 100%; height: auto !important; }
+html.bvm-ready table.bvm-stack > tbody > tr > td[width="1"]:empty, html.bvm-ready table.bvm-stack img[src$="px.gif"] { display: none !important; }
+html.bvm-ready table.bvm-fit { max-width: 100% !important; }
+td.info_center img:not([src$="px.gif"]), td.home_center img:not([src$="px.gif"]) { max-width: 100% !important; height: auto !important; }
+td.info_center p, td.info_center li, td.info_center td, td.home_center td.content p, td.home_center td.content li { font-size: 15px !important; line-height: 1.5 !important; }
+td.info_center p { margin: 0 0 8px !important; }
+td.info_center p:empty { display: none; }
+td.info_center ul, td.info_center ol { padding-left: 22px !important; margin: 4px 0 10px !important; }
+td.info_center hr { margin: 14px 0; }
+/* links in running text: a 40 px tall tap zone that does not move the lines */
+td.info_center p a, td.info_center li a, td.info_center td > a:not([class]), td.content_info span > a,
+td.prods_center td[style*="padding:20px"] li a, td.prods_center td[style*="padding: 20px"] li a { padding: 12px 0; }
+td.info_center p a:not(:has(img)), td.info_center li a:not(:has(img)) { font-size: max(1em, 15px) !important; }
+/* widgets pasted into CMS pages (e.g. the building calculator link) never push the page sideways */
+td.info_center td.content > *, td.info_center .zhitov_wdiv, td.info_center iframe { max-width: 100% !important; box-sizing: border-box; }
+td.info_center td > a:not([class]) { display: inline-block; padding: 10px 0; min-height: 40px; box-sizing: border-box; }
+td.info_center p a:has(img), td.info_center td > a:not([class]):has(img) { padding: 0; display: inline-block; min-width: 40px; min-height: 40px; }
+/* option rows: radio / check boxes with their text become one big tap row */
+.bvm-opt { display: flex !important; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+.bvm-opt input[type="radio"], .bvm-opt input[type="checkbox"] { flex: 0 0 22px; width: 22px; height: 22px; margin: 0 !important; accent-color: var(--bvm-green); }
+/* form controls on account, cart and order pages: one column, 16 px, 46 px tall */
+html.bvm-ready td.info_center input[type="text" i], html.bvm-ready td.info_center input[type="password" i],
+html.bvm-ready td.info_center input[type="email" i], html.bvm-ready td.info_center input[type="tel" i],
+html.bvm-ready td.info_center input:not([type]), html.bvm-ready td.info_center select, html.bvm-ready td.info_center textarea {
+  display: block; width: 100% !important; max-width: 100% !important; height: 46px !important; box-sizing: border-box; margin: 2px 0 6px !important;
+  padding: 0 12px !important; border: 1px solid #b4b4b4 !important; border-radius: 8px !important; background-color: #fff; color: var(--bvm-ink);
+  font: normal 16px/1.2 Arial, Helvetica, sans-serif !important;
+}
+html.bvm-ready td.info_center textarea { height: auto !important; min-height: 110px; padding: 10px 12px !important; line-height: 1.4 !important; }
+html.bvm-ready td.info_center select { padding: 0 8px !important; }
+html.bvm-ready td.info_center input:focus, html.bvm-ready td.info_center select:focus, html.bvm-ready td.info_center textarea:focus {
+  outline: none; border-color: var(--bvm-green) !important; box-shadow: 0 0 0 3px rgba(0, 139, 77, .25);
+}
+html.bvm-ready td.info_center input[type="submit" i], html.bvm-ready td.info_center input[type="button" i], input.eshopButton, input.sbagButton {
+  min-height: 48px !important; height: auto !important; padding: 0 18px !important; border-radius: 8px !important;
+  font: bold 16px/1.2 Arial, Helvetica, sans-serif !important; white-space: normal; cursor: pointer;
+}
+html.bvm-ready td.info_center input[type="submit" i], input.eshopButton[type="submit" i], input.eshopButton[value*="formēšana"] {
+  width: 100% !important; border: 0 !important; background: var(--bvm-green) !important; color: #fff !important;
+}
+/* label cells above their fields */
+html.bvm-ready table.bvm-ftable > tbody > tr > td { padding: 0 !important; }
+html.bvm-ready table.bvm-ftable > tbody > tr { padding: 4px 0 !important; }
+html.bvm-ready table.bvm-ftable td, html.bvm-ready table.bvm-ftable th { text-align: left !important; height: auto !important; }
+html.bvm-ready table.bvm-ftable td > b:only-child, html.bvm-ready td.info_center td[align] > b { display: block; text-align: left; }
+td.FIELDNAME, td.FIELDTITLE { padding: 8px 0 2px !important; font: bold 14px/1.35 Arial, Helvetica, sans-serif !important; color: var(--bvm-ink); white-space: normal !important; }
+/* radio / checkbox with a <label for>: the label is the big tap row with its own round mark */
+html.bvm-ready td.info_center input[type="radio" i]:not(.bvm-native) + label, html.bvm-ready td.info_center input[type="checkbox" i]:not(.bvm-native) + label {
+  position: relative; display: flex !important; align-items: center; min-height: 46px; margin: 4px 0 !important; padding: 8px 12px 8px 44px !important; box-sizing: border-box;
+  border: 1px solid #c6c6c6; border-radius: 10px; background: #fff; cursor: pointer; font: normal 16px/1.3 Arial, Helvetica, sans-serif !important; color: var(--bvm-ink) !important;
+}
+html.bvm-ready td.info_center input[type="radio" i]:not(.bvm-native), html.bvm-ready td.info_center input[type="checkbox" i]:not(.bvm-native) {
+  position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none;
+}
+html.bvm-ready td.info_center input:not(.bvm-native) + label::before {
+  content: ""; position: absolute; left: 13px; top: 50%; width: 20px; height: 20px; margin-top: -11px;
+  border: 2px solid #8a8a8a; border-radius: 50%; background: #fff; box-sizing: content-box;
+}
+html.bvm-ready td.info_center input[type="checkbox" i]:not(.bvm-native) + label::before { border-radius: 5px; }
+html.bvm-ready td.info_center input:not(.bvm-native):checked + label { border-color: var(--bvm-green); background: #e7f4ec; box-shadow: inset 0 0 0 1px var(--bvm-green); font-weight: bold !important; }
+html.bvm-ready td.info_center input:not(.bvm-native):checked + label::before { border-color: var(--bvm-green); background: radial-gradient(circle, var(--bvm-green) 0 45%, #fff 50%); }
+html.bvm-ready td.info_center input[type="checkbox" i]:not(.bvm-native):checked + label::before { background: var(--bvm-green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M4 10.5l4 4 8-9' fill='none' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E") center / 16px no-repeat; }
+html.bvm-ready td.info_center input:not(.bvm-native):focus-visible + label { outline: 3px solid #ffd54a; outline-offset: 1px; }
+html.bvm-ready td.info_center input:disabled + label { opacity: .5; }
+/* radios / check boxes without a label, and the "compare" boxes: a 40 px tap box with a 22 px mark drawn inside */
+input.bvm-native, td.tiles input.cmpCheckb, td.rezgis input.cmpCheckb, table.prodBoxRin input.cmpCheckb, td.bvm-pd-photo input.cmpCheckb {
+  -webkit-appearance: none; appearance: none; flex: 0 0 40px; width: 40px !important; height: 40px !important; margin: 0 !important; padding: 0 !important;
+  border: 0 !important; border-radius: 8px; vertical-align: middle; cursor: pointer;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Crect x='1' y='1' width='20' height='20' rx='4' fill='%23fff' stroke='%23777' stroke-width='2'/%3E%3C/svg%3E") center / 22px 22px no-repeat !important;
+}
+input.bvm-native:checked, td.tiles input.cmpCheckb:checked, td.rezgis input.cmpCheckb:checked, table.prodBoxRin input.cmpCheckb:checked, td.bvm-pd-photo input.cmpCheckb:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Crect x='1' y='1' width='20' height='20' rx='4' fill='%23008B4D' stroke='%23008B4D' stroke-width='2'/%3E%3Cpath d='M5.5 11.5l3.5 3.5 7.5-8' fill='none' stroke='%23fff' stroke-width='2.6'/%3E%3C/svg%3E") !important;
+}
+input.bvm-native[type="radio" i] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Ccircle cx='11' cy='11' r='9.5' fill='%23fff' stroke='%23777' stroke-width='2'/%3E%3C/svg%3E") !important; }
+input.bvm-native[type="radio" i]:checked { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Ccircle cx='11' cy='11' r='9.5' fill='%23fff' stroke='%23008B4D' stroke-width='2'/%3E%3Ccircle cx='11' cy='11' r='5.5' fill='%23008B4D'/%3E%3C/svg%3E") !important; }
+input.bvm-native:focus-visible, input.cmpCheckb:focus-visible { outline: 3px solid var(--bvm-green); outline-offset: -2px; }
+input.bvm-native:disabled { opacity: .45; }
+
+/* ---------- 11. Home: banner slider, offer blocks, special-offer cards (also search results and brand page) ---------- */
+#outer_jbanrek_div, #jbanrek_div, #jbanrek, div.banner-body, div.banner-container, div.banner-img { width: auto !important; max-width: 100% !important; height: auto !important; }
+#outer_jbanrek_div { margin: 8px 0 0; }
+#outer_jbanrek_div div.banner-img { border-radius: 8px; overflow: hidden; }
+td.home_center > table td > br, #outer_jbanrek_div ~ br { display: none !important; }
+td.content_home td.content > a#spec + table.ListTable table.SpecPied { margin-top: 10px !important; }
 div.banner-img img, #jbanrek img { width: 100% !important; height: auto !important; }
-/* product page: photo above the parameters, parameters full width */
+#jbanrek a, #jbanrek span, #jbanrek div[onclick] { -webkit-tap-highlight-color: transparent; }
+#jbanrek .banner-menu { position: static !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+  display: flex !important; justify-content: center; gap: 6px; width: auto !important; height: auto !important; margin: 8px 0 0 !important; padding: 0 !important; transform: none !important; }
+#jbanrek span.banner-nr { display: inline-flex !important; align-items: center; justify-content: center; min-width: 44px; height: 40px; margin: 0 !important; float: none !important; position: static !important; padding: 0 !important; box-sizing: border-box; border-radius: 6px; font-size: 15px !important; line-height: 1 !important; }
+td.home_center > table, td.home_center > table > tbody, td.home_center > table > tbody > tr, td.home_center > table > tbody > tr > td { display: block !important; width: auto !important; }
+td.content_home > table, td.content_home > table > tbody, td.content_home > table > tbody > tr, td.content_home > table > tbody > tr > td,
+td.content_home table.content, td.content_home table.content > tbody, td.content_home table.content > tbody > tr, td.content_home td.content { display: block !important; width: auto !important; padding: 0 !important; }
+table.content, td.content, td.content_home, td.content_info, td.content_prods { height: auto !important; }
+table.ListTable, table.ListTable > tbody, table.ListTable > tbody > tr, table.ListTable > tbody > tr > td { display: block !important; width: auto !important; padding: 0 !important; }
+table.ListTable { margin: 0 0 14px !important; }
+table.SpecPied, table.SpecPied > tbody, table.SpecPied > tbody > tr, td.SpecPied { display: block !important; width: auto !important; }
+table.SpecPied { margin: 16px 0 10px !important; }
+td.SpecPied { padding: 0 !important; background: transparent !important; }
+div.SpecPied { display: block; width: auto !important; padding: 10px 14px !important; border-radius: 8px; }
+div.SpecPied, div.SpecPied * { font: bold 18px/1.25 Arial, Helvetica, sans-serif !important; }
+/* the cards: two per row */
+table.ListTable > tbody > tr > td > table, table.ListTable > tbody > tr > td > table > tbody { display: block !important; width: auto !important; }
+table.ListTable > tbody > tr > td > table > tbody { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+table.ListTable > tbody > tr > td > table > tbody > tr { display: contents !important; }
+td.special { display: block !important; width: auto !important; min-width: 0; padding: 0 !important; border: 0 !important; }
+td.special:empty { display: none !important; }
+table.prodBoxSpec { display: block !important; width: auto !important; height: 100% !important; box-sizing: border-box; padding: 8px;
+  border: 1px solid #d9d9d9 !important; border-radius: 10px; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .06); }
+table.prodBoxSpec > tbody { display: flex !important; flex-direction: column; height: 100%; }
+table.prodBoxSpec > tbody > tr { display: flex !important; flex-direction: column; flex: 1 1 auto; }
+table.prodBoxSpec > tbody > tr > td { display: block !important; width: auto !important; padding: 0 !important; }
+table.prodBoxSpec > tbody > tr > td:first-child { position: relative; }
+table.prodBoxSpec > tbody > tr > td:first-child > a { display: block; }
+table.prodBoxSpec > tbody > tr > td:first-child img:not([src$="px.gif"]) {
+  display: block; width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; object-fit: contain; border-radius: 6px; background: #fff;
+}
+table.prodBoxSpec img[src$="px.gif"] { display: none !important; }
+/* layout tables inside cards carry fixed height="" attributes from the desktop design */
+table.prodBoxSpec table, table.prodBoxSpec td, td.tiles table, td.tiles td, td.rezgis table, td.rezgis td, table.prodBoxRin table, table.prodBoxRin td,
+td.subcat table, td.subcat td, td.bvm-pd-info table, table.ShBag td, td.info_center table[height], td.home_center table[height] { height: auto !important; }
+table.prodBoxSpec > tbody > tr > td:last-child { flex: 1 1 auto; display: flex !important; flex-direction: column; }
+table.prodBoxSpec > tbody > tr > td:last-child > table { display: flex !important; flex-direction: column; flex: 1 1 auto; width: auto !important; }
+table.prodBoxSpec > tbody > tr > td:last-child > table > tbody { display: flex !important; flex-direction: column; flex: 1 1 auto; }
+table.prodBoxSpec > tbody > tr > td:last-child > table > tbody > tr { display: block !important; }
+table.prodBoxSpec > tbody > tr > td:last-child > table > tbody > tr:last-child { margin-top: auto; }
+table.prodBoxSpec > tbody > tr > td:last-child td { display: block !important; padding: 0 !important; position: static; }
+table.prodBoxSpec > tbody > tr > td:last-child img[src*="db_ikonas"] { position: absolute; top: 4px; right: 4px; width: 44px !important; height: auto !important; pointer-events: none; }
+table.prodBoxSpec > tbody > tr > td:last-child > table table, table.prodBoxSpec > tbody > tr > td:last-child > table table > tbody { display: block !important; width: auto !important; }
+table.prodBoxSpec > tbody > tr > td:last-child > table table tr { display: flex !important; align-items: center; justify-content: space-between; gap: 6px; }
+a.special_cat { display: inline-block !important; min-height: 40px; padding: 4px 0 2px; box-sizing: border-box; margin-top: 2px; font-size: 13px !important; line-height: 17px !important; color: #777 !important; }
+a.special_pname { display: block !important; min-height: 40px; color: #111 !important; font: bold 15px/1.3 Arial, Helvetica, sans-serif !important; overflow-wrap: anywhere; }
+td.special div[style*="padding:4px"], td.special div[style*="padding: 4px"] { padding: 0 !important; }
+div.special_pprice { font: bold 19px/1.2 Arial, Helvetica, sans-serif !important; color: var(--bvm-orange) !important; padding-top: 4px; }
+div.special_pprice * { font-size: inherit !important; }
+a.SpecPiedAll { display: flex !important; align-items: center; justify-content: center; min-height: 46px; margin: 4px 0 8px; border: 1px solid #c9c9c9; border-radius: 8px; font-size: 15px !important; }
+td.content div[align="right" i] { text-align: center !important; }
+
+/* ---------- 12. Catalog / site map, subcategory tiles, brands, brand page ---------- */
+table.cat_home, table.cat_home > tbody, table.cat_home > tbody > tr { display: block !important; width: auto !important; }
+table.cat_home > tbody > tr > td { display: block !important; width: auto !important; padding: 0 !important; margin: 0 0 6px; border: 1px solid #e2e2e2; border-radius: 10px; overflow: hidden; }
+table.cat_home > tbody > tr > td:empty { display: none !important; }
+div.catsad { margin: 0 !important; background: #f4f4f4; }
+a.catsad { display: block !important; min-height: 48px; padding: 14px 14px 12px; box-sizing: border-box; color: var(--bvm-green-d) !important; font: bold 16px/1.25 Arial, Helvetica, sans-serif !important; text-decoration: none !important; }
+div.cat_cat { margin: 0 !important; border-top: 1px solid #ececec; }
+a.cat_cat { display: block !important; min-height: 44px; padding: 12px 14px 10px 22px; box-sizing: border-box; color: var(--bvm-ink) !important; font-size: 15px !important; text-decoration: none !important; }
+div.cat_cat > a:not([class]) { display: block !important; min-height: 44px; padding: 12px 14px 10px 22px; box-sizing: border-box; color: var(--bvm-green-d) !important; font-weight: bold; font-size: 15px !important; }
+td.subcat div.SUBCAT { height: 100%; }
+td.subcat a { text-decoration: none !important; }
+td.subcat div.SUBCAT > a.subcat:empty { display: none; }
+td.subcat table, td.subcat tbody, td.subcat tr, td.subcat td { display: block !important; width: auto !important; height: auto !important; padding: 0 !important; }
+td.subcat div.SUBCAT { box-sizing: border-box; padding: 8px; border: 1px solid #d9d9d9; border-radius: 10px; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .06); }
+td.subcat a:has(> img.subcat) { display: block !important; }
+img.subcat { display: block; width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; object-fit: contain; border-radius: 6px; }
+div.subcat_name { margin: 0 !important; }
+div.subcat_name a.subcat { display: block !important; min-height: 44px; padding: 10px 0 4px; box-sizing: border-box;
+  color: #111 !important; font: bold 15px/1.25 Arial, Helvetica, sans-serif !important; text-align: center; overflow-wrap: anywhere; }
+table.BrandsTable, table.BrandsTable > tbody { display: block !important; width: auto !important; }
+table.BrandsTable > tbody { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+table.BrandsTable > tbody > tr { display: contents !important; }
+td.BrandsTable { display: block !important; width: auto !important; padding: 0 !important; }
+td.BrandsTable:empty { display: none !important; }
+a.BrandsTable { display: flex !important; align-items: center; justify-content: center; height: 72px; padding: 6px; box-sizing: border-box; border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; }
+a.BrandsTable img { max-width: 100% !important; max-height: 56px !important; width: auto !important; height: auto !important; }
+table.mctm, table.mctm > tbody, table.mctm > tbody > tr { display: block !important; width: auto !important; }
+table.mctm td { display: block !important; padding: 0 !important; border-bottom: 1px solid #ececec; }
+table.mctm a { display: flex !important; flex-wrap: wrap; align-items: center; gap: 4px; min-height: 46px; padding: 4px 0; font-size: 15px !important; }
+td.mctm_lvl_1 a { font-weight: bold !important; font-size: 16px !important; }
+td.mctm_lvl_2 a { padding-left: 14px; }
+td.mctm_lvl_3 a { padding-left: 28px; }
+td.mctm_lvl_4 a { padding-left: 42px; }
+table.mctm a b, table.mctm a span { font-size: 13px !important; }
+
+/* ---------- 13. Search results and "nothing found" ---------- */
+div.SMapPartName { margin: 14px 0 6px !important; font: bold 18px/1.3 Arial, Helvetica, sans-serif !important; color: var(--bvm-ink); }
+td.content_home > span:first-of-type, td.content_info > span:first-of-type { display: inline-block; margin: 0 0 6px; font-size: 16px !important; }
+td.content > i { display: block; padding: 12px 14px; margin: 4px 0 10px; border-radius: 8px; background: var(--bvm-soft); font-size: 15px !important; }
+
+/* ---------- 14. Product page ---------- */
 table.productFrame, table.productFrame > tbody, table.productFrame > tbody > tr, td.productFrame,
-table.ProdMain, table.ProdMain > tbody, table.ProdMain > tbody > tr, table.ProdMain > tbody > tr > td { display: block !important; width: auto !important; }
+table.ProdMain, table.ProdMain > tbody, table.ProdMain > tbody > tr, table.ProdMain > tbody > tr > td { display: block !important; width: auto !important; padding: 0 !important; }
 table.ProdMain > tbody > tr > td img[src$="px.gif"] { display: none !important; }
-table.ProdDescTable { width: 100% !important; }
-td.DescField { white-space: normal !important; width: 42%; font-size: 14px !important; }
-td.DescValue { font-size: 15px !important; overflow-wrap: anywhere; }
 div.title_prod { display: block !important; padding: 10px 14px !important; }
-a.H1prod { font-size: 19px !important; line-height: 1.3 !important; }
+a.H1prod { display: block !important; min-height: 44px; padding: 6px 0; box-sizing: border-box; font-size: 20px !important; line-height: 1.3 !important; }
+/* photo: big, sharp (mobile.js swaps the 200 px thumbnail for the photo itself), tap opens their gallery */
+td.bvm-pd-photo { text-align: center !important; padding: 6px 0 0 !important; font-size: 14px !important; color: var(--bvm-muted); }
+td.bvm-pd-photo > a[rel^="prettyPhoto"]:first-of-type, td.bvm-pd-photo > a:first-of-type { display: block; }
+td.bvm-pd-photo > a img:not([src$="px.gif"]):not([src*="zoom"]) {
+  display: block; width: 100% !important; height: auto !important; max-height: 360px; aspect-ratio: auto; object-fit: contain; margin: 0 auto; border-radius: 8px; background: #fff;
+}
+td.bvm-pd-photo img[src*="zoom.gif"] { display: none !important; }
+td.bvm-pd-photo table, td.bvm-pd-photo tbody, td.bvm-pd-photo tr, td.bvm-pd-photo td { display: block !important; width: auto !important; }
+td.bvm-pd-photo div.salidzinat { display: flex !important; align-items: center; justify-content: center; gap: 4px; padding: 6px 0 0 !important; }
+input.cmpCheckb { accent-color: var(--bvm-green); }
+td.bvm-pd-photo input.cmpCheckb { width: 22px; height: 22px; margin: 0 !important; }
+input.salidzinat { min-height: 40px; }
+.bvm-pcount { display: block; margin: 4px 0 0; font-size: 13px; color: var(--bvm-muted); }
+/* the right part: price and buying first, then parameters, then the other models */
+table.ProdMain > tbody > tr > td.bvm-pd-info { display: flex !important; flex-direction: column; gap: 4px; }
+td.bvm-pd-info > * { order: 5; width: auto !important; max-width: 100%; }
+td.bvm-pd-info > .bvm-pd-badge { order: 1; }
+td.bvm-pd-info > .bvm-pd-price { order: 2; }
+td.bvm-pd-info > .bvm-pd-timer { order: 3; }
+td.bvm-pd-info > .bvm-pd-buy { order: 4; }
+td.bvm-pd-info > .bvm-pd-params { order: 6; }
+td.bvm-pd-info > .bvm-pd-mtitle { order: 7; }
+td.bvm-pd-info > .bvm-pd-models { order: 8; }
+.bvm-pd-badge, .bvm-pd-badge > tbody, .bvm-pd-badge > tbody > tr { display: block !important; }
+.bvm-pd-badge > tbody > tr { display: flex !important; align-items: center; gap: 8px; margin-top: 6px; }
+.bvm-pd-badge td { display: block !important; padding: 0 !important; width: auto !important; }
+.bvm-pd-badge span { display: inline-block; padding: 4px 8px !important; border-radius: 4px; font-size: 14px !important; line-height: 1.3 !important; }
+.bvm-pd-badge img { width: 40px !important; height: auto !important; }
+.bvm-pd-price, .bvm-pd-price > tbody { display: block !important; }
+.bvm-pd-price > tbody > tr:first-child { display: flex !important; align-items: baseline; gap: 10px; padding-top: 8px; }
+.bvm-pd-price > tbody > tr:not(:first-child) { display: none !important; }
+.bvm-pd-price > tbody > tr:not(:first-child):has(td:not(:empty)) { display: block !important; }
+.bvm-pd-price td { display: block !important; padding: 0 !important; }
+.bvm-pd-price td.DescField { font-size: 15px !important; color: var(--bvm-muted); }
+.bvm-pd-price td.DescField:empty { display: none !important; }
+.bvm-pd-price a { display: inline-flex !important; align-items: center; min-height: 40px; min-width: 40px; font-size: 14px !important; }
+table.productFrame, td.productFrame, table.ProdLongDesc, td.ProdLongDesc, table.ProdMain, table.ProdMain td { height: auto !important; }
+td.ProductPrice div.ProductPrice, div.ProductPrice { font: bold 30px/1.1 Arial, Helvetica, sans-serif !important; color: var(--bvm-orange) !important; }
+.bvm-pd-timer, .bvm-pd-timer > tbody { display: block !important; width: auto !important; }
+.bvm-pd-timer > tbody > tr { display: flex !important; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+.bvm-pd-timer td { display: block !important; padding: 0 !important; white-space: normal !important; font-size: 14px !important; }
+.bvm-pd-timer td span { font-size: 15px !important; }
+/* buy box: model line, - qty +, pirkt */
+.bvm-pd-buy, .bvm-pd-buy > tbody, .bvm-pd-buy > tbody > tr, .bvm-pd-buy > tbody > tr > td { display: block !important; width: auto !important; padding: 0 !important; }
+.bvm-pd-buy form { margin: 8px 0 4px !important; padding: 12px; border: 1px solid #d9d9d9; border-radius: 10px; background: #fafafa; }
 table.ProdBuy, table.ProdBuy > tbody { display: block !important; width: auto !important; }
 table.ProdBuy > tbody > tr { display: flex !important; flex-wrap: wrap; align-items: center; gap: 8px; }
-input.AmountButton { width: 44px !important; height: 44px !important; }
-input.AmountText { width: 64px !important; height: 44px !important; text-align: center; }
-input.BuyButton { min-width: 96px; height: 44px !important; }
-/* info pages (Kontakti, Klientiem, cart, login): layout tables stack, data tables scroll inside their own box */
-td.info_center table, td.info_center tbody, td.info_center tr, td.info_center td { display: block !important; width: auto !important; max-width: 100%; }
-td.info_center table.ShBag, td.info_center table.Orders { display: block !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-td.info_center table.ShBag *, td.info_center table.Orders * { display: revert !important; }
-td.info_center table.ShBag tbody, td.info_center table.Orders tbody { display: table-row-group !important; }
-td.info_center p, td.info_center li, td.info_center td { font-size: 15px !important; line-height: 1.5 !important; }
+table.ProdBuy > tbody > tr > td { display: block !important; padding: 0 !important; }
+table.ProdBuy > tbody > tr > td:first-child { flex: 1 0 100%; }
+table.ProdBuy > tbody > tr > td:first-child:empty { display: none !important; }
+table.ProdBuy td.ProdBuyTDs table, table.ProdBuy td.ProdBuyTDs tbody { display: block !important; width: auto !important; }
+table.ProdBuy td.ProdBuyTDs table tr { display: flex !important; align-items: center; gap: 8px; }
+table.ProdBuy td.ProdBuyTDs th, table.ProdBuy td.ProdBuyTDs table td { display: block !important; width: auto !important; padding: 4px 8px !important; font-size: 14px !important; white-space: nowrap; }
+table.ProdBuy td.ProdBuyTDs table td { white-space: normal; }
+table.ProdBuy td.ProdBuyTDs:nth-child(2) { display: flex !important; align-items: center; gap: 6px; }
+table.ProdBuy > tbody > tr > td:last-child { flex: 1 1 auto; }
+input.AmountButton { width: 44px !important; height: 46px !important; margin: 0 !important; padding: 0 !important; border-radius: 8px !important; font: bold 22px/1 Arial, sans-serif !important; }
+input.AmountText { width: 64px !important; height: 46px !important; margin: 0 !important; padding: 0 4px !important; box-sizing: border-box; text-align: center;
+  border: 1px solid #b4b4b4 !important; border-radius: 8px !important; font: bold 18px/1 Arial, sans-serif !important; }
+input.BuyButton { min-width: 96px; height: 48px !important; border-radius: 8px !important; font: bold 18px/1 Arial, Helvetica, sans-serif !important; }
+table.ProdBuy input.BuyButton { width: 100% !important; }
+/* parameters: readable label / value list */
+table.ProdDescTable, table.ProdDescTable > tbody { display: block !important; width: auto !important; }
+table.ProdDescTable { margin: 10px 0 0 !important; border-top: 2px solid var(--bvm-green); }
+table.ProdDescTable > tbody > tr { display: grid !important; grid-template-columns: minmax(0, 40%) minmax(0, 1fr); gap: 10px; padding: 8px 4px !important; border-bottom: 1px solid var(--bvm-line); }
+td.DescField, td.DescValue { display: block !important; width: auto !important; padding: 0 !important; white-space: normal !important; }
+td.DescField { font-size: 14px !important; line-height: 1.35 !important; color: var(--bvm-muted); }
+td.DescValue { font-size: 15px !important; line-height: 1.35 !important; overflow-wrap: anywhere; color: var(--bvm-ink); }
+/* "Citi preces modeļi": every model becomes a card (column names from the header, mobile.js) */
+.bvm-pd-mtitle { margin: 16px 0 6px !important; padding: 0 !important; font: bold 17px/1.3 Arial, Helvetica, sans-serif !important; color: var(--bvm-ink); }
+.bvm-pd-models, .bvm-pd-models > tbody { display: block !important; width: auto !important; }
+.bvm-pd-models > tbody > tr:first-child { display: none !important; }
+.bvm-pd-models > tbody > tr { height: auto !important; display: grid !important; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; align-items: center;
+  margin: 0 0 10px; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 10px; background: #fff !important; }
+.bvm-pd-models > tbody > tr > td { display: block !important; padding: 0 !important; font-size: 15px !important; line-height: 1.3 !important; }
+.bvm-pd-models > tbody > tr > td[data-label]::before { content: attr(data-label) ": "; color: var(--bvm-muted); font-size: 13px; }
+.bvm-pd-models > tbody > tr > td.bvm-m-empty { display: none !important; }
+.bvm-pd-models > tbody > tr > td.bvm-m-name { grid-column: 1 / -1; font-weight: bold; font-size: 16px !important; }
+.bvm-pd-models > tbody > tr > td.bvm-m-name img { display: none !important; }
+.bvm-pd-models > tbody > tr > td.tab_pp { grid-column: 1; font: bold 20px/1.1 Arial, Helvetica, sans-serif !important; color: var(--bvm-orange); }
+.bvm-pd-models > tbody > tr > td.tab_pp small { font-size: 15px !important; }
+.bvm-pd-models > tbody > tr > td.bvm-m-buy { grid-column: 1 / -1; }
+.bvm-pd-models td.bvm-m-buy form { display: flex !important; align-items: center; gap: 8px; }
+.bvm-pd-models td.bvm-m-buy input.AmountText { flex: 0 0 76px; width: 76px !important; }
+.bvm-pd-models td.bvm-m-buy input.BuyButton { flex: 1 1 auto; }
+/* tabs: Attēli / Vairāk informācijas / Jautājumi */
+form[name="descButtonsForm"] { margin: 18px 0 0 !important; padding: 0 !important; }
+form[name="descButtonsForm"] table, form[name="descButtonsForm"] tbody { display: block !important; width: auto !important; }
+form[name="descButtonsForm"] tr { display: flex !important; gap: 6px; overflow-x: auto; }
+form[name="descButtonsForm"] td { display: block !important; padding: 0 !important; flex: 0 0 auto; }
+form[name="descButtonsForm"] td[width="2"], form[name="descButtonsForm"] td[width="100%"] { display: none !important; }
+div[id^="descBtn_"] { display: flex !important; align-items: center; gap: 4px; min-height: 44px; padding: 0 14px !important; box-sizing: border-box; border-radius: 8px 8px 0 0;
+  font: bold 15px/1.2 Arial, Helvetica, sans-serif !important; white-space: nowrap; cursor: pointer; }
+div[id^="LongDesc_"] { max-width: 100%; }
+td.ProdLongDesc { display: flow-root !important; padding: 12px 2px !important; overflow-wrap: anywhere; }
+td.ProdLongDesc [style*="float"] { float: none !important; }
+td.ProdLongDesc [style*="width"]:not(img) { width: auto !important; max-width: 100% !important; }
+td.ProdLongDesc div[class*="feature"] { display: block !important; padding: 6px 0 !important; border-bottom: 1px solid var(--bvm-line); }
+td.ProdLongDesc span[class*="feature__label"] { display: block !important; width: auto !important; color: var(--bvm-muted); font-size: 14px !important; }
+td.ProdLongDesc ul[class*="feature"] { margin: 0 !important; padding: 0 !important; list-style: none; }
+table.ProdLongDesc, table.ProdLongDesc > tbody, table.ProdLongDesc > tbody > tr { display: block !important; width: auto !important; }
+td.ProdLongDesc, td.ProdLongDesc p, td.ProdLongDesc li, td.ProdLongDesc span, td.ProdLongDesc td { font-size: 15px !important; line-height: 1.5 !important; }
+td.ProdLongDesc table { max-width: 100% !important; width: 100% !important; }
+#LongDesc_atteli td.ProdLongDesc { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+#LongDesc_atteli td.ProdLongDesc > a { display: block; }
+#LongDesc_atteli td.ProdLongDesc img { display: block; width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; object-fit: contain; border: 1px solid var(--bvm-line); border-radius: 6px; }
+a.prodnavy { display: inline-flex !important; align-items: center; min-height: 48px; padding: 0 14px; border: 1px solid #c9c9c9; border-radius: 8px; font-size: 15px !important; }
+/* "« Pie preču saraksta" links and the notes under the product */
+td.content_prods > div > table[width="100%"]:not([class]) a[onclick] { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px !important; }
+td.content_prods > div > table[width="100%"]:not([class]) > tbody > tr { display: flex !important; justify-content: space-between; }
+td.content_prods > div > table[width="100%"]:not([class]) > tbody > tr > td { display: block !important; padding: 0 !important; }
+td.content_prods > div > table[width="100%"]:not([class]) > tbody > tr > td[width="100%"] { display: none !important; }
+td.content_prods table, td.content_prods tbody { max-width: 100%; }
+td.content_prods td[style*="padding:20px"], td.content_prods td[style*="padding: 20px"] { padding: 12px 0 !important; }
+td.content_prods td[style*="padding:20px"] li, td.content_prods td[style*="padding: 20px"] li, td.content_prods td[style*="padding:20px"] p { font-size: 14px !important; line-height: 1.5 !important; }
+td.content_prods td[style*="padding:20px"] p[style*="margin-left"] { margin-left: 0 !important; }
+td.content_prods td[style*="padding:20px"] table[width="200"] a { display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
+/* sticky "price + Pirkt" bar, shown once the buy box has scrolled away (mobile.js) */
+html.bvm-ready .bvm-buybar {
+  display: flex; align-items: center; gap: 12px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 1500;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)); background: #fff; box-shadow: 0 -4px 16px rgba(0, 0, 0, .16);
+  transform: translateY(110%); transition: transform .2s ease; font-family: Arial, Helvetica, sans-serif;
+}
+html.bvm-buybar-on .bvm-buybar { transform: none; }
+html.bvm-lock .bvm-buybar { transform: translateY(110%); }
+.bvm-buybar .bvm-bb-sum { flex: 1 1 auto; min-width: 0; }
+.bvm-buybar .bvm-bb-l { display: block; font-size: 13px; color: var(--bvm-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bvm-buybar .bvm-bb-v { display: block; font: bold 22px/1.15 Arial, Helvetica, sans-serif; color: var(--bvm-orange); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bvm-buybar button, .bvm-buybar a.bvm-bb-go {
+  flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; min-width: 150px; height: 50px; padding: 0 18px; box-sizing: border-box;
+  border: 0; border-radius: 8px; background: var(--bvm-green); color: #fff !important; font: bold 17px/1.1 Arial, Helvetica, sans-serif !important; text-decoration: none !important; cursor: pointer;
+}
+.bvm-buybar button:focus-visible { outline: 3px solid #1b1b1b; outline-offset: 2px; }
+html.bvm-buybar-on body { padding-bottom: 76px !important; }
+
+/* ---------- 15. Compare window (compare.php, opens in its own tab on phones) ---------- */
+body.compare { margin: 0 !important; padding: 12px !important; }
+body.compare form > div:first-of-type { margin: 0 0 10px !important; font: bold 20px/1.3 Arial, Helvetica, sans-serif !important; }
+body.compare form > table { display: block !important; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-right: 1px solid gainsboro !important; border-radius: 8px; }
+body.compare form > table td { min-width: 140px; max-width: 160px; font-size: 14px !important; line-height: 1.35 !important; vertical-align: top; }
+body.compare form > table td:first-child { position: -webkit-sticky; position: sticky; left: 0; z-index: 2; min-width: 96px; max-width: 110px; background: #f6f6f6 !important;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, .08); font-weight: bold; overflow-wrap: anywhere; }
+body.compare form > table img { width: 100% !important; height: auto !important; }
+body.compare a { display: inline-flex !important; align-items: center; justify-content: center; min-height: 40px; min-width: 44px; font-size: 14px !important; }
+body.compare .bvm-cmp-hint { display: block; margin: 0 0 8px; font: normal 13px/1.3 Arial, sans-serif; color: #666; }
+
+/* ---------- 15b. "Uzdot jautājumu" window (questions.php, opens in its own tab on phones) ---------- */
+body.questions_form { margin: 0 !important; padding: 8px 14px 24px !important; background: #fff; }
+body.questions_form > br:first-child { display: none; }
+body.questions_form center { display: block; text-align: left; }
+table.questions_form, table.questions_form > tbody, table.questions_form > tbody > tr { display: block !important; width: auto !important; }
+table.questions_form td { display: block !important; width: auto !important; padding: 0 !important; text-align: left !important; white-space: normal !important; }
+td.questions_form, td.contacts_form { padding: 12px 0 4px !important; font: bold 15px/1.3 Arial, Helvetica, sans-serif !important; color: var(--bvm-ink); }
+table.questions_form span[style*="grey"] { display: block; margin: 2px 0 0; font: italic 13px/1.3 Arial, sans-serif !important; }
+body.questions_form input[type="text" i], body.questions_form textarea {
+  display: block; width: 100% !important; height: 46px; box-sizing: border-box; padding: 0 12px !important; border: 1px solid #b4b4b4 !important; border-radius: 8px !important;
+  font: normal 16px/1.3 Arial, Helvetica, sans-serif !important; color: var(--bvm-ink);
+}
+body.questions_form textarea { height: auto; min-height: 160px; padding: 10px 12px !important; }
+body.questions_form input:focus, body.questions_form textarea:focus { outline: none; border-color: var(--bvm-green) !important; box-shadow: 0 0 0 3px rgba(0, 139, 77, .25); }
+body.questions_form input[type="submit" i], body.questions_form input[type="button" i] {
+  width: 100% !important; min-height: 50px; margin: 14px 0 0; border: 0; border-radius: 8px; background: var(--bvm-green) !important; color: #fff !important;
+  font: bold 17px/1.2 Arial, Helvetica, sans-serif !important; cursor: pointer;
+}
+body.questions_form a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* ---------- 16. Cart (Pirkumu grozs) and order form (Pasūtījuma formēšana) ---------- */
+.bvm-steps { display: flex; gap: 4px; margin: 4px 0 12px; padding: 0; list-style: none; counter-reset: bvmstep; }
+html.bvm-ready .bvm-steps { display: flex; }
+.bvm-steps li { flex: 1 1 0; min-width: 0; counter-increment: bvmstep; }
+.bvm-steps a, .bvm-steps span {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 52px; padding: 4px 2px; box-sizing: border-box;
+  border-bottom: 3px solid #d6d6d6; color: #777 !important; text-decoration: none !important; text-align: center; font: normal 12.5px/1.2 Arial, Helvetica, sans-serif !important;
+}
+.bvm-steps a::before, .bvm-steps span::before { content: counter(bvmstep); display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #d6d6d6; color: #fff; font: bold 13px/1 Arial, sans-serif; }
+.bvm-steps .bvm-done a, .bvm-steps .bvm-done span { border-bottom-color: var(--bvm-green); color: var(--bvm-green-d) !important; }
+.bvm-steps .bvm-done a::before, .bvm-steps .bvm-done span::before { content: "\2713"; background: var(--bvm-green); }
+.bvm-steps .bvm-now a, .bvm-steps .bvm-now span { border-bottom-color: var(--bvm-orange); color: #1b1b1b !important; font-weight: bold !important; }
+.bvm-steps .bvm-now a::before, .bvm-steps .bvm-now span::before { background: var(--bvm-orange); color: #1b1b1b; }
+/* cart lines become cards */
+td.info_center table.sysWindow, td.info_center table.sysWindow > tbody, td.info_center table.sysWindow > tbody > tr, td.info_center td.sysWindow { display: block !important; width: auto !important; padding: 0 !important; }
+html.bvm-ready table.ShBag.bvm-cards, html.bvm-ready table.ShBag.bvm-cards > tbody { display: block !important; width: auto !important; }
+html.bvm-ready table.ShBag.bvm-cards > tbody > tr { display: block !important; }
+html.bvm-ready table.ShBag.bvm-cards > tbody > tr.ShBag:first-child { display: none !important; }
+html.bvm-ready table.ShBag.bvm-cards > tbody > tr.bvm-line {
+  display: grid !important; grid-template-columns: 72px minmax(0, 1fr); gap: 4px 12px; margin: 0 0 10px; padding: 12px;
+  border: 1px solid #d9d9d9; border-radius: 10px; background: #fff !important;
+}
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td { display: block !important; padding: 0 !important; width: auto !important; text-align: left !important; font-size: 15px !important; line-height: 1.35 !important; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-nr { display: none !important; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-img { grid-column: 1; grid-row: 1 / span 3; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-img a { display: block; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-img img { width: 72px !important; height: auto !important; border-radius: 6px; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-name { grid-column: 2; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-name a.ShBag { display: block; min-height: 44px; margin: 0; padding: 3px 0; box-sizing: border-box; font: bold 15px/1.3 Arial, sans-serif !important; color: #111 !important; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-name span, html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-name div,
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-name b { font-size: 13px !important; line-height: 1.4 !important; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-val { grid-column: 2; display: flex !important; justify-content: space-between; align-items: center; gap: 8px; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-val::before { content: attr(data-label); color: var(--bvm-muted); font-size: 13px; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-sum { font-weight: bold; font-size: 17px !important; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-qty input { width: 76px !important; height: 46px !important; margin: 0 !important; font-size: 18px !important; font-weight: bold; text-align: center; border-radius: 8px; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-del { grid-column: 1 / -1; display: flex !important; justify-content: flex-end; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-del a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border: 1px solid #d0d0d0; border-radius: 8px; font-size: 14px !important; color: #a30000 !important; text-decoration: none !important; }
+html.bvm-ready table.ShBag.bvm-cards tr.bvm-line > td.bvm-c-del a::after { content: "Izņemt"; }
+html.bvm-ready table.ShBag.bvm-cards > tbody > tr:not(.bvm-line) { display: flex !important; justify-content: center; }
+html.bvm-ready table.ShBag.bvm-cards > tbody > tr:not(.bvm-line) > * { display: block !important; padding: 0 !important; }
+html.bvm-ready table.ShBag.bvm-cards > tbody > tr:not(.bvm-line) > *:empty { display: none !important; }
+html.bvm-ready table.ShBag.bvm-cards input[type="submit"] { width: 100% !important; min-width: 200px; background: #fff !important; color: var(--bvm-ink) !important; border: 1px solid #b4b4b4 !important; }
+/* totals */
+html.bvm-ready table.ShBag.bvm-totals, html.bvm-ready table.ShBag.bvm-totals > tbody { display: block !important; width: auto !important; }
+html.bvm-ready table.ShBag.bvm-totals > tbody > tr { display: flex !important; justify-content: space-between; align-items: baseline; padding: 6px 2px; border-bottom: 1px solid var(--bvm-line); }
+html.bvm-ready table.ShBag.bvm-totals > tbody > tr > td { display: block !important; width: auto !important; padding: 0 !important; font-size: 15px !important; }
+html.bvm-ready table.ShBag.bvm-totals > tbody > tr:last-child td { font-size: 18px !important; }
+html.bvm-ready table.ShBag.bvm-totals img { display: none !important; }
+td.sysWindow form + br + table, .bvm-cart-actions { width: 100% !important; }
+html.bvm-ready table.bvm-cart-actions, html.bvm-ready table.bvm-cart-actions > tbody { display: block !important; }
+html.bvm-ready table.bvm-cart-actions > tbody > tr { display: flex !important; flex-direction: column-reverse; gap: 10px; }
+html.bvm-ready table.bvm-cart-actions td { display: block !important; padding: 0 !important; text-align: center !important; }
+html.bvm-ready table.bvm-cart-actions input { width: 100% !important; }
+input.sbagButton { background: #fff !important; border: 1px solid #c9c9c9 !important; color: #444 !important; }
+/* order form */
+form[name="OrderForm"] td.FIELDVAL { padding: 0 0 6px !important; }
+form[name="OrderForm"] hr { margin: 10px 0 !important; }
+form[name="OrderForm"] .ui-slider { margin: 14px 10px !important; }
+form[name="OrderForm"] .ui-slider .ui-slider-handle { width: 28px; height: 28px; top: -.6em; }
+form[name="OrderForm"] input[name="meneshi"], form[name="OrderForm"] input[name="iemaksa"], form[name="OrderForm"] input[name="maksajums"], form[name="OrderForm"] input#cena { display: inline-block !important; width: 110px !important; }
+html.bvm-ready td.info_center form[name="OrderForm"] input[type="submit" i] { min-height: 52px !important; font-size: 18px !important; }
+html.bvm-ready td.info_center form[name="OrderForm"] input[type="button" i][value*="groza"] { background: #fff !important; color: var(--bvm-ink) !important; border: 1px solid #b4b4b4 !important; width: 100% !important; }
+td.info_center a[href*="atteikuma"], td.info_center a[href^="mailto:"] { display: inline-flex; align-items: center; min-height: 40px; padding: 0 !important; }
+/* order form: "bez reģistrēšanās" / "Login / Reģistrēties" become two full-width choices, the current one marked */
+html.bvm-ready table.bvm-regchoice, html.bvm-ready table.bvm-regchoice > tbody { display: block !important; width: auto !important; }
+html.bvm-ready table.bvm-regchoice > tbody > tr { display: flex !important; flex-direction: column; gap: 8px; margin: 4px 0 14px; }
+html.bvm-ready table.bvm-regchoice > tbody > tr > td { display: block !important; width: auto !important; padding: 0 !important; text-align: left !important; }
+table.bvm-regchoice li { display: block; list-style: none; margin: 0; padding: 0; }
+html.bvm-ready table.bvm-regchoice td a:empty { display: none !important; }
+html.bvm-ready table.bvm-regchoice td.bvm-rc-now li, html.bvm-ready table.bvm-regchoice td.bvm-rc-alt li a {
+  position: relative; display: block !important; width: auto !important; min-height: 48px; margin: 0 !important; padding: 13px 36px 13px 44px !important; box-sizing: border-box;
+  border: 1px solid #c6c6c6; border-radius: 10px; background: #fff; color: var(--bvm-ink) !important; text-decoration: none !important;
+  font: normal 16px/1.3 Arial, Helvetica, sans-serif !important;
+}
+td.bvm-rc-now li b, td.bvm-rc-alt li a b { font-weight: bold; margin-left: .3em; }
+td.bvm-rc-now li { border-color: var(--bvm-green); background: #e7f4ec; box-shadow: inset 0 0 0 1px var(--bvm-green); font-weight: bold !important; }
+td.bvm-rc-now li::before, td.bvm-rc-alt li a::before {
+  content: ""; position: absolute; left: 13px; top: 50%; width: 20px; height: 20px; margin-top: -12px; border: 2px solid #8a8a8a; border-radius: 50%; background: #fff;
+}
+td.bvm-rc-now li::before { border-color: var(--bvm-green); background: radial-gradient(circle, var(--bvm-green) 0 45%, #fff 50%); }
+td.bvm-rc-alt li a::after { content: ""; position: absolute; right: 16px; top: 50%; width: 8px; height: 8px; margin-top: -5px; border-right: 2.5px solid #777; border-top: 2.5px solid #777; transform: rotate(45deg); }
+.bvm-blank { display: none !important; }
+
+/* account pages: login first, then registration */
+html.bvm-ready table.bvm-acc > tbody > tr { display: flex !important; flex-direction: column; }
+html.bvm-ready table.bvm-acc > tbody > tr > td { display: block !important; width: auto !important; border: 0 !important; padding: 0 0 18px !important; }
+html.bvm-ready table.bvm-acc > tbody > tr > td.bvm-acc-login { order: -1; border-bottom: 1px solid var(--bvm-line) !important; margin-bottom: 14px; }
+html.bvm-ready table.bvm-acc > tbody > tr > td > b:first-child { display: block; margin: 4px 0 8px; font: bold 18px/1.3 Arial, Helvetica, sans-serif !important; }
+td.info_center a[href*="sw=nurf"], td.info_center a[href*="sw=fpas"], td.info_center a[href*="sw=reglog"], td.info_center a[href*="mui=reglog"] {
+  display: inline-flex !important; align-items: center; min-height: 44px; margin-right: 14px; font-size: 15px !important;
+}
+
+.g-recaptcha { margin: 8px 0; max-width: 100%; overflow: hidden; }
+/* Kontakti and other CMS pages: their icon links get a full tap box */
+td.content_info td > a:has(> img), td.content_info p > a:has(> img) { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
 
 /* ---------- 11. Very narrow phones (320–359 px): two values per row ---------- */
 @media (max-width: 359px) {
@@ -1105,6 +1653,7 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
   #bvm-bar .bvm-cart { font-size: 14px !important; padding: 0 4px; }
   #bvm-bar .bvm-r3 > button { gap: 6px; padding: 0 6px; font-size: 15px !important; }
   table.prodBoxTab tr.bvm-prow > td.bvm-c-param { grid-column: span 6; }
+  table.prodBoxRin > tbody > tr { grid-template-columns: 30% minmax(0, 1fr); column-gap: 10px; }
   table.prodBoxTab tr.bvm-prow > td.bvm-c-price { font-size: 20px !important; }
   table.prodBoxTab tr.bvm-prow input.tab_buy { width: 64px !important; }
   input.tab_buybtn { font-size: 16px !important; }
@@ -1112,7 +1661,7 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #bvm-bar, html.bvm-ready .bvm-drawer, html.bvm-ready .bvm-fpanel, #bvm-backdrop, .bvm-fpanel .bvm-acc-i { transition: none !important; }
+  #bvm-bar, html.bvm-ready .bvm-drawer, html.bvm-ready .bvm-fpanel, #bvm-backdrop, .bvm-fpanel .bvm-acc-i, html.bvm-ready .bvm-buybar { transition: none !important; }
   html.bvm-search-open #bvm-bar .bvm-r2 { animation: none !important; }
 }
 
@@ -1120,8 +1669,8 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
 
 </style><script id="bvm-mobile-js">
 /*!
- * BUVVide.lv: phone layer v1 (mobile.js). Pairs with mobile.css. No libraries.
- * Put it in <head> right after the viewport meta, without "defer".
+ * BUVVide.lv: phone layer v3 (mobile.js). Pairs with mobile.css. No libraries.
+ * Put it in <head> without "defer". No viewport tag needed in the template: on phones this file adds it.
  * It never changes the shop's own functions: filters, AJAX list, cart and search work as before.
  * On desktop and tablets it only adds hidden helper elements, nothing visible.
  */
@@ -1130,12 +1679,22 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
   var html = d.documentElement;
   var MQ = '(max-width: 767px), (max-width: 1023px) and (max-height: 480px) and (pointer: coarse)';
 
-  // Tablets keep today's zoomed-out page: classic 980px layout viewport instead of device width.
+  // v3: the viewport tag is added here, on phones only. Tablets and computers get no tag at all, so every
+  // browser lays the page out exactly as today (Chrome: max(980, screen width); a fixed 980 zoomed big tablets).
+  // If a viewport tag is already in the template (the old 3-line snippet), tablets get the v2 fallback width=980.
+  var PHONE = true;
+  try { PHONE = Math.min(screen.width, screen.height) < 768; } catch (e) { /* keep phone */ }
   try {
-    if (Math.min(screen.width, screen.height) >= 768) {
-      var vp = d.querySelector('meta[name="viewport"]');
-      if (vp) vp.setAttribute('content', 'width=980');
-    }
+    var vp = d.querySelector('meta[name="viewport"]');
+    if (PHONE) {
+      if (!vp) {
+        vp = d.createElement('meta');
+        vp.setAttribute('name', 'viewport');
+        vp.setAttribute('content', 'width=device-width, initial-scale=1');
+        vp.setAttribute('data-bvm', '1');
+        (d.head || html).appendChild(vp);
+      }
+    } else if (vp) vp.setAttribute('content', 'width=980');
   } catch (e) { /* ignore */ }
 
   // ?bvm=off shows the old phone view for this browser session (?bvm=on brings the new one back)
@@ -1509,6 +2068,332 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
     }).observe(prodsDiv, { childList: true });
   }
 
+  /* ---------- v3: every other page type ---------- */
+  function pageType() {
+    var t = 'info';
+    if (d.body.classList.contains('compare')) t = 'compare';
+    else if (d.body.classList.contains('questions_form')) t = 'questions';
+    else if (d.querySelector('table.ProdMain')) t = 'product';
+    else if (d.querySelector('#productsDIV table.prodBoxTab, #productsDIV table.prodBoxTil, #productsDIV table.prodBoxRez, #productsDIV table.prodBoxRin')) t = 'list';
+    else if (d.forms.OrderForm) t = 'order';
+    else if (d.forms.SBForm || /[?&]sw=vbag/.test(w.location.search) || d.querySelector('a.H1[href*="mu=10"]')) t = 'cart';
+    else if (d.forms.NewUserForm || d.forms.LoginForm2 || d.querySelector('table.swUserDatas, input[name="pswd_email"]')) t = 'account';
+    else if (d.querySelector('a.H1[href*="Search="]')) t = 'search';
+    else if (d.querySelector('table.SubCats')) t = 'subcats';
+    else if (d.getElementById('jbanrek') && d.querySelector('td.content_home')) t = 'home';
+    html.classList.add('bvm-p-' + t);
+    return t;
+  }
+
+  // tables wider than the phone become one column; tables that fit keep their own layout (icons + captions, hours)
+  var SKIP = /\b(ListTable|SpecPied|prodBoxSpec|SubCats|cat_home|BrandsTable|mctm|ShBag|title|sysWindow|pr_top|prodBox\w*|Desc\w*|ProdMain|productFrame|ProdBuy|showSelectors|ratings|footer|cjst|tray|title_prods?|Trademark|ProdsTable_\w+|paramsTable|bvm-\w+)\b/;
+  function fitTables() {
+    if (!isMobile()) return;
+    each(d.querySelectorAll('td.info_center table, td.content_home td.content table, td.ProdLongDesc table, td.content_prods td[style*="padding"] table'), function (t) {
+      if (SKIP.test(t.className || '') || closest(t.parentNode, 'table.ShBag, table.ListTable, table.cat_home, table.mctm, table.pr_top, table.BrandsTable, table.ProdMain')) return;
+      if (t.classList.contains('bvm-stack')) return;
+      var inForm = !!closest(t, 'form') || !!t.querySelector('input:not([type="hidden" i]), select, textarea');
+      var box = t.parentNode, avail = box ? box.clientWidth : w.innerWidth;
+      if (inForm) t.classList.add('bvm-stack', 'bvm-ftable');
+      else if (t.offsetWidth && t.offsetWidth > Math.min(avail, w.innerWidth) + 1) t.classList.add('bvm-stack');
+      else if (t.offsetWidth) t.classList.add('bvm-fit');
+    });
+  }
+
+  // radio / check boxes: with an adjacent <label for> the label becomes the tap row (CSS); without one the native box stays
+  function tuneForms() {
+    each(d.querySelectorAll('td.info_center input[type="radio" i], td.info_center input[type="checkbox" i]'), function (i) {
+      var n = i.nextElementSibling;
+      var ok = n && n.tagName === 'LABEL' && i.id && n.getAttribute('for') === i.id;
+      if (!ok) i.classList.add('bvm-native');
+    });
+    // keyboards and autofill on phones; field types are not changed, so their checks stay as they are
+    var HINTS = {
+      'Email': ['email', 'email'], 'UEMAILTXT': ['email', 'email'], 'login': ['email', 'username'], 'pswd_email': ['email', 'email'],
+      'Parole1': [null, 'new-password'], 'Parole2': [null, 'new-password'], 'password': [null, 'current-password'],
+      'UNAMETXT': [null, 'given-name'], 'USNAMETXT': [null, 'family-name'], 'Kontaktpersona': [null, 'name'],
+      'uPhone': ['tel', 'tel'], 'Talrunis': ['tel', 'tel'],
+      'uPostIndex': [null, 'postal-code'], 'KURJERS_uPostIndex': [null, 'postal-code'], 'JurPostIndex': [null, 'postal-code'],
+      'uAddress': [null, 'street-address'], 'KURJERS_uAddress': [null, 'street-address'], 'JurAddress': [null, 'street-address'],
+      'KURJERS_uAddCity': [null, 'address-level2'], 'Fiz_RCIEMATSTXT': [null, 'address-level3'], 'Jur_RCIEMATSTXT': [null, 'address-level3'],
+      'JURNAMETXT': [null, 'organization'], 'JURADDRTXT': [null, 'street-address'],
+      'FLDarbaAlga': ['decimal', 'off'], 'FLMenSaistibas': ['decimal', 'off'], 'FLBerni': ['numeric', 'off'],
+      'meneshi': ['numeric', 'off'], 'iemaksa': ['decimal', 'off'], 'ba': ['numeric', 'off'],
+      'qnPerson': [null, 'name'], 'qnPhone': ['tel', 'tel'], 'qnEmail': ['email', 'email']
+    };
+    if (!isMobile()) return;   // computers and tablets keep today's behaviour
+    each(d.querySelectorAll('input[name]'), function (i) {
+      var t = (i.getAttribute('type') || 'text').toLowerCase();
+      if (t !== 'text' && t !== 'password' && t !== 'email' && t !== 'tel') return;
+      var h = HINTS[i.name];
+      if (!h && /^Amounts\[/.test(i.name)) h = ['numeric', 'off'];
+      if (!h) return;
+      if (h[0] && !i.hasAttribute('inputmode')) i.setAttribute('inputmode', h[0]);
+      if (h[1] && !i.hasAttribute('autocomplete')) i.setAttribute('autocomplete', h[1]);
+      if (h[0] === 'email') { i.setAttribute('autocapitalize', 'off'); i.setAttribute('spellcheck', 'false'); }
+    });
+  }
+
+  // a fixed bar at the bottom: label + value on the left, one button on the right that presses the shop's own button
+  var buybar = null;
+  function makeBar(label, value, btnText, target, watch) {
+    if (!target) return;
+    buybar = el('div', 'bvm-ui bvm-buybar', { role: 'region', 'aria-label': btnText });
+    var sum = el('div', 'bvm-bb-sum');
+    var l = el('span', 'bvm-bb-l'); l.appendChild(d.createTextNode(label));
+    var v = el('span', 'bvm-bb-v'); v.appendChild(d.createTextNode(value));
+    sum.appendChild(l); sum.appendChild(v);
+    var b = el('button', '', { type: 'button' }); b.appendChild(d.createTextNode(btnText));
+    b.addEventListener('click', function () { target.click(); });
+    buybar.appendChild(sum); buybar.appendChild(b);
+    d.body.appendChild(buybar);
+    buybar._v = v;
+    // show the bar only while the shop's own button is off screen
+    function upd() {
+      // not a phone, or their button is gone (e.g. the filters replaced the product with a list): no bar
+      if (!isMobile() || !html.contains(target)) { html.classList.remove('bvm-buybar-on'); return; }
+      var r = (watch || target).getBoundingClientRect();
+      var off = r.bottom < 60 || r.top > (w.innerHeight || 600) - 10 || (!r.width && !r.height);
+      html.classList.toggle('bvm-buybar-on', off);
+    }
+    w.addEventListener('scroll', upd, { passive: true });
+    w.addEventListener('resize', upd);
+    upd();
+    return buybar;
+  }
+
+  function product() {
+    var main = d.querySelector('table.ProdMain');
+    if (!main || !main.rows[0]) return;
+    var cells = main.rows[0].cells;
+    var photo = cells[0], info = cells[1];
+    if (photo) photo.classList.add('bvm-pd-photo');
+    if (info) {
+      info.classList.add('bvm-pd-info');
+      each(info.children, function (c) {
+        if (c.tagName === 'TABLE') {
+          if (c.classList.contains('ProdDescTable')) c.classList.add('bvm-pd-params');
+          else if (c.querySelector('td.ProductPrice, div.ProductPrice')) c.classList.add('bvm-pd-price');
+          else if (c.querySelector('table.ProdBuy')) c.classList.add('bvm-pd-buy');
+          else if (c.querySelector('th.tab') && c.querySelector('form')) c.classList.add('bvm-pd-models');
+          else if (/Akcijas cena|cena vēl/i.test(txt(c))) c.classList.add('bvm-pd-timer');
+          else if (!c.querySelector('form')) c.classList.add('bvm-pd-badge');
+        } else if (c.tagName === 'DIV' && /modeļi/i.test(txt(c))) c.classList.add('bvm-pd-mtitle');
+      });
+    }
+    // other models: column names on every cell
+    each(d.querySelectorAll('table.bvm-pd-models'), function (t) {
+      var labels = [];
+      each(t.rows, function (tr, ri) {
+        if (ri === 0) { each(tr.cells, function (c) { labels.push(txt(c)); }); return; }
+        each(tr.cells, function (c, ci) {
+          var lab = labels[ci] || '';
+          if (c.querySelector('form')) c.classList.add('bvm-m-buy');
+          else if (c.classList.contains('tab_pp')) { /* price, styled by class */ }
+          else if (/^Model/i.test(lab)) c.classList.add('bvm-m-name');
+          else if (!txt(c) || txt(c) === '-') c.classList.add('bvm-m-empty');
+          else if (lab) c.setAttribute('data-label', lab);
+        });
+      });
+    });
+    // sharp photo: the 200 px thumbnail is swapped for the photo the link opens (falls back if it fails)
+    if (photo && isMobile()) {
+      var a = photo.querySelector('a[href]');
+      var img = a ? a.querySelector('img:not([src$="px.gif"]):not([src*="zoom"])') : null;
+      var href = a ? a.getAttribute('href') : '';
+      if (img && /\.(jpe?g|png|webp|gif)$/i.test(href) && !img.getAttribute('data-bvm')) {
+        var src = img.getAttribute('src');
+        img.setAttribute('data-bvm', '1');
+        img.onerror = function () { img.onerror = null; img.setAttribute('src', src); };
+        img.removeAttribute('width'); img.removeAttribute('height');
+        img.setAttribute('src', href);
+      }
+    }
+    each(d.querySelectorAll('input.AmountText'), function (i) { i.setAttribute('inputmode', 'numeric'); });
+    // sticky price + Pirkt (presses their own "pirkt" of the main buy form)
+    var buyForm = d.querySelector('.bvm-pd-buy form');
+    var buyBtn = buyForm ? buyForm.querySelector('input.BuyButton, input[type="submit"]') : null;
+    var price = txt(d.querySelector('div.ProductPrice')).replace(/\s*(€|EUR)\s*$/, '');
+    if (buyBtn && price) makeBar(txt(d.querySelector('a.H1prod')) || 'Cena', price + ' €', 'Pirkt', buyBtn, buyForm);
+    // tabs: keep their own showDescButton(); tables shown later are checked again
+    var tabs = d.forms.descButtonsForm;
+    if (tabs) {
+      each(tabs.querySelectorAll('div[id^="descBtn_"]'), function (b) {
+        b.setAttribute('role', 'button'); b.setAttribute('tabindex', '0');
+        b.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); b.click(); } });
+      });
+      tabs.addEventListener('click', function () { setTimeout(fitTables, 0); });
+    }
+  }
+
+  function stepsBar(now) {
+    var names = ['Grozs', 'Kontakti un piegāde', 'Iesniegt'];
+    var ol = el('ol', 'bvm-ui bvm-steps', { 'aria-label': 'Pasūtījuma soļi' });
+    each(names, function (n, i) {
+      var li = el('li', i < now ? 'bvm-done' : (i === now ? 'bvm-now' : ''));
+      var s;
+      if (i === 0 && now > 0) s = el('a', '', { href: './?l=1&sw=vbag' });
+      else s = el('span');
+      if (i === now) s.setAttribute('aria-current', 'step');
+      s.appendChild(d.createTextNode(n));
+      li.appendChild(s); ol.appendChild(li);
+    });
+    return ol;
+  }
+
+  // cart lines (and the same list on the order form) become cards; the role of each cell comes from its column title
+  function cardify(t) {
+    t.classList.add('bvm-cards');
+    var roles = [];
+    each(t.rows, function (tr, ri) {
+      if (ri === 0) {
+        each(tr.cells, function (c, ci) {
+          var h = txt(c);
+          roles.push(/^Nr/i.test(h) ? 'nr' : /NOSAUK/i.test(h) ? 'name' : /^Daudz/i.test(h) ? 'qty' : /^Atlaide/i.test(h) ? 'disc'
+            : /^Cena/i.test(h) ? 'price' : /^Summa/i.test(h) ? 'sum' : /\.\.\./.test(h) ? 'del' : (ci === 1 ? 'img' : 'x'));
+        });
+        return;
+      }
+      if (tr.cells.length < 5) return;
+      tr.classList.add('bvm-line');
+      each(tr.cells, function (c, ci) {
+        var r = roles[ci] || 'x';
+        c.classList.add('bvm-c-' + r);
+        if (r === 'qty' || r === 'disc' || r === 'price' || r === 'sum') {
+          c.classList.add('bvm-c-val');
+          c.setAttribute('data-label', { qty: 'Daudzums', disc: 'Atlaide', price: 'Cena', sum: 'Summa' }[r]);
+        }
+        if (r === 'del') { var a = c.querySelector('a'); if (a) a.setAttribute('aria-label', 'Izņemt preci no groza'); }
+      });
+    });
+  }
+
+  // "Apmaksas summa: 559.74 EUR" under the list (falls back to the KOPĀ line)
+  function paySum(f) {
+    var out = '';
+    each(f.querySelectorAll('div, td'), function (n) {
+      if (out || !/^Apmaksas\s*summa/i.test(txt(n))) return;
+      var b = n.querySelector('b'); if (b && /\d/.test(txt(b))) out = txt(b);
+    });
+    if (!out) each(f.querySelectorAll('tr'), function (tr) { if (!out && /^KOPĀ/i.test(txt(tr))) { var b = tr.querySelectorAll('b'); if (b.length) out = txt(b[b.length - 1]); } });
+    return out.replace(/\s*EUR$/, ' €');
+  }
+
+  function cart() {
+    var f = d.forms.SBForm;
+    var t = f ? f.querySelector('table.ShBag') : null;
+    var title = d.querySelector('table.title');
+    if (title && title.parentNode && !d.querySelector('.bvm-steps')) title.parentNode.insertBefore(stepsBar(0), title.nextSibling);
+    if (!t) return;
+    cardify(t);
+    var tot = f.querySelectorAll('table.ShBag')[1];
+    if (tot) tot.classList.add('bvm-totals');
+    var go = d.querySelector('input[onclick*="sw=nwor"]');
+    var acts = go ? closest(go, 'table') : null;
+    if (acts) acts.classList.add('bvm-cart-actions');
+    var sum = paySum(f);
+    if (go) makeBar('Apmaksas summa', sum, 'Noformēt pasūtījumu', go);
+  }
+
+  function order() {
+    var f = d.forms.OrderForm;
+    if (!f) return;
+    var title = d.querySelector('table.title');
+    if (title && title.parentNode && !d.querySelector('.bvm-steps')) title.parentNode.insertBefore(stepsBar(1), title.nextSibling);
+    regChoice(f);
+    var items = f.querySelector('table.ShBag');
+    if (items) { items.classList.add('bvm-order-items'); cardify(items); }
+    var sub = f.querySelector('input[type="submit" i]');
+    var sum = paySum(f);
+    if (sub) makeBar('Apmaksas summa', sum, 'Iesniegt pasūtījumu', sub);
+  }
+
+  function account() {
+    each([d.forms.NewUserForm, d.forms.LoginForm2], function (f) {
+      if (!f) return;
+      var td = closest(f, 'td');
+      var t = td ? closest(td.parentNode, 'table') : null;
+      if (t) t.classList.add('bvm-acc');
+      if (td && f.name === 'LoginForm2') td.classList.add('bvm-acc-login');
+    });
+  }
+
+  function comparePage() {
+    var f = d.forms.Compare;
+    var t = f ? f.querySelector('table') : null;
+    if (!t || !isMobile()) return;
+    var cols = t.rows[0] ? t.rows[0].cells.length - 1 : 0;
+    if (cols > 1) {
+      var hint = el('p', 'bvm-ui bvm-cmp-hint');
+      hint.appendChild(d.createTextNode('Preces: ' + cols + '. Tabulu var pavilkt uz sāniem.'));
+      t.parentNode.insertBefore(hint, t);
+    }
+  }
+
+  // cookie notice: "Vairāk" shows the full text; while it is open the sticky bars move above it
+  function cookieNotice() {
+    var ck = d.getElementById('cookiesInfoBlock');
+    if (!ck) return;
+    var btns = ck.querySelector('.buttons'), p = ck.querySelector('.disclaimer p');
+    if (btns && p && !ck.querySelector('.bvm-ck-more')) {
+      if (!p.id) p.id = 'bvm-ck-text';
+      var more = el('button', 'bvm-ui bvm-ck-more', { type: 'button', 'aria-expanded': 'false', 'aria-controls': p.id });
+      more.appendChild(d.createTextNode('Vairāk'));
+      more.addEventListener('click', function () {
+        var open = !html.classList.contains('bvm-ck-open');
+        html.classList.toggle('bvm-ck-open', open);
+        more.setAttribute('aria-expanded', open ? 'true' : 'false');
+        more.textContent = open ? 'Mazāk' : 'Vairāk';
+        upd();
+      });
+      btns.insertBefore(more, btns.firstChild);
+    }
+    function upd() {
+      var on = isMobile() && getComputedStyle(ck).display !== 'none' && ck.offsetHeight > 0;
+      html.classList.toggle('bvm-ck-on', on);
+      if (on) html.style.setProperty('--bvm-ck', ck.offsetHeight + 'px');
+      else html.style.removeProperty('--bvm-ck');
+    }
+    if (w.MutationObserver) new MutationObserver(upd).observe(ck, { attributes: true, attributeFilter: ['style', 'class'] });
+    w.addEventListener('resize', upd);
+    w.addEventListener('load', upd);
+    upd();
+  }
+
+  // order form: the "without registration" / "Login / Reģistrēties" pair above the form
+  function regChoice(f) {
+    var t = f.previousElementSibling;
+    while (t && t.tagName !== 'TABLE') t = t.previousElementSibling;
+    if (!t || !t.querySelector('a[href*="sw=reglog"]') || !t.rows[0] || t.rows[0].cells.length !== 2) return;
+    t.classList.add('bvm-regchoice');
+    t.rows[0].cells[0].classList.add('bvm-rc-now');
+    t.rows[0].cells[1].classList.add('bvm-rc-alt');
+    var li = t.rows[0].cells[0].querySelector('li');
+    if (li) li.setAttribute('aria-current', 'true');
+    // the empty paragraphs and rule the template puts above it only make a gap on a phone
+    var n = t.previousElementSibling;
+    while (n && (n.tagName === 'P' || n.tagName === 'HR') && !txt(n) && !n.querySelector('img, a, input')) { n.classList.add('bvm-blank'); n = n.previousElementSibling; }
+  }
+
+  function initPages(type) {
+    try { cookieNotice(); } catch (err) { if (w.console) console.warn('mobile.js cookie', err); }
+    try {
+      tuneForms();
+      if (type === 'product') product();
+      else if (type === 'cart') cart();
+      else if (type === 'order') order();
+      else if (type === 'account') account();
+      fitTables();
+      var lastW = w.innerWidth;
+      w.addEventListener('resize', function () {
+        if (Math.abs(w.innerWidth - lastW) < 2) return;
+        lastW = w.innerWidth;
+        each(d.querySelectorAll('table.bvm-stack, table.bvm-fit'), function (t) { if (!closest(t, 'form')) t.classList.remove('bvm-stack', 'bvm-fit'); });
+        fitTables();
+      });
+    } catch (err) { if (w.console) console.warn('mobile.js pages', err); }
+  }
+
   /* ---------- open / close ---------- */
   function lock(on) { html.classList.toggle('bvm-lock', on); }
   // mode 'cats': categories only, scrolled to the current one; mode 'menu': top menu + categories
@@ -1620,13 +2505,20 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
   }
 
   function onMQ() {
-    if (!isMobile()) { closeMenu(true); closeFilters(false, true); closeSearch(true); html.classList.remove('bvm-bar-up'); }
-    else each(d.querySelectorAll('tr.bvm-prow'), sharpenImages);
+    if (!isMobile()) { closeMenu(true); closeFilters(false, true); closeSearch(true); html.classList.remove('bvm-bar-up', 'bvm-buybar-on'); }
+    else { each(d.querySelectorAll('tr.bvm-prow'), sharpenImages); fitTables(); }
     tameSelects();
   }
 
   function init() {
     if (!d.body || html.classList.contains('bvm-ready')) return;
+    var type = 'info';
+    try { type = pageType(); } catch (e) { /* keep 'info' */ }
+    if (type === 'compare' || type === 'questions') {
+      // the compare and "ask a question" windows have no shop header: only the page helpers
+      try { if (type === 'compare') comparePage(); else tuneForms(); html.classList.add('bvm-ready'); } catch (err) { if (w.console) console.warn('mobile.js', err); }
+      return;
+    }
     try {
       buildBar();
       buildDrawer();
@@ -1636,6 +2528,8 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
       bindGlobal();
       syncQty();
       html.classList.add('bvm-ready');
+      initPages(type);
+      w.addEventListener('load', fitTables);
       if (mql) { if (mql.addEventListener) mql.addEventListener('change', onMQ); else if (mql.addListener) mql.addListener(onMQ); }
       onMQ();
     } catch (err) {
@@ -1840,6 +2734,168 @@ td.info_center p, td.info_center li, td.info_center td { font-size: 15px !import
       if (t) t.scrollIntoView(); else window.scrollTo(0, 0);
     }
   });
+})();
+
+</script><script id="bvm-demo-safe">
+/* Saved copy only (not part of mobile.js / mobile.css). Nothing from this copy reaches buvvide.lv:
+   every form send and every AJAX call to the shop is stopped and a short note is shown; links to pages
+   that have a saved copy stay inside the copies, other shop links open buvvide.lv in a new tab. */
+(function () {
+  'use strict';
+  var ROOT = '';
+  var PAGES = {"sakums": "sakums/index.html", "katalogs": "katalogs/index.html", "kategorija": "kategorija/index.html", "saraksts": "index.html", "atteli": "atteli/index.html", "parametri": "parametri/index.html", "rindas": "rindas/index.html", "prece": "prece/index.html", "prece-2": "prece-2/index.html", "jautajums": "jautajums/index.html", "meklesana": "meklesana/index.html", "meklesana-nekas": "meklesana-nekas/index.html", "razotaji": "razotaji/index.html", "razotajs": "razotajs/index.html", "akcijas": "akcijas/index.html", "salidzinasana": "salidzinasana/index.html", "grozs-tukss": "grozs-tukss/index.html", "grozs": "grozs/index.html", "pasutijums": "pasutijums/index.html", "ieiet": "ieiet/index.html", "registracija": "registracija/index.html", "parole": "parole/index.html", "kontakti": "kontakti/index.html", "klientiem": "klientiem/index.html", "info": "info/index.html", "sikdatnes": "sikdatnes/index.html"};
+  var MSG = 'Šī ir apskates kopija: nekas netiek nosūtīts.';
+  var timer = null;
+  function toast() {
+    var t = document.getElementById('bvm-demo-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'bvm-demo-toast';
+      t.setAttribute('role', 'status');
+      t.setAttribute('aria-live', 'polite');
+      t.style.cssText = 'position:fixed;left:50%;top:116px;transform:translateX(-50%);z-index:2147483000;width:max-content;max-width:calc(100% - 32px);' +
+        'box-sizing:border-box;padding:12px 16px;border-radius:10px;background:#1d1d1d;color:#fff;font:15px/1.35 Arial,Helvetica,sans-serif;' +
+        'text-align:center;box-shadow:0 6px 24px rgba(0,0,0,.3);opacity:0;transition:opacity .2s;pointer-events:none';
+      (document.body || document.documentElement).appendChild(t);
+    }
+    t.textContent = MSG;
+    t.style.opacity = '1';
+    clearTimeout(timer);
+    timer = setTimeout(function () { t.style.opacity = '0'; }, 3000);
+  }
+  function isShop(u) { return /(^|\.)buvvide\.lv$/i.test(u.hostname || ''); }
+  function params(u) {
+    var q = {};
+    u.search.replace(/^\?/, '').split('&').forEach(function (kv) {
+      if (!kv) return;
+      var i = kv.indexOf('='), k = i < 0 ? kv : kv.slice(0, i), v = i < 0 ? '' : kv.slice(i + 1);
+      try { k = decodeURIComponent(k.replace(/\+/g, ' ')); v = decodeURIComponent(v.replace(/\+/g, ' ')); } catch (e) { /* keep raw */ }
+      q[k.trim()] = v.trim();
+    });
+    return q;
+  }
+  // which saved copy shows this shop address (null = none)
+  function slugFor(u) {
+    var path = u.pathname.toLowerCase(), q = params(u);
+    if (/compare\.php$/.test(path)) return 'salidzinasana';
+    if (/questions\.php$/.test(path)) return q.p === '26848' ? 'jautajums' : null;
+    if (path !== '/' && path !== '' && !/\/index\.php$/.test(path)) return null;
+    if (q.at) return null;
+    if (q.sw === 'vbag' || q.mu === '10' || q.mui === 'vbag') return 'grozs';
+    if (q.mui === 'nwor') return 'pasutijums';
+    if (q.sw === 'nwor') return 'pasutijums';
+    if (q.sw === 'reglog' || q.mui === 'reglog') return 'ieiet';
+    if (q.sw === 'nurf') return 'registracija';
+    if (q.sw === 'fpas') return 'parole';
+    if (q.sw) return null;
+    if ('Search' in q) { var s = q.Search.toLowerCase(); return s === 'jaucējkrāns' ? 'meklesana' : (s === 'qzxwvj' ? 'meklesana-nekas' : null); }
+    if (q.p && q.p !== '0') return q.p === '26848' ? 'prece' : (q.p === '30902' ? 'prece-2' : null);
+    if (q.c === '657') return ({ tiles: 'atteli', rezgis: 'parametri', rindas: 'rindas' })[q.ListT] || 'saraksts';
+    if (q.c === '208') return 'kategorija';
+    if (q.c && q.c !== '0') return null;
+    if (q.br && q.br !== '0') return q.br === '347' ? 'razotajs' : null;
+    if (q.mui === 'cookies') return 'sikdatnes';
+    if (q.mui === 'kontakti' || q.mu === '3') return 'kontakti';
+    if (q.mu) return ({ '129': 'razotaji', '130': 'katalogs', '137': 'akcijas', '71': 'klientiem', '174': 'info' })[q.mu] || null;
+    for (var k in q) if (k !== 'l' && q[k] !== '' && q[k] !== '0') return null;   // an address we do not know: no copy
+    return 'sakums';
+  }
+  function local(slug) { return new URL(ROOT + PAGES[slug], location.href).href; }
+  // shop addresses that DO something (add to cart: bp/rtC/ba, empty the cart: at=clear_sbag, ...) are never opened
+  function isAction(u) { var q = params(u); return !!(q.at || q.bp || q.rtC || q.ba || q.bpam || q.x || q.del_pid || q.action); }
+  function route(u) {
+    if (!isShop(u)) { window.open(u.href, '_blank', 'noopener'); return; }
+    if (isAction(u)) { toast(); return; }
+    var s = slugFor(u);
+    if (s && PAGES[s]) location.href = local(s);
+    else window.open(u.href, '_blank', 'noopener');
+  }
+  window.bvmGo = function (url) { try { route(new URL(url, document.baseURI)); } catch (e) { toast(); } return false; };
+
+  // forms: javascript: actions (their list filters) run as before; a GET form that lands on a saved copy goes there;
+  // product names in the lists (their loadProduct) behave like links; every other send is stopped with the note
+  function handle(f, submitter) {
+    var act = (f.getAttribute('action') || '').trim();
+    if (/^javascript:/i.test(act)) return 'pass';
+    var u;
+    try { u = new URL(act || './', document.baseURI); } catch (e) { toast(); return 'blocked'; }
+    if ((f.getAttribute('method') || 'get').toLowerCase() === 'get' && isShop(u)) {
+      var fd = new FormData(f);
+      if (submitter && submitter.name) fd.append(submitter.name, submitter.value || '');
+      var qs = [], real = 0;
+      fd.forEach(function (v, k) { if (typeof v === 'string') { qs.push(encodeURIComponent(k) + '=' + encodeURIComponent(v)); if (k !== 'l' && v !== '' && v !== '0') real++; } });
+      u.search = qs.join('&');
+      var s = real ? slugFor(u) : null;     // only a real query (search words, a brand) can open another saved page
+      if (s && PAGES[s] && !isAction(u)) { location.href = local(s); return 'routed'; }
+    }
+    if (f.getAttribute('name') === 'FilterForm' && /[?&]p=\d+/.test(act)) { route(u); return 'routed'; }
+    toast();
+    return 'blocked';
+  }
+  var nativeSubmit = HTMLFormElement.prototype.submit;
+  HTMLFormElement.prototype.submit = function () { if (handle(this) === 'pass') return nativeSubmit.call(this); };
+  document.addEventListener('submit', function (e) {
+    if (handle(e.target, e.submitter) !== 'pass') { e.preventDefault(); e.stopImmediatePropagation(); }
+  }, true);
+  // forms with required fields stop in the browser's own check before any send: show the same note there too
+  document.addEventListener('invalid', function () { toast(); }, true);
+  // in a saved page a few send buttons lost their form (the template opens <form> inside a table): same note
+  document.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest ? e.target.closest('input[type="submit" i], button[type="submit" i], input[type="image" i]') : null;
+    if (b && !b.form) { e.preventDefault(); toast(); }
+  }, true);
+
+  // AJAX to the shop (lists, compare, banners, cart): never sent; a note only when the visitor caused it
+  function active() { try { return !!(navigator.userActivation && navigator.userActivation.isActive); } catch (e) { return false; } }
+  function shopUrl(url) { try { var u = new URL(url, document.baseURI); return u.protocol !== 'file:' && isShop(u); } catch (e) { return false; } }
+  var xo = XMLHttpRequest.prototype.open, xs = XMLHttpRequest.prototype.send;
+  XMLHttpRequest.prototype.open = function (m, url) { this.__bvmShop = shopUrl(url); return xo.apply(this, arguments); };
+  XMLHttpRequest.prototype.send = function () { if (this.__bvmShop) { if (active()) toast(); return; } return xs.apply(this, arguments); };
+  if (window.fetch) {
+    var fo = window.fetch;
+    window.fetch = function (input) {
+      var url = typeof input === 'string' ? input : (input && input.url) || '';
+      if (shopUrl(url)) { if (active()) toast(); return new Promise(function () {}); }
+      return fo.apply(this, arguments);
+    };
+  }
+  var wo = window.open;
+  window.open = function (url) {
+    try {
+      var u = new URL(url, document.baseURI);
+      if (u.protocol !== 'file:' && isShop(u)) {
+        var s = slugFor(u);
+        if (s && PAGES[s]) { var a = Array.prototype.slice.call(arguments); a[0] = local(s); return wo.apply(window, a); }
+      }
+    } catch (e) { /* fall through */ }
+    return wo.apply(window, arguments);
+  };
+
+  // links
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a || a.closest('#cookiesInfoBlock a.ico')) return;
+    var h = (a.getAttribute('href') || '').trim();
+    if (!h || h.charAt(0) === '#' || /^(javascript|mailto|tel|sms):/i.test(h)) return;
+    if (/^prettyPhoto|^lightbox/i.test(a.getAttribute('rel') || '') || /\.(jpe?g|png|gif|webp)(\?|$)/i.test(h)) return;
+    var u;
+    try { u = new URL(a.href); } catch (er) { return; }
+    if (u.protocol === 'file:') return;
+    e.preventDefault();
+    e.stopPropagation();
+    route(u);
+  }, true);
+
+  // buttons of the shop that change page with location.href="..." go through the same rules
+  function rewire() {
+    Array.prototype.forEach.call(document.querySelectorAll('[onclick*="location"]'), function (n) {
+      var oc = n.getAttribute('onclick') || '';
+      var nw = oc.replace(/(?:(?:window|document|self|top)\.)?location(?:\.href)?\s*=\s*(["'])(.*?)\1/g, 'bvmGo($1$2$1)');
+      if (nw !== oc) n.setAttribute('onclick', nw);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', rewire); else rewire();
 })();
 
 </script></head><body bottommargin="0" class="main" leftmargin="0" rightmargin="0" topmargin="0"><center><a id="top"></a><table border="0" cellpadding="0" cellspacing="0" class="HTML" width="100%"><tbody><tr><td class="HEADLEFT" valign="TOP"><br/></td><td align="CENTER" class="HEADMID" valign="TOP" width="1160"><table border="0" cellpadding="0" cellspacing="0" class="header" style="" width="1160"><tbody><tr><td align="LEFT" valign="TOP"><table border="0" cellpadding="0" cellspacing="0" style="" width="100%"><tbody><tr><td align="LEFT" style="" valign="MIDDLE" width="230"><a href="/" style="background:Transparent;" title="Koka VIRPOTI / BUVVide.lv - būvmateriāli internetā un ne tikai"><img border="0" class="header_logo" src="./px.gif" style=""/></a></td><td align="LEFT" valign="TOP" width="100%"><table border="0" cellpadding="0" cellspacing="0" class="header_height" style="" width="100%"><tbody><tr><td align="LEFT" class="header_navy" style="" valign="MIDDLE"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td align="CENTER" nowrap="" style="padding-left:8px;" width="50%"><a class="header_navy" href="./?l=1&amp;sw=reglog" style="font-weight:normal; text-decoration:none;"><b>Login</b> / Reģistrēties</a></td><td align="CENTER" nowrap="" style="padding-right:8px;" width="50%"><table border="0" cellpadding="0" cellspacing="0" onmouseover='style.cursor="pointer";style.cursor="hand";' width="10"><tbody><tr><td nowrap=""><a class="header_navy" href="./?l=1&amp;sw=vbag" style="font-weight:bold;">Grozs:</a></td><td nowrap="" style="padding-left:4px;" width="100%"><table border="0" cellpadding="0" cellspacing="0" class="addSBag" onclick='location.href="./?l=1&amp;sw=vbag";'><tbody><tr><td align="CENTER" class="addSBag" nowrap="" valign="MIDDLE">0.00 €</td></tr></tbody></table></td></tr></tbody></table></td><td nowrap="" style="" valign="MIDDLE"><table border="0" cellpadding="0" cellspacing="0" class="lang"><tbody><tr class="lang"><td class="lang" nowrap=""><a class="lang" href="/?l=1&amp;c=657" id="lang" title="Latviski"><img border="0" class="lang" hspace="0" src="./cms_dp/design/lat.gif" vspace="0"/>Latviski</a></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td class="header_info"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td align="LEFT" valign="MIDDLE" width="50%"><p><img alt="" border="0" height="40" src="/mlt_buvvide/design/banner_1.png" width="269"/></p><br/></td><td align="CENTER" nowrap="" style="padding-right:60px;" valign="MIDDLE"><form action="./" class="SearchForm" method="GET" name="SearchForm" style="margin:0px;"><div class="SearchForm"><input name="l" type="hidden" value="1"/><input class="searchField" name="Search" onfocus='if(this.value == "Meklēšana...") {this.value="";}; return true;' type="text" value="Meklēšana..."/><input class="searchButton" onclick="SearchForm.submit();" type="button"/></div></form></td><td align="RIGHT" style="padding-right:20px;" width="50%"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td><a href="https://www.facebook.com/buvvide/" target="_blank"><img border="0" src="./userfiles/Image/db_atteli/facebook.png" style="vertical-align:middle; margin:3px 6px;"/></a></td><td><a href="https://www.google.com/search?q=BUVVide.lv#ip=1" target="_blank"><img border="0" src="./userfiles/Image/db_atteli/googl.png" style="vertical-align:middle; margin:3px 6px;"/></a></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td class="header_menu"><table border="0" cellpadding="3" cellspacing="0" class="mjst"><tbody><tr><td class="mjst_lvl_1" id="mutd_137" onclick='location.href="./?l=1&amp;mu= 137";' onmouseout='jsoff("mu","mjst","1","137");' onmouseover='json("mu","mjst","1","137");'><a class="mjst_lvl_1" href="./?l=1&amp;mu= 137" id="mua_137">AKCIJAS/ JAUNUMI!</a></td><td><div class="separ_mjst_lvl_1"><br/></div></td><td class="mjst_lvl_1" id="mutd_129" onclick='location.href="./?l=1&amp;mu= 129";' onmouseout='jsoff("mu","mjst","1","129");' onmouseover='json("mu","mjst","1","129");'><a class="mjst_lvl_1" href="./?l=1&amp;mu= 129" id="mua_129">RAŽOTĀJI</a></td><td><div class="separ_mjst_lvl_1"><br/></div></td><td class="mjst_lvl_1" id="mutd_71" onclick='location.href="./?l=1&amp;mu= 71";' onmouseout='jsoff("mu","mjst","1","71");' onmouseover='json("mu","mjst","1","71");'><a class="mjst_lvl_1" href="./?l=1&amp;mu= 71" id="mua_71">KLIENTIEM</a></td><td><div class="separ_mjst_lvl_1"><br/></div></td><td class="mjst_lvl_1" id="mutd_174" onclick='location.href="./?l=1&amp;mu= 174";' onmouseout='jsoff("mu","mjst","1","174");' onmouseover='json("mu","mjst","1","174");'><a class="mjst_lvl_1" href="./?l=1&amp;mu= 174" id="mua_174">INFO</a></td><td><div class="separ_mjst_lvl_1"><br/></div></td><td class="mjst_lvl_1" id="mutd_3" onclick='location.href="./?l=1&amp;mu= 3&amp;mui= kontakti";' onmouseout='jsoff("mu","mjst","1","3");' onmouseover='json("mu","mjst","1","3");'><a class="mjst_lvl_1" href="./?l=1&amp;mu= 3&amp;mui= kontakti" id="mua_3">KONTAKTI</a></td><td><div class="separ_mjst_lvl_1"><br/></div></td><td class="mjst_lvl_1" id="mutd_130" onclick='location.href="./?l=1&amp;mu= 130";' onmouseout='jsoff("mu","mjst","1","130");' onmouseover='json("mu","mjst","1","130");'><a class="mjst_lvl_1" href="./?l=1&amp;mu= 130" id="mua_130">SITE MAP</a></td><td width="100%"><br/></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td><td class="HEADRIGHT" valign="TOP"><br/></td></tr><tr><td class="CONTLEFT" valign="TOP"><br/></td><td align="LEFT" class="CONTMID" height="500" valign="TOP" width="1160"><div class="body">
