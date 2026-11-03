@@ -2,27 +2,28 @@
 <html lang="lv">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Elektroietaišu projektēšana Rīgā | SIA EnergoBloom</title>
-<meta name="description" content="SIA EnergoBloom: elektroietaišu projekti privātmājām un komerctelpām Rīgā. Apgaismojuma un spēka tīklu projekti, konsultācijas. Tālr. +371 25 986 657.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Elektroprojekti privātmājām un komerctelpām Rīgā | SIA EnergoBloom</title>
+<meta name="description" content="SIA EnergoBloom, elektroinženieris Mareks Korols: elektroietaišu projekti privātmājām un komerctelpām Rīgā, apgaismojuma un spēka tīkli, konsultācijas. Tālr. +371 25 986 657.">
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#1e2427">
+<meta name="theme-color" content="#070a1f">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="lv_LV">
 <meta property="og:locale:alternate" content="ru_RU">
 <meta property="og:site_name" content="SIA EnergoBloom">
-<meta property="og:title" content="Elektroietaišu projektēšana Rīgā | SIA EnergoBloom">
+<meta property="og:title" content="Elektroprojekti privātmājām un komerctelpām Rīgā | SIA EnergoBloom">
 <meta property="og:description" content="Elektroietaišu projekti privātmājām un komerctelpām. Zvaniet: +371 25 986 657.">
 <meta property="og:image" content="img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="SIA EnergoBloom: elektroietaišu projektēšana Rīgā">
+<meta property="og:image:alt" content="SIA EnergoBloom: elektroprojekti privātmājām un komerctelpām Rīgā">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="img/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-<link rel="preload" href="fonts/serif-lat.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/onest-lat.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/manrope-lat.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="img/hero-m.webp" media="(max-width: 899px)">
+<link rel="preload" as="image" href="img/hero-d.webp" media="(min-width: 900px)">
 <link rel="stylesheet" href="css/style.css">
 <script type="application/ld+json">
 {
@@ -45,10 +46,10 @@
 <a class="skip" href="#saturs" data-t="skip">Pāriet uz saturu</a>
 
 <header class="hdr" id="hdr">
-  <div class="hdr__in wrap">
+  <div class="hdr__in">
     <a class="logo" href="#top" aria-label="SIA EnergoBloom" data-t-aria="logoAria">
-      <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="16" cy="16" r="4" fill="currentColor"/></svg>
-      <span class="logo__txt"><span class="logo__sia">SIA</span> EnergoBloom</span>
+      <svg class="logo__mark" viewBox="0 0 20 20" aria-hidden="true"><rect x="1" y="1" width="8" height="8" rx="1.2"/><rect x="11" y="1" width="8" height="8" rx="1.2"/><rect x="1" y="11" width="8" height="8" rx="1.2"/><rect x="11" y="11" width="8" height="8" rx="1.2"/></svg>
+      <span class="logo__txt">EnergoBloom</span>
     </a>
     <nav class="nav" aria-label="Sadaļas" data-t-aria="navAria">
       <a href="#pakalpojumi" data-t="nav1">Pakalpojumi</a>
@@ -57,7 +58,7 @@
       <a href="#kontakti" data-t="nav4">Kontakti</a>
     </nav>
     <div class="hdr__end">
-      <a class="hdr__tel" href="tel:+37125986657"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="currentColor"/></svg>+371 25 986 657</a>
+      <a class="hdr__tel" href="tel:+37125986657">+371 25 986 657</a>
       <div class="lang" role="group" aria-label="Valoda" data-t-aria="langAria">
         <button class="lang__b" type="button" data-lang="lv" aria-pressed="true" lang="lv">LV</button>
         <button class="lang__b" type="button" data-lang="ru" aria-pressed="false" lang="ru">RU</button>
@@ -68,161 +69,152 @@
     </div>
   </div>
   <div class="menu" id="menu" hidden>
-    <nav class="menu__nav wrap" aria-label="Izvēlne" data-t-aria="menuAria">
-      <a href="#pakalpojumi"><span class="menu__q">Q1</span><span data-t="nav1">Pakalpojumi</span></a>
-      <a href="#ka-stradajam"><span class="menu__q">Q2</span><span data-t="nav2">Kā strādājam</span></a>
-      <a href="#par-mani"><span class="menu__q">Q3</span><span data-t="nav3">Par mani</span></a>
-      <a href="#kontakti"><span class="menu__q">Q4</span><span data-t="nav4">Kontakti</span></a>
-      <div class="menu__cta">
-        <a class="btn btn--call" href="tel:+37125986657"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="currentColor"/></svg><span data-t="call">Zvanīt</span></a>
-        <a class="btn btn--wa" href="https://wa.me/37125986657"><svg class="ico ico--wa" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>WhatsApp</a>
-      </div>
+    <nav class="menu__nav" aria-label="Izvēlne" data-t-aria="menuAria">
+      <a href="#pakalpojumi"><span class="menu__n">01</span><span data-t="nav1">Pakalpojumi</span></a>
+      <a href="#ka-stradajam"><span class="menu__n">02</span><span data-t="nav2">Kā strādājam</span></a>
+      <a href="#par-mani"><span class="menu__n">03</span><span data-t="nav3">Par mani</span></a>
+      <a href="#kontakti"><span class="menu__n">04</span><span data-t="nav4">Kontakti</span></a>
     </nav>
+    <div class="menu__cta">
+      <a class="btn btn--call" href="tel:+37125986657"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg><span data-t="call">Zvanīt</span></a>
+      <a class="btn btn--wa" href="https://wa.me/37125986657"><svg class="ico ico--wa" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>WhatsApp</span></a>
+    </div>
   </div>
 </header>
 
 <main id="saturs">
   <section class="hero" aria-labelledby="h1">
-    <div class="hero__in wrap">
-      <div class="hero__text">
-        <p class="hero__eyebrow"><span class="hero__node" aria-hidden="true"></span>SIA EnergoBloom · <span data-t="riga">Rīga</span></p>
-        <h1 id="h1" data-t="h1">Elektroietaišu projektēšana Rīgā</h1>
-        <p class="hero__lead" data-t="lead">Projekti privātmājām un komerctelpām. Par savu objektu runājat tieši ar inženieri.</p>
+    <div class="hero__media">
+      <picture>
+        <source media="(min-width: 900px)" srcset="img/hero-d.webp" width="1600" height="1000">
+        <img src="img/hero-m.webp" width="780" height="1260" alt="Moderna māja zilajā stundā, lielajos logos deg silta gaisma" data-t-alt="altHero" fetchpriority="high">
+      </picture>
+    </div>
+    <div class="hero__in">
+      <h1 class="hero__h" id="h1"><span class="hero__big" data-t="h1a">Elektro&shy;projekti</span> <span class="hero__sub" data-t="h1b">privātmājām un komerctelpām Rīgā</span></h1>
+      <div class="hero__foot">
+        <p class="hero__line" data-t="heroLine">Gaisma katrā logā sākas ar projektu.</p>
+        <p class="sig"><span class="sig__dot" aria-hidden="true"></span><span data-t="sig">Mareks Korols, elektroinženieris</span></p>
         <div class="hero__cta">
-          <a class="btn btn--call" href="tel:+37125986657"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="currentColor"/></svg><span data-t="call">Zvanīt</span></a>
-          <a class="btn btn--wa" href="https://wa.me/37125986657"><svg class="ico ico--wa" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>WhatsApp</a>
+          <a class="btn btn--call" href="tel:+37125986657"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg><span data-t="call">Zvanīt</span></a>
+          <a class="btn btn--wa" href="https://wa.me/37125986657"><svg class="ico ico--wa" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>WhatsApp</span></a>
         </div>
-        <p class="hero__facts"><span data-t="regShort">Reģ. Nr.</span> 40203683924 · <span data-t="bisShort">Būvkomersantu reģistrā</span></p>
       </div>
-      <figure class="hero__photo">
+    </div>
+  </section>
+
+  <section class="sec svc" id="pakalpojumi" aria-labelledby="h-pak">
+    <div class="wrap sec__head">
+      <h2 class="h2" id="h-pak" data-t="pakH">Ko projektējam</h2>
+      <p class="sec__intro" data-t="pakIntro">Elektroietaišu projektēšana ir mūsu specialitāte Būvkomersantu reģistrā. Projektējam dzīvojamām mājām un komerctelpām un konsultējam, ja vēl nav skaidrs, ar ko sākt.</p>
+    </div>
+    <ol class="svc__track" id="svc-track">
+      <li class="card card--a">
+        <figure class="card__ph">
+          <picture>
+            <source media="(min-width: 900px)" srcset="img/s1-l.webp" width="1200" height="800">
+            <img src="img/s1-p.webp" width="800" height="1000" decoding="async" alt="Dzīvojamā istaba un ēdamzona vakarā: griestu prožektori un divas piekaramās lampas virs galda" data-t-alt="alt1">
+          </picture>
+          <span class="card__n" aria-hidden="true">01</span>
+        </figure>
+        <h3 class="card__h" data-t="s1h">Privātmājas</h3>
+        <p class="card__p" data-t="s1p">Elektroietaišu projekts mājai: ievads un sadales skapis, apgaismojums, kontaktligzdu izvietojums un spēka pieslēgumi.</p>
+      </li>
+      <li class="card card--b">
+        <figure class="card__ph">
+          <img src="img/s2-p.webp" width="800" height="1000" decoding="async" alt="Biroja telpa ar lieliem gredzenveida gaismekļiem zem griestiem" data-t-alt="alt2">
+          <span class="card__n" aria-hidden="true">02</span>
+        </figure>
+        <h3 class="card__h" data-t="s2h">Komerctelpas un biroji</h3>
+        <p class="card__p" data-t="s2p">Biroji, veikali, darbnīcas un citas komerctelpas: elektroapgāde, apgaismojums un iekārtu pieslēgumi.</p>
+      </li>
+      <li class="card card--c">
+        <figure class="card__ph">
+          <img src="img/s3-p.webp" width="800" height="1000" decoding="async" alt="Sakārtots sadales skapis: automātslēdžu rindas ar marķējumu" data-t-alt="alt3">
+          <span class="card__n" aria-hidden="true">03</span>
+        </figure>
+        <h3 class="card__h" data-t="s3h">Apgaismojuma un spēka tīkli</h3>
+        <p class="card__p" data-t="s3p">Apgaismojuma grupas, spēka tīkli iekārtām un slodžu sadale pa grupām sadales skapī.</p>
+      </li>
+      <li class="card card--d">
+        <figure class="card__ph">
+          <picture>
+            <source media="(min-width: 900px)" srcset="img/s4-l.webp" width="1200" height="800">
+            <img src="img/s4-p.webp" width="800" height="1000" decoding="async" alt="Telpu plāns uz koka galda, blakus zīmulis, mērlente un kafijas krūze" data-t-alt="alt4">
+          </picture>
+          <span class="card__n" aria-hidden="true">04</span>
+        </figure>
+        <h3 class="card__h" data-t="s4h">Konsultācijas</h3>
+        <p class="card__p" data-t="s4p">Izrunājam jūsu ieceri, esošo elektroinstalāciju un to, kāds projekts objektam būs vajadzīgs.</p>
+      </li>
+    </ol>
+    <div class="svc__dots" aria-hidden="true"><span class="is-on"></span><span></span><span></span><span></span></div>
+  </section>
+
+  <section class="sec how" id="ka-stradajam" aria-labelledby="h-ka">
+    <div class="wrap how__in">
+      <figure class="how__ph">
         <picture>
-          <source media="(min-width: 900px)" srcset="img/hero-d.webp" width="1100" height="1256">
-          <img src="img/hero-m.webp" width="800" height="540" alt="Inženieris pie klēpjdatora, uz galda izdrukāti elektroietaišu rasējumi" data-t-alt="altHero" fetchpriority="high">
+          <source media="(min-width: 900px)" srcset="img/how-p.webp" width="800" height="1000">
+          <img src="img/how-l.webp" width="1200" height="750" loading="lazy" decoding="async" alt="Stikla piekaramā lampa ar iedegtu spuldzi pie tumšas koka līstu sienas" data-t-alt="altHow">
+        </picture>
+      </figure>
+      <div class="how__body">
+        <h2 class="h2" id="h-ka" data-t="kaH">Kā strādājam</h2>
+        <p class="sec__intro" data-t="kaIntro">No pirmā zvana līdz projekta dokumentiem.</p>
+        <ol class="steps">
+          <li class="step"><span class="step__n" aria-hidden="true">01</span><div><h3 data-t="k1h">Jūs zvanāt vai rakstāt</h3><p data-t="k1p">Pastāstiet, kāds ir objekts un kas jāprojektē. Var zvanīt, rakstīt WhatsApp vai e-pastā.</p></div></li>
+          <li class="step"><span class="step__n" aria-hidden="true">02</span><div><h3 data-t="k2h">Pārrunājam objektu</h3><p data-t="k2p">Noskaidrojam telpas, iekārtas un jūsu vēlmes. Ja ir plāni vai esošie rasējumi, tie noderēs.</p></div></li>
+          <li class="step"><span class="step__n" aria-hidden="true">03</span><div><h3 data-t="k3h">Projektējam</h3><p data-t="k3p">Sagatavojam elektroietaišu projektu: shēmas, plānus un aprēķinus jūsu objektam.</p></div></li>
+          <li class="step"><span class="step__n" aria-hidden="true">04</span><div><h3 data-t="k4h">Nododam dokumentus</h3><p data-t="k4p">Saņemat projekta dokumentāciju un varat uzdot jautājumus par to, kas tajā ir.</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec about" id="par-mani" aria-labelledby="h-par">
+    <div class="wrap about__in">
+      <div class="about__text">
+        <h2 class="h2" id="h-par" data-t="parH">Inženieris, kuram varat piezvanīt</h2>
+        <p class="about__lead" data-t="par1">Esmu Mareks Korols, elektroinženieris. SIA EnergoBloom ir mans uzņēmums, kas nodarbojas ar elektroietaišu projektēšanu.</p>
+        <p class="about__p" data-t="par2">Zvanot vai rakstot, jūs runājat tieši ar mani: par savu objektu, iecerēm un to, kas projektā būs vajadzīgs.</p>
+        <dl class="facts" aria-label="Uzņēmuma dati" data-t-aria="factsAria">
+          <div><dt data-t="d1">Uzņēmums</dt><dd data-t="d1v">SIA EnergoBloom, reģistrēts 2025. gadā</dd></div>
+          <div><dt data-t="d2">Reģ. Nr.</dt><dd class="num">40203683924</dd></div>
+          <div><dt data-t="d3">Būvkomersantu reģistrā</dt><dd data-t="d3v">Elektroietaišu projektēšana</dd></div>
+          <div><dt data-t="d4">Pilsēta</dt><dd data-t="riga">Rīga</dd></div>
+        </dl>
+      </div>
+      <figure class="about__ph">
+        <picture>
+          <source media="(min-width: 900px)" srcset="img/about-p.webp" width="800" height="1000">
+          <img src="img/about.webp" width="1200" height="800" loading="lazy" decoding="async" alt="Telpu plāns uz galda, uz tā brilles un zīmulis" data-t-alt="altAbout">
         </picture>
       </figure>
     </div>
   </section>
 
-  <section class="sec sec--paper" id="pakalpojumi" aria-labelledby="h-pak">
-    <div class="wrap">
-      <div class="sec__head">
-        <p class="feeder"><svg class="feeder__sym" viewBox="0 0 44 16" aria-hidden="true"><path d="M0 8h12M28 8h16M14 8l12-6"/><circle cx="13" cy="8" r="2"/><circle cx="27" cy="8" r="2"/></svg><span class="feeder__q">Q1</span><span data-t="nav1">Pakalpojumi</span></p>
-        <h2 id="h-pak" data-t="pakH">Ko mēs projektējam</h2>
-        <p class="sec__intro" data-t="pakIntro">Elektroietaišu projektēšana ir mūsu specialitāte Būvkomersantu reģistrā. Projektējam elektroietaises dzīvojamām mājām un komerctelpām, kā arī konsultējam, ja vēl nav skaidrs, ar ko sākt.</p>
-      </div>
-      <ol class="sched">
-        <li class="sched__row">
-          <span class="sched__n">1.1</span>
-          <div class="sched__body">
-            <h3 data-t="s1h">Privātmājas</h3>
-            <p data-t="s1p">Elektroietaišu projekts privātmājai: ievads un sadales skapis, apgaismojums, kontaktligzdu izvietojums un spēka pieslēgumi.</p>
-          </div>
-          <img class="sched__img" src="img/privatmajas.webp" width="800" height="600" loading="lazy" alt="Mājas virtuve ar sliežu gaismekļiem pie griestiem un lieliem logiem uz dārzu" data-t-alt="alt1">
-        </li>
-        <li class="sched__row">
-          <span class="sched__n">1.2</span>
-          <div class="sched__body">
-            <h3 data-t="s2h">Komerctelpas un biroji</h3>
-            <p data-t="s2p">Biroji, veikali, darbnīcas un citas komerctelpas: elektroapgāde, apgaismojums un iekārtu pieslēgumi.</p>
-          </div>
-          <img class="sched__img" src="img/komerctelpas.webp" width="800" height="600" loading="lazy" alt="Trīs piekaramie gaismekļi komerctelpā, aiz tiem gaismas paneļi griestos" data-t-alt="alt2">
-        </li>
-        <li class="sched__row">
-          <span class="sched__n">1.3</span>
-          <div class="sched__body">
-            <h3 data-t="s3h">Apgaismojuma un spēka tīkli</h3>
-            <p data-t="s3p">Apgaismojuma grupas, spēka tīkli iekārtām un slodžu sadale pa grupām sadales skapī.</p>
-          </div>
-          <img class="sched__img" src="img/speka-tikli.webp" width="800" height="600" loading="lazy" alt="Automātslēdžu rinda sadales skapī ar krāsainiem vadiem" data-t-alt="alt3">
-        </li>
-        <li class="sched__row">
-          <span class="sched__n">1.4</span>
-          <div class="sched__body">
-            <h3 data-t="s4h">Konsultācijas</h3>
-            <p data-t="s4p">Izrunājam jūsu ieceri, esošo elektroinstalāciju un to, kāds projekts jūsu objektam būs vajadzīgs.</p>
-          </div>
-          <img class="sched__img" src="img/konsultacijas.webp" width="800" height="600" loading="lazy" alt="Rokas uz klēpjdatora tastatūras, blakus izdrukāts telpu plāns" data-t-alt="alt4">
-        </li>
-      </ol>
-    </div>
-  </section>
-
-  <section class="sec sec--ink" id="ka-stradajam" aria-labelledby="h-ka">
-    <div class="wrap">
-      <div class="sec__head">
-        <p class="feeder"><svg class="feeder__sym" viewBox="0 0 44 16" aria-hidden="true"><path d="M0 8h12M28 8h16M14 8l12-6"/><circle cx="13" cy="8" r="2"/><circle cx="27" cy="8" r="2"/></svg><span class="feeder__q">Q2</span><span data-t="kaLabel">Kā mēs strādājam</span></p>
-        <h2 id="h-ka" data-t="kaH">No pirmā zvana līdz projekta dokumentiem</h2>
-      </div>
-      <ol class="circuit">
-        <li class="step">
-          <svg class="step__sym" viewBox="0 0 64 32" aria-hidden="true"><path d="M0 16h20M44 16h20M22 16l20-12"/><circle cx="21" cy="16" r="2.6"/><circle cx="43" cy="16" r="2.6"/></svg>
-          <span class="step__n">01</span>
-          <h3 data-t="k1h">Jūs zvanāt vai rakstāt</h3>
-          <p data-t="k1p">Pastāstiet, kāds ir objekts un kas jāprojektē. Var zvanīt, rakstīt WhatsApp vai e-pastā.</p>
-        </li>
-        <li class="step">
-          <svg class="step__sym" viewBox="0 0 64 32" aria-hidden="true"><path d="M0 16h20M44 16h20M22 16l20-6"/><circle cx="21" cy="16" r="2.6"/><circle cx="43" cy="16" r="2.6"/></svg>
-          <span class="step__n">02</span>
-          <h3 data-t="k2h">Pārrunājam objektu</h3>
-          <p data-t="k2p">Noskaidrojam telpas, iekārtas un jūsu vēlmes. Ja ir plāni vai esošie rasējumi, tie noderēs.</p>
-        </li>
-        <li class="step">
-          <svg class="step__sym" viewBox="0 0 64 32" aria-hidden="true"><path d="M0 16h20M44 16h20M22 16h20"/><circle cx="21" cy="16" r="2.6"/><circle cx="43" cy="16" r="2.6"/></svg>
-          <span class="step__n">03</span>
-          <h3 data-t="k3h">Projektējam</h3>
-          <p data-t="k3p">Sagatavojam elektroietaišu projektu: shēmas, plānus un aprēķinus jūsu objektam.</p>
-        </li>
-        <li class="step step--lamp">
-          <svg class="step__sym" viewBox="0 0 64 32" aria-hidden="true"><path d="M0 16h22M42 16h22"/><circle class="lamp" cx="32" cy="16" r="10"/><path d="M24.9 8.9l14.2 14.2M39.1 8.9L24.9 23.1"/></svg>
-          <span class="step__n">04</span>
-          <h3 data-t="k4h">Nododam dokumentus</h3>
-          <p data-t="k4p">Saņemat projekta dokumentāciju un varat uzdot jautājumus par to, kas tajā ir.</p>
-        </li>
-      </ol>
-    </div>
-  </section>
-
-  <section class="sec sec--paper" id="par-mani" aria-labelledby="h-par">
-    <div class="wrap about">
-      <figure class="about__photo">
-        <img src="img/shema.webp" width="800" height="880" loading="lazy" alt="Elektriskās shēmas fragments uz papīra ar iezīmētām līnijām" data-t-alt="alt5">
-      </figure>
-      <div class="about__text">
-        <p class="feeder"><svg class="feeder__sym" viewBox="0 0 44 16" aria-hidden="true"><path d="M0 8h12M28 8h16M14 8l12-6"/><circle cx="13" cy="8" r="2"/><circle cx="27" cy="8" r="2"/></svg><span class="feeder__q">Q3</span><span data-t="nav3">Par mani</span></p>
-        <h2 id="h-par" data-t="parH">Inženieris, kuram varat piezvanīt</h2>
-        <p data-t="par1">Esmu Mareks Korols, elektroinženieris. SIA EnergoBloom ir mans uzņēmums, kas nodarbojas ar elektroietaišu projektēšanu.</p>
-        <p data-t="par2">Zvanot vai rakstot, jūs runājat tieši ar mani: par savu objektu, iecerēm un to, kas projektā būs vajadzīgs.</p>
-        <dl class="stamp" aria-label="Uzņēmuma dati" data-t-aria="stampAria">
-          <div class="stamp__c stamp__c--wide"><dt data-t="d1">Uzņēmums</dt><dd>SIA EnergoBloom</dd></div>
-          <div class="stamp__c"><dt data-t="d2">Reģ. Nr.</dt><dd class="num">40203683924</dd></div>
-          <div class="stamp__c"><dt data-t="d3">Būvkomersantu reģistrs</dt><dd data-t="d3v">Reģistrēts 2025. gadā</dd></div>
-          <div class="stamp__c stamp__c--wide"><dt data-t="d4">Specialitāte</dt><dd data-t="d4v">Elektroietaišu projektēšana</dd></div>
-          <div class="stamp__c"><dt data-t="d5">Pilsēta</dt><dd data-t="riga">Rīga</dd></div>
-          <div class="stamp__c"><dt data-t="d6">Inženieris</dt><dd data-t="d6v">Mareks Korols, elektroinženieris</dd></div>
-        </dl>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec sec--ink contact" id="kontakti" aria-labelledby="h-kon">
+  <section class="sec contact" id="kontakti" aria-labelledby="h-kon">
+    <figure class="contact__band">
+      <picture>
+        <source media="(min-width: 900px)" srcset="img/riga-d.webp" width="1600" height="667">
+        <img src="img/riga-m.webp" width="800" height="500" loading="lazy" decoding="async" alt="Rīga zilajā stundā: izgaismots dzelzceļa tilts pār Daugavu un televīzijas tornis" data-t-alt="altRiga">
+      </picture>
+    </figure>
     <div class="wrap contact__in">
       <div class="contact__info">
-        <p class="feeder"><svg class="feeder__sym" viewBox="0 0 44 16" aria-hidden="true"><path d="M0 8h12M28 8h16M14 8l12-6"/><circle cx="13" cy="8" r="2"/><circle cx="27" cy="8" r="2"/></svg><span class="feeder__q">Q4</span><span data-t="nav4">Kontakti</span></p>
-        <h2 id="h-kon" data-t="konH">Pastāstiet par savu objektu</h2>
+        <h2 class="h2" id="h-kon" data-t="konH">Pastāstiet par savu objektu</h2>
         <p class="contact__intro" data-t="konIntro">Zvaniet vai rakstiet WhatsApp. Ja ērtāk, aizpildiet formu vai rakstiet e-pastu.</p>
-        <div class="person">
-          <p class="person__name" data-t="pName">Mareks Korols</p>
-          <p class="person__role" data-t="pRole">Elektroinženieris, SIA EnergoBloom</p>
-          <a class="person__tel" href="tel:+37125986657">+371 25 986 657</a>
-          <div class="person__cta">
-            <a class="btn btn--call" href="tel:+37125986657"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="currentColor"/></svg><span data-t="call">Zvanīt</span></a>
-            <a class="btn btn--wa" href="https://wa.me/37125986657"><svg class="ico ico--wa" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>WhatsApp</a>
-          </div>
-          <ul class="person__list">
-            <li><span class="person__k" data-t="lEmail">E-pasts</span><a href="mailto:marekorol@inbox.lv">marekorol@inbox.lv</a></li>
-            <li><span class="person__k" data-t="lCity">Pilsēta</span><span data-t="riga">Rīga</span></li>
-          </ul>
+        <p class="person"><span class="person__name" data-t="pName">Mareks Korols</span><span class="person__role" data-t="pRole">Elektroinženieris, SIA EnergoBloom</span></p>
+        <a class="person__tel" href="tel:+37125986657">+371 25 986 657</a>
+        <div class="person__cta">
+          <a class="btn btn--call" href="tel:+37125986657"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg><span data-t="call">Zvanīt</span></a>
+          <a class="btn btn--wa" href="https://wa.me/37125986657"><svg class="ico ico--wa" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>WhatsApp</span></a>
         </div>
+        <ul class="person__list">
+          <li><span class="person__k" data-t="lEmail">E-pasts</span><a href="mailto:marekorol@inbox.lv">marekorol@inbox.lv</a></li>
+          <li><span class="person__k" data-t="lCity">Pilsēta</span><span data-t="riga">Rīga</span></li>
+        </ul>
       </div>
 
       <form class="form" id="forma" novalidate>
@@ -271,8 +263,8 @@
   <div class="wrap ftr__in">
     <div class="ftr__brand">
       <a class="logo" href="#top" aria-label="SIA EnergoBloom" data-t-aria="logoAria">
-        <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="16" cy="16" r="4" fill="currentColor"/></svg>
-        <span class="logo__txt"><span class="logo__sia">SIA</span> EnergoBloom</span>
+        <svg class="logo__mark" viewBox="0 0 20 20" aria-hidden="true"><rect x="1" y="1" width="8" height="8" rx="1.2"/><rect x="11" y="1" width="8" height="8" rx="1.2"/><rect x="1" y="11" width="8" height="8" rx="1.2"/><rect x="11" y="11" width="8" height="8" rx="1.2"/></svg>
+        <span class="logo__txt">EnergoBloom</span>
       </a>
       <p data-t="ftrLine">Elektroietaišu projektēšana · Rīga</p>
       <p><span data-t="regShort">Reģ. Nr.</span> 40203683924</p>
@@ -286,8 +278,8 @@
 </footer>
 
 <div class="callbar" id="callbar" aria-hidden="true">
-  <a class="btn btn--call" href="tel:+37125986657" tabindex="-1"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="currentColor"/></svg><span data-t="call">Zvanīt</span></a>
-  <a class="btn btn--wa" href="https://wa.me/37125986657" tabindex="-1"><svg class="ico ico--wa" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>WhatsApp</a>
+  <a class="btn btn--call" href="tel:+37125986657" tabindex="-1"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg><span data-t="call">Zvanīt</span></a>
+  <a class="btn btn--wa" href="https://wa.me/37125986657" tabindex="-1"><svg class="ico ico--wa" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>WhatsApp</span></a>
 </div>
 
 <script src="js/main.js"></script>
