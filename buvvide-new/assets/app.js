@@ -493,7 +493,8 @@
       var grid = $('[data-grid]', root);
       grid.classList.toggle('is-list', S.view === 'list');
       grid.innerHTML = n ? list.slice(0, S.show).map(card).join('') :
-        '<div class="empty" style="grid-column:1/-1"><h3>' + t('Ar šiem filtriem preču nav') + '</h3><p>' + t('Noņemiet kādu filtru vai notīriet visus.') + '</p><button class="btn" type="button" data-clearall>' + t('Notīrīt filtrus') + '</button></div>';
+        (S.items.length ? '<div class="empty" style="grid-column:1/-1"><h3>' + t('Ar šiem filtriem preču nav') + '</h3><p>' + t('Noņemiet kādu filtru vai notīriet visus.') + '</p><button class="btn" type="button" data-clearall>' + t('Notīrīt filtrus') + '</button></div>'
+          : '<div class="empty" style="grid-column:1/-1"><h3>' + t('Šajā kategorijā preces vēl tiek pievienotas') + '</h3><p>' + t('Apskatiet citas kategorijas vai pajautājiet mums pa tālruni.') + '</p><a class="btn" href="katalogs.html">' + t('Uz katalogu') + '</a></div>');
       var more = $('[data-more]', root);
       if (n > S.show) {
         more.innerHTML = '<span class="more__n">' + t('Rādītas') + ' ' + Math.min(S.show, n) + ' ' + t('no') + ' ' + n + '</span><span class="more__bar"><i style="width:' + Math.round(S.show / n * 100) + '%"></i></span>' +
@@ -623,8 +624,11 @@
       return getJSON('data/c/' + id + '.json').then(function (j) {
         reg(j.items);
         var tot = j.total || j.items.length;
+        if (!j.items.length) { $('#cat-n').textContent = t('Preces šajā kategorijā vēl tiek pievienotas'); }
+        else {
         $('#cat-n').textContent = tot + ' ' + plural(tot, t('prece'), t('preces'));
         if (j.items.length < tot) $('#cat-note').textContent = t('Šeit — pirmās') + ' ' + j.items.length + ' ' + t('preces no visām apakškategorijām. Lai redzētu visas, izvēlieties apakškategoriju augstāk.');
+        }
         var catFacet = null;
         if (c.k && c.k.length) {
           catFacet = {};
