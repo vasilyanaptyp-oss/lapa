@@ -25,7 +25,12 @@
     s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     return s[0] + ',' + s[1] + ' €';
   }
-  function img(p) { return !p ? '' : /^https?:/.test(p) ? p : IMG + p; }
+  var IMGMAP = w.BV_IMG || {};
+  function img(p) {
+    if (!p) return '';
+    if (/^https?:/.test(p) || p.indexOf('img/') === 0) return p;
+    return IMGMAP[p] || IMG + p;
+  }
   function qp(k) { return new URLSearchParams(location.search).get(k); }
   function icon(n, cls) { return '<svg class="ico ' + (cls || '') + '" aria-hidden="true"><use href="#i-' + n + '"/></svg>'; }
   function fold(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9Ѐ-ӿ]+/g, ' ').trim(); }

@@ -418,6 +418,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .stickybuy { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: flex; align-items: center; gap: 12px; padding: 10px var(--gut) calc(10px + env(safe-area-inset-bottom));
   background: #fff; border-top: 1px solid var(--line); box-shadow: 0 -6px 20px rgba(0,0,0,.08); transform: translateY(110%); transition: transform .2s; }
 .stickybuy.is-on { transform: none; }
+body.has-sticky { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
 .stickybuy__p { flex: 1; min-width: 0; }
 .stickybuy__p .price b { font-size: 20px; }
 .stickybuy__name { font-size: 12px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
