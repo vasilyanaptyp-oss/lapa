@@ -681,11 +681,18 @@
           return cn.indexOf(fq0) >= 0 || fq0.split(' ').every(function (tk) { return tk.length > 2 && cn.indexOf(tk) >= 0; });
         }).sort(function (a, b) { return (T.cats[b].cnt || 0) - (T.cats[a].cnt || 0); }).slice(0, 8);
         if (cm.length) {
+          $('#cat-n').textContent = t('Atrastas kategorijas');
+          $('#search-empty').hidden = true;   // matched categories are the answer, no «what are you looking for» block
           $('#subcats').innerHTML = cm.map(function (id) {
             var s = T.cats[id];
             return '<a class="subcat" href="' + catURL(id) + '"><span class="subcat__img">' + (s.img ? '<img src="' + esc(img(s.img)) + '" alt="" loading="lazy">' : '') + '</span>' +
               '<span class="subcat__name">' + hl(s.n, q) + (s.cnt ? '<small>' + s.cnt + ' ' + plural(s.cnt, t('prece'), t('preces')) + '</small>' : '') + '</span></a>';
           }).join('');
+        } else {
+          // nothing matched at all: say so and offer the popular categories
+          $('#cat-n').textContent = t('Nekas netika atrasts');
+          var eh = $('#search-empty');
+          if (eh) { eh.hidden = false; var h2 = $('h2', eh); if (h2) h2.textContent = t('Nekas netika atrasts'); }
         }
         return;
       }
