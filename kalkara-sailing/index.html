@@ -59,7 +59,10 @@
   <!-- HERO -->
   <section class="hero" id="top">
     <div class="hero-media" aria-hidden="true">
-      <img src="img/hero.webp" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+      <picture>
+        <source media="(max-width: 599px)" srcset="img/hero-mobile.webp" width="900" height="1367">
+        <img src="img/hero.webp" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+      </picture>
     </div>
     <div class="hero-inner">
       <p class="eyebrow" data-i18n="hero.eyebrow">Marina Kalkara · Malta</p>
