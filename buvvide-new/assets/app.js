@@ -107,6 +107,7 @@
   }
   function priceHTML(p, vat) {
     var sale = pct(p) >= 1;
+    if (p.pr == null) return '<div class="price"><b>' + t('Cena: zvaniet') + '</b></div>';   // shop sells it without a price, same wording as buvvide.lv
     return '<div class="price' + (sale ? ' price--sale' : '') + '"><b>' + money(p.pr) + '</b>' + (sale ? '<s>' + money(p.o) + '</s>' : '') +
       (vat ? '<span class="price__vat">' + t('ar PVN 21%') + '</span>' : '') + '</div>';
   }
@@ -131,7 +132,7 @@
       '<div class="card__body"><div class="card__main"><a class="card__title" href="' + prodURL(p) + '">' + esc(p.n) + '</a>' +
       (meta ? '<p class="card__meta">' + esc(meta) + '</p>' : '') + '</div>' +
       '<div class="card__foot">' + priceHTML(p, false) + notes +
-      '<div class="card__add"><button class="btn btn--sm" type="button" data-add="' + p.id + '">' + icon('cart') + '<span>' + t('Grozā') + '</span></button></div>' +
+      (p.pr == null ? '' : '<div class="card__add"><button class="btn btn--sm" type="button" data-add="' + p.id + '">' + icon('cart') + '<span>' + t('Grozā') + '</span></button></div>') +
       '</div></div></article>';
   }
 
@@ -241,7 +242,7 @@
           h += '<div class="suggest__h">' + t('Preces') + '</div>';
           res.forEach(function (p) {
             h += '<a href="' + prodURL(p) + '"><span class="suggest__img">' + (p.img ? '<img src="' + esc(img(p.img)) + '" alt="" loading="lazy">' : '') + '</span>' +
-              '<span class="suggest__name">' + hl(p.n, q) + '</span><span class="suggest__price">' + money(p.pr) + '</span></a>';
+              '<span class="suggest__name">' + hl(p.n, q) + '</span><span class="suggest__price">' + (p.pr == null ? t('Cena: zvaniet') : money(p.pr)) + '</span></a>';
           });
           h += '<a class="suggest__all" href="meklet.html?q=' + encodeURIComponent(q) + '">' + t('Visi rezultāti') + ' →</a>';
         }
@@ -406,7 +407,7 @@
     })();
 
     function match(p, skip) {
-      if (skip !== '__price') {
+      if (skip !== '__price' && p.pr != null) {   // «Cena: zvaniet» items have no price to compare
         if (S.pmin != null && p.pr < S.pmin) return false;
         if (S.pmax != null && p.pr > S.pmax) return false;
       }
@@ -418,10 +419,10 @@
       return true;
     }
     function sorted(list) {
-      var a = list.slice();
-      if (S.sort === 'asc') a.sort(function (x, y) { return x.pr - y.pr; });
-      else if (S.sort === 'desc') a.sort(function (x, y) { return y.pr - x.pr; });
-      else if (S.sort === 'disc') a.sort(function (x, y) { return pct(y) - pct(x) || x.pr - y.pr; });
+      var a = list.slice(), np = function (v) { return v == null ? Infinity : v; };   // «Cena: zvaniet» sorts last on the cheap-first side
+      if (S.sort === 'asc') a.sort(function (x, y) { return np(x.pr) - np(y.pr); });
+      else if (S.sort === 'desc') a.sort(function (x, y) { return (y.pr == null ? -1 : y.pr) - (x.pr == null ? -1 : x.pr); });
+      else if (S.sort === 'disc') a.sort(function (x, y) { return pct(y) - pct(x) || np(x.pr) - np(y.pr); });
       else if (S.sort === 'az') a.sort(function (x, y) { return natCmp(x.n, y.n); });
       return a;
     }
@@ -721,9 +722,10 @@
     });
 
     function draw(det, base, list, T) {
+      base = base || {};   // a product can be missing from its category list (live site sells it without a price)
       var p = {
-        id: id, c: cid || (base && base.c), n: (det && det.name) || base.n, s: (det && det.short) || (base && base.s) || '',
-        pr: (det && det.price) || base.pr, o: (det && det.old) || (base && base.o) || null,
+        id: id, c: cid || (base && base.c) || (det && det.c), n: (det && det.name) || base.n || '', s: (det && det.short) || (base && base.s) || '',
+        pr: det ? det.price : base.pr, o: (det && det.old) || (base && base.o) || null,
         img: (det && det.images && det.images[0]) || (base && base.img) || '', f: (base && base.f) || (det && det.f) || [],
         prm: (det && det.params && det.params.length ? det.params : (base && base.prm) || []), brand: det && det.brand, code: det && det.code
       };
@@ -765,8 +767,13 @@
         if (side) h += '<p class="field__hint" style="margin-top:8px">' + t('Pasūtot jānorāda vēršanas virziens — kreisās vai labās durvis.') + '</p>';
         h += '<p class="field__err" id="opterr">' + t('Lūdzu, izvēlieties variantu.') + '</p></div>';
       }
-      h += '<div class="buyrow"><div class="qty"><button type="button" data-q="-1" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input id="qty" type="number" min="1" max="999" value="1" aria-label="' + t('Daudzums') + '"><button type="button" data-q="1" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
-        '<button class="btn" type="button" id="buy">' + icon('cart') + t('Ielikt grozā') + '</button></div>';
+      if (p.pr == null) {
+        // the shop shows «Cena: zvaniet» for these: no cart button, a phone line instead
+        h += '<p class="buybox__ask">' + icon('phone') + '<span>' + t('Šai precei cena nav norādīta. Zvaniet, un mēs pateiksim cenu un pieejamību.') + ' <a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a></span></p>';
+      } else {
+        h += '<div class="buyrow"><div class="qty"><button type="button" data-q="-1" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input id="qty" type="number" min="1" max="999" value="1" aria-label="' + t('Daudzums') + '"><button type="button" data-q="1" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
+          '<button class="btn" type="button" id="buy">' + icon('cart') + t('Ielikt grozā') + '</button></div>';
+      }
       h += '<a class="btn btn--wa btn--block buybox__wa" id="pwa" target="_blank" rel="noopener" href="' + waLink(t('Labdien! Vēlos pasūtīt') + ': ' + p.n + ' (ID ' + id + ')') + '"><svg class="wa-ico" aria-hidden="true"><use href="#i-wa"/></svg>' + t('Pasūtīt WhatsApp') + '</a>';
       var nts = (det && det.nt) || (base && base.nt) || [];
       nts.forEach(function (x) { if (!/Atlaide pēc/.test(x[0])) h += '<p class="buybox__ask' + (x[1] === 'g' ? ' is-g' : '') + '">' + icon(x[1] === 'g' ? 'truck' : 'info') + '<span>' + esc(t(x[0])) + '</span></p>'; });
@@ -819,7 +826,8 @@
       var sb = $('#stickybuy');
       $('.stickybuy__name', sb).textContent = p.n;
       $('.stickybuy__p', sb).insertAdjacentHTML('beforeend', priceHTML(p, false));
-      if ('IntersectionObserver' in w) {
+      if (p.pr == null) { sb.hidden = true; }   // no cart button on this page, so no sticky bar
+      else if ('IntersectionObserver' in w) {
         var io = new IntersectionObserver(function (en) {
           var vis = en[0].isIntersecting;
           sb.classList.toggle('is-on', !vis); d.body.classList.toggle('has-sticky', !vis);
@@ -882,7 +890,8 @@
       });
       // qty
       $$('[data-q]').forEach(function (b) { b.addEventListener('click', function () { qty.value = Math.max(1, Math.min(999, (+qty.value || 1) + +b.getAttribute('data-q'))); }); });
-      qty.addEventListener('change', function () { qty.value = Math.max(1, Math.min(999, Math.round(+qty.value) || 1)); });
+      if (qty) qty.addEventListener('change', function () { qty.value = Math.max(1, Math.min(999, Math.round(+qty.value) || 1)); });
+      if (!$('#buy')) return;   // price on request: no cart row on this page
       $('#buy').addEventListener('click', function () {
         if (variants.length && vi < 0) {
           var e = $('#opterr'); e.style.display = 'block';
@@ -926,6 +935,7 @@
       h += '<a class="btn btn--block" href="noformet.html">' + t('Noformēt pasūtījumu') + icon('arrow-r') + '</a>' +
         '<a class="btn btn--ghost btn--block" style="margin-top:8px" href="katalogs.html">' + t('Turpināt iepirkties') + '</a>' +
         '<div class="summary__note"><p>' + icon('bank') + '<span>' + t('Apmaksa uzreiz nav jāveic. Nosūtīsim avansa rēķinu; preces noliktavā rezervējam uz 3 darba dienām.') + '</span></p>' +
+        '<p>' + icon('info') + '<span>' + t('Standarta min. pasūtījuma (preču) summa 47 €. Atsevišķām precēm var būt norādīts individuāls min. pasūtījums.') + '</span></p>' +
         '<p>' + icon('truck') + '<span>' + t('Piegāde visā Latvijā 2–4 darba dienās pēc apmaksas vai saņemšana noliktavā.') + '</span></p>' +
         '<p>' + icon('clock') + '<span>' + t('Pasūtījumus pieņemam 24/7, apstrādājam P–C 9:30–17:30, Pk 9:30–17:00.') + '</span></p></div></aside></div>';
       root.innerHTML = h;
