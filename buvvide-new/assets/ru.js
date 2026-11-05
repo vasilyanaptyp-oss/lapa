@@ -165,7 +165,7 @@ window.BV_RU = {
 "Pasūtījums": "Заказ",
 "Pasūtījums sagatavots": "Заказ подготовлен",
 "Pasūtījumus pieņemam 24/7": "Заказы принимаем 24/7",
-"Pasūtījumus pieņemam 24/7, apstrādājam darba dienās 9:30–17:30.": "Заказы принимаем 24/7, обрабатываем в рабочие дни 9:30–17:30.",
+"Pasūtījumus pieņemam 24/7, apstrādājam P–C 9:30–17:30, Pk 9:30–17:00.": "Заказы принимаем 24/7, обрабатываем Пн–Чт 9:30–17:30, Пт 9:30–17:00.",
 "Pasūtījumus pieņemam 24/7, apstrādājam darba dienās.": "Заказы принимаем 24/7, обрабатываем в рабочие дни.",
 "Pasūtījumus var saņemt arī noliktavā — tad par piegādi nav jāmaksā. Katrai precei var būt sava noliktava; par gatavību paziņosim pa tālruni vai e-pastu.": "Заказ можно забрать и со склада — тогда за доставку платить не нужно. У каждого товара может быть свой склад; о готовности сообщим по телефону или e-mail.",
 "Pasūtīt WhatsApp": "Заказать в WhatsApp",

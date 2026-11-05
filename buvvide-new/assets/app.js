@@ -776,7 +776,7 @@
         (flags.indexOf('ship') >= 0 ? '' : '<div class="perk">' + icon('store') + '<div><b>' + t('Saņemšana noliktavā') + '</b><span>' + t('Par piegādi nav jāmaksā. Pēc apmaksas nododam noliktavai 2 darba stundu laikā.') + '</span></div></div>') +
         '<div class="perk">' + icon('bank') + '<div><b>' + t('Maksājat pēc rēķina') + '</b><span>' + t('Apmaksa uzreiz nav jāveic: ja prece ir noliktavā, rezervējam to uz 3 darba dienām un nosūtām avansa rēķinu.') + '</span></div></div>' +
         (p.pr >= 150 ? '<div class="perk">' + icon('calendar') + '<div><b>' + t('ESTO līzings līdz 60 mēnešiem') + '</b><span>' + t('Privātpersonām. Izvēlieties to, noformējot pasūtījumu.') + '</span></div></div>' : '') +
-        '<div class="perk">' + icon('phone') + '<div><b>' + t('Jautājumi par preci?') + '</b><span><a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a> · ' + t('darba dienās 9:30–17:30') + '</span></div></div>' +
+        '<div class="perk">' + icon('phone') + '<div><b>' + t('Jautājumi par preci?') + '</b><span><a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a> · ' + t('P–C 9:30–17:30, Pk 9:30–17:00') + '</span></div></div>' +
         '</div></div>';
       // accessories / kit parts («Piederumi» tab of the shop)
       var acc = (det && det.acc) || [];
@@ -927,7 +927,7 @@
         '<a class="btn btn--ghost btn--block" style="margin-top:8px" href="katalogs.html">' + t('Turpināt iepirkties') + '</a>' +
         '<div class="summary__note"><p>' + icon('bank') + '<span>' + t('Apmaksa uzreiz nav jāveic. Nosūtīsim avansa rēķinu; preces noliktavā rezervējam uz 3 darba dienām.') + '</span></p>' +
         '<p>' + icon('truck') + '<span>' + t('Piegāde visā Latvijā 2–4 darba dienās pēc apmaksas vai saņemšana noliktavā.') + '</span></p>' +
-        '<p>' + icon('clock') + '<span>' + t('Pasūtījumus pieņemam 24/7, apstrādājam darba dienās 9:30–17:30.') + '</span></p></div></aside></div>';
+        '<p>' + icon('clock') + '<span>' + t('Pasūtījumus pieņemam 24/7, apstrādājam P–C 9:30–17:30, Pk 9:30–17:00.') + '</span></p></div></aside></div>';
       root.innerHTML = h;
     }
     root.addEventListener('click', function (e) {
