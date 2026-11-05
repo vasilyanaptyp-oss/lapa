@@ -4,7 +4,7 @@
   var d = document, w = window;
   var IMG = 'https://www.buvvide.lv/userfiles/Image/';
   var SHOP = { tel: '+37129123476', telH: '29 123 476', tel2: '+37127422801', tel2H: '27 422 801', wa: '37120865048', waH: '+371 20 865 048',
-    mail: 'birojs@buvvide.lv', min: 47 };
+    mail: 'birojs@buvvide.lv' };
   var PAGE = d.body.getAttribute('data-page') || '';
   var P = {};           // product registry id -> product
   var TREE = null;
@@ -41,7 +41,12 @@
     return _cache[u];
   }
   function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
-  function plural(n, one, many) { return (n % 10 === 1 && n % 100 !== 11) ? one : many; }
+  function plural(n, one, many) {  // Latvian: 1 prece, 2 preces, 10 preču (genitive after 0 and 10-20, 30...)
+    var m = n % 100, d = n % 10;
+    if (d === 1 && m !== 11) return one;
+    if (d === 0 || (m >= 11 && m <= 19)) return t('preču');
+    return many;
+  }
   function prodURL(p) { return 'prece.html?id=' + p.id + '&c=' + p.c; }
   function catURL(id) { return 'kategorija.html?c=' + id; }
   function waLink(text) { return 'https://wa.me/' + SHOP.wa + '?text=' + encodeURIComponent(text); }
@@ -118,7 +123,7 @@
     var meta = metaLine(p);
     return '<article class="card">' +
       '<a class="card__media" href="' + prodURL(p) + '" tabindex="-1" aria-hidden="true">' + badges(p) +
-      (p.img ? '<img loading="lazy" decoding="async" src="' + esc(img(p.img)) + '" alt="">' : '') + '</a>' +
+      (p.img ? '<img loading="lazy" decoding="async" width="300" height="300" src="' + esc(img(p.img)) + '" alt="">' : '') + '</a>' +
       '<div class="card__body"><div class="card__main"><a class="card__title" href="' + prodURL(p) + '">' + esc(p.n) + '</a>' +
       (meta ? '<p class="card__meta">' + esc(meta) + '</p>' : '') + '</div>' +
       '<div class="card__foot">' + priceHTML(p, false) + notes +
@@ -775,7 +780,6 @@
       if (specRows) h += '<section class="pp__sec acc' + (desc.length ? '' : ' is-open') + '"><button class="acc__h" type="button">' + t('Tehniskie parametri') + icon('chev-d') + '</button><div class="acc__b"><table class="spec"><tbody><tr><th>ID</th><td>' + id + '</td></tr>' + (p.code ? '<tr><th>' + t('Kods') + '</th><td>' + esc(p.code) + '</td></tr>' : '') + specRows + '</tbody></table></div></section>';
       h += '<section class="pp__sec acc"><button class="acc__h" type="button">' + t('Piegāde, apmaksa, atgriešana') + icon('chev-d') + '</button><div class="acc__b prose"><ul>' +
         '<li>' + t('Cenas norādītas eiro ar PVN 21%. Uzņēmumiem — PVN 0% precēm, uz kurām attiecas reversais PVN.') + '</li>' +
-        '<li>' + t('Standarta minimālā pasūtījuma summa — 47 €.') + '</li>' +
         '<li>' + t('Ja prece ir noliktavā, rezervējam to uz 3 darba dienām un nosūtām rēķinu. Neapmaksāti rēķini pēc 3 darba dienām tiek anulēti.') + '</li>' +
         '<li>' + t('Preces uz pasūtījumu pasūtām vai sākam ražot pēc apmaksas.') + '</li>' +
         '<li>' + t('Privātpersonām — tiesības 14 dienu laikā atteikties no pirkuma.') + ' <a class="link" href="info.html#atgriesana">' + t('Sīkāk') + '</a></li></ul></div></section>';
@@ -899,10 +903,7 @@
         (save > 0 ? '<div class="sumrow sumrow--save"><span>' + t('Atlaide') + '</span><span>−' + money(save) + '</span></div>' : '') +
         '<div class="sumrow"><span>' + t('Piegāde') + '</span><span>' + t('aprēķināsim rēķinā') + '</span></div>' +
         '<div class="sumrow sumrow--total"><span>' + t('Kopā ar PVN') + '</span><span>' + money(sum) + '</span></div>';
-      var left = SHOP.min - sum;
-      h += '<div class="minbar' + (left <= 0 ? ' is-ok' : '') + '">' + (left > 0 ? t('Minimālā pasūtījuma summa 47 €. Pietrūkst') + ' <b>' + money(left) + '</b>.' : t('Minimālā pasūtījuma summa sasniegta.')) +
-        '<i><b style="width:' + Math.min(100, Math.round(sum / SHOP.min * 100)) + '%"></b></i></div>';
-      h += '<a class="btn btn--block" href="noformet.html"' + (left > 0 ? ' aria-disabled="true" data-blocked' : '') + '>' + t('Noformēt pasūtījumu') + icon('arrow-r') + '</a>' +
+      h += '<a class="btn btn--block" href="noformet.html">' + t('Noformēt pasūtījumu') + icon('arrow-r') + '</a>' +
         '<a class="btn btn--ghost btn--block" style="margin-top:8px" href="katalogs.html">' + t('Turpināt iepirkties') + '</a>' +
         '<div class="summary__note"><p>' + icon('bank') + '<span>' + t('Apmaksa uzreiz nav jāveic. Nosūtīsim avansa rēķinu; preces noliktavā rezervējam uz 3 darba dienām.') + '</span></p>' +
         '<p>' + icon('truck') + '<span>' + t('Piegāde visā Latvijā 2–4 darba dienās pēc apmaksas vai saņemšana noliktavā.') + '</span></p>' +
@@ -920,7 +921,7 @@
         $('#undo').onclick = function () { var c = Cart.get(); c.splice(k, 0, gone); Cart.set(c); draw(); el.classList.remove('is-on'); };
         return;
       }
-      if ((b = e.target.closest('[data-blocked]'))) { e.preventDefault(); msg(t('Minimālā pasūtījuma summa ir 47 €.')); }
+      if ((b = e.target.closest('[data-blocked]'))) { e.preventDefault(); return; }
     });
     root.addEventListener('change', function (e) {
       var i = e.target.getAttribute('data-cqi'); if (i == null) return;
