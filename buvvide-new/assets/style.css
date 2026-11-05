@@ -568,7 +568,7 @@ body.has-sticky .toast { bottom: 90px; }
     repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 40px) left top / 100% 10px no-repeat,
     repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 8px) left top / 100% 5px no-repeat; }
 .ftr__grid { display: grid; gap: 26px; padding: 38px 0 26px; }
-.ftr h3 { color: #fff; font-size: 15px; margin-bottom: 12px; }
+.ftr h3, .ftr .ftr__h { color: #fff; font-size: 15px; font-weight: 700; margin: 0 0 12px; }
 .ftr ul { display: grid; gap: 8px; }
 .ftr a:hover { color: #fff; text-decoration: underline; }
 .ftr__tel { display: inline-flex; align-items: center; gap: 8px; color: #fff; font-size: 20px; font-weight: 700; }
