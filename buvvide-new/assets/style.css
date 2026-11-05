@@ -163,7 +163,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .sec { padding: 36px 0; }
 .sec--tight { padding: 24px 0; }
 .sec--grey { background: var(--bg-2); }
-.sec__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.sec__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 16px; margin-bottom: 18px; }
+.sec__head > :first-child { min-width: 0; }
 .sec__title { font-size: 24px; font-weight: 700; }
 .sec__title + .ruler { margin-top: 10px; }
 .sec__more { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; color: var(--green); white-space: nowrap; font-size: 14px; }
