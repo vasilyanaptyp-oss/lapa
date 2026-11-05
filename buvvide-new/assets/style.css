@@ -784,3 +784,6 @@ body.has-sticky .toast { bottom: 90px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 @media print { .hdr, .topbar, .ftr, .stickybuy, .toast { display: none !important; } }
+
+/* photo host unreachable: keep the slot tidy instead of a broken-image icon */
+img.img-fail { object-fit: contain; padding: 18%; opacity: .55; mix-blend-mode: normal; }

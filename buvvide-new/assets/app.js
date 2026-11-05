@@ -1184,6 +1184,37 @@
     $$('form.search input[type=search]').forEach(function (e) { e.setAttribute('placeholder', RUPH); });
   }
 
+  /* photos come from buvvide.lv: if that host is slow or unreachable the card must degrade
+     to the neutral placeholder instead of showing a broken-image icon */
+  function imgGuard() {
+    var REPL = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#cfd6d2" stroke-width="1.4">' +
+      '<path d="M3.6 7.5 12 3.6l8.4 3.9v9L12 20.4l-8.4-3.9z"/><path d="M3.6 7.5 12 11.4l8.4-3.9M12 11.4v9"/></svg>');
+    $$('img').forEach(function (i) {
+      if (i.dataset.guarded) return;
+      i.dataset.guarded = '1';
+      i.addEventListener('error', function () {
+        if (i.dataset.failed) return;
+        i.dataset.failed = '1';
+        i.src = REPL;
+        i.classList.add('img-fail');
+      });
+    });
+  }
+  imgGuard();
+  var _mo = new MutationObserver(function (muts) {
+    for (var k = 0; k < muts.length; k++) {
+      var add = muts[k].addedNodes;
+      for (var j = 0; j < add.length; j++) {
+        var n = add[j];
+        if (n.nodeType !== 1) continue;
+        if (n.tagName === 'IMG') imgGuard();
+        else if (n.querySelectorAll) { if (n.querySelectorAll('img').length) imgGuard(); }
+      }
+    }
+  });
+  try { _mo.observe(d.body, { childList: true, subtree: true }); } catch (e) {}
+
   cnStatic();
   Cart.badge();
   w.addEventListener('storage', function (e) { if (e.key === 'bv_cart') Cart.badge(); });
