@@ -110,10 +110,14 @@
     return '<div class="price' + (sale ? ' price--sale' : '') + '"><b>' + money(p.pr) + '</b>' + (sale ? '<s>' + money(p.o) + '</s>' : '') +
       (vat ? '<span class="price__vat">' + t('ar PVN 21%') + '</span>' : '') + '</div>';
   }
-  function metaLine(p) {
+  function metaLine(p) {  // «masīvkoka karkass · platums 890/990 mm» instead of bare numbers
     var bits = [];
     if (p.s) bits.push(p.s);
-    (p.prm || []).forEach(function (kv) { if (bits.length < 3 && kv[0] !== 'Preces tips' && kv[1].length < 28) bits.push(kv[1]); });
+    (p.prm || []).forEach(function (kv) {
+      if (bits.length >= 3 || kv[0] === 'Preces tips' || !kv[1] || kv[1].length > 24) return;
+      var lab = String(kv[0]).toLowerCase();
+      bits.push(lab.length <= 14 && !/^\d/.test(lab) ? lab + ' ' + kv[1] : kv[1]);
+    });
     return bits.join(' · ');
   }
   function card(p) {
