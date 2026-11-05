@@ -127,7 +127,7 @@
     var meta = metaLine(p);
     return '<article class="card">' +
       '<a class="card__media" href="' + prodURL(p) + '" tabindex="-1" aria-hidden="true">' + badges(p) +
-      (p.img ? '<img loading="lazy" decoding="async" width="300" height="300" src="' + esc(img(p.img)) + '" alt="">' : '') + '</a>' +
+      (p.img ? '<img loading="lazy" decoding="async" width="300" height="300" src="' + esc(img(p.img)) + '" alt="">' : '<svg class="card__ph" aria-hidden="true"><use href="#i-box"/></svg>') + '</a>' +
       '<div class="card__body"><div class="card__main"><a class="card__title" href="' + prodURL(p) + '">' + esc(p.n) + '</a>' +
       (meta ? '<p class="card__meta">' + esc(meta) + '</p>' : '') + '</div>' +
       '<div class="card__foot">' + priceHTML(p, false) + notes +

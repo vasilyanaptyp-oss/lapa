@@ -227,6 +227,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .card:hover { border-color: var(--line-2); box-shadow: var(--sh); }
 .card__media { position: relative; display: block; aspect-ratio: 1 / 1; background: var(--bg-2); overflow: hidden; }
 .card__media img { position: absolute; left: 8%; top: 8%; width: 84%; height: 84%; object-fit: contain; mix-blend-mode: multiply; transition: transform .3s ease; }
+.card__ph { position: absolute; left: 30%; top: 30%; width: 40%; height: 40%; color: var(--line-2, #cfd6d2); }
 .card:hover .card__media img { transform: scale(1.035); }
 .badges { position: absolute; left: 8px; top: 8px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; z-index: 1; }
 .badge { display: inline-block; padding: 3px 7px; border-radius: var(--r-s); font-size: 12px; font-weight: 700; line-height: 1.3; background: var(--ink); color: #fff; }
