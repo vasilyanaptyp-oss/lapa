@@ -225,6 +225,105 @@ button{font:inherit;color:inherit}
 }
 .ask:hover{color:var(--accent);border-color:var(--accent)}
 
+/* ---------- programme tables (mobile: stacked cards) ---------- */
+.prog{
+  max-width:var(--max);margin:52px auto 0;padding:0 var(--gutter);
+  display:flex;flex-direction:column;gap:18px;
+}
+.prog-head h3{font-size:clamp(1.4rem,3.6vw,2rem);letter-spacing:-.02em;margin-bottom:10px}
+.prog-head .eyebrow{margin-bottom:10px}
+.prog-head p:last-child{color:var(--muted);font-size:.98rem;max-width:54ch}
+.prog>.ask{align-self:flex-start}
+
+.ptable{
+  border:1px solid rgba(13,27,33,.14);background:#fff;
+  display:grid;gap:0;overflow-x:auto;
+}
+.prow{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:0;
+  padding:14px 16px;border-top:1px solid rgba(13,27,33,.1);
+}
+.prow:first-child{border-top:0}
+.prow.phead{display:none}
+.pl{font-weight:600;font-size:.98rem;color:var(--ink);margin-bottom:6px}
+.ptable .cell-l{text-transform:none;letter-spacing:0;font-size:.98rem;font-weight:600;color:var(--ink)}
+.season-dates{display:block;font-weight:400;color:var(--muted);font-size:.84rem;letter-spacing:.02em}
+.pv{
+  display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  padding:7px 0;border-top:1px dotted rgba(13,27,33,.14);
+}
+.pv:first-of-type{border-top:1px dotted rgba(13,27,33,.14)}
+.pv-l{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.pv-v{font-family:var(--serif);font-size:1.16rem;font-weight:500;font-variant-numeric:lining-nums;white-space:nowrap}
+.prog-note{color:var(--muted);font-size:.84rem;max-width:60ch}
+
+/* ISSA cards */
+.issa-grid{display:grid;gap:16px}
+.issa{
+  background:#fff;border:1px solid rgba(13,27,33,.12);padding:20px 18px 18px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.issa h4{overflow-wrap:break-word;font-family:var(--serif);font-size:1.24rem;font-weight:500;margin:0;letter-spacing:-.01em}
+.issa-days{font-size:.78rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--sea)}
+.issa-prices{margin:2px 0 4px;display:grid;gap:8px}
+.issa-prices div{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-top:1px dotted rgba(13,27,33,.16);padding-top:8px}
+.issa-prices dt{font-size:.8rem;color:var(--muted);max-width:15ch}
+.issa-prices dd{margin:0;font-family:var(--serif);font-size:1.14rem;white-space:nowrap;font-variant-numeric:lining-nums}
+.issa .ask{margin-top:auto}
+
+/* ---------- fleet ---------- */
+.fleet{background:var(--paper-2);border-top:1px solid rgba(13,27,33,.08)}
+.boats{
+  max-width:var(--max);margin:38px auto 0;padding:0 var(--gutter);
+  display:grid;gap:22px;
+}
+.boat{background:#fff;border:1px solid rgba(13,27,33,.12);display:flex;flex-direction:column;min-width:0}
+.boat-img{aspect-ratio:3/2;overflow:hidden;background:var(--paper-2)}
+.boat-img img{width:100%;height:100%;object-fit:cover}
+.boat-body{padding:22px 20px 22px;display:flex;flex-direction:column;gap:12px;flex:1;min-width:0}
+.boat-kicker{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-ink)}
+.boat h3{font-size:1.4rem;letter-spacing:-.02em;overflow-wrap:break-word}
+.boat-name{display:block;font-size:1.15rem;color:var(--sea);font-style:italic;margin-top:2px}
+.specs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px;margin:0;min-width:0}
+.specs div{display:flex;justify-content:space-between;gap:10px;border-top:1px solid rgba(13,27,33,.1);padding:8px 0;font-size:.92rem}
+.specs dt{color:var(--muted);font-size:.86rem}
+.specs dd{margin:0;font-weight:600;font-variant-numeric:lining-nums}
+.boat-note{font-size:.8rem;color:var(--muted);font-style:italic}
+.boat .ask{margin-top:auto;align-self:flex-start}
+
+/* ---------- racing calendar ---------- */
+.calendar{background:var(--deep);color:var(--paper)}
+.calendar .sec-head h2{color:var(--paper)}
+.calendar .sec-head .sec-lead{color:rgba(246,243,236,.74)}
+.calendar .eyebrow{color:#f0a58c}
+.cal{max-width:var(--max);margin:38px auto 0;padding:0 var(--gutter);display:grid;gap:14px}
+.cal-head{display:none}
+.cal-row{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:0;
+  border:1px solid rgba(246,243,236,.16);background:rgba(246,243,236,.035);
+  padding:18px 16px;
+}
+.cal-name h3{font-size:1.24rem;letter-spacing:-.01em;margin-bottom:4px;overflow-wrap:break-word}
+.cal-name p{font-size:.86rem;color:rgba(246,243,236,.62);margin-bottom:10px}
+.cal-name .ask{color:#ffb69a;border-color:rgba(255,182,154,.4)}
+.cal-name .ask:hover{color:#fff;border-color:#fff}
+.cal-cell{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid rgba(246,243,236,.1)}
+.cell-l{font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(246,243,236,.56)}
+.cell-v{font-family:var(--serif);font-size:1.06rem;text-align:right;font-variant-numeric:lining-nums}
+.cal-price .cell-v,.cal-span2 .cell-v{font-size:1.3rem}
+
+/* ---------- charters ---------- */
+.charters{background:var(--paper)}
+.ch-grid{max-width:var(--max);margin:38px auto 0;padding:0 var(--gutter);display:grid;gap:22px}
+.ch{
+  background:#fff;border:1px solid rgba(13,27,33,.12);padding:22px 18px 20px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.ch h3{overflow-wrap:break-word;font-size:1.3rem;letter-spacing:-.015em}
+.ch-sub{font-size:.9rem;color:var(--muted)}
+.ch .ask{align-self:flex-start;margin-top:4px}
+.ch-note{max-width:var(--max);margin:20px auto 0;padding:0 var(--gutter);font-size:.82rem;color:var(--muted)}
+
 /* how it works */
 .how{background:var(--paper-2);border-top:1px solid rgba(13,27,33,.08)}
 .steps{
@@ -345,6 +444,48 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
   .card:nth-child(5) .card-img{flex:0 0 46%;aspect-ratio:auto}
   .card:nth-child(5) .card-body{flex:1 1 54%;padding:26px 26px 24px;justify-content:center}
   .steps{gap:34px}
+  .issa-grid{grid-template-columns:1fr 1fr}
+  .boat{flex-direction:row}
+  .boat-img{flex:0 0 42%;aspect-ratio:auto}
+  .boat-body{flex:1 1 58%}
+  .cal-row{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);column-gap:18px}
+  .cal-name{grid-row:span 4;align-self:start}
+  .cal-cell{padding:7px 0}
+}
+
+@media (min-width:760px){
+  .prow{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:baseline}
+  .prow.phead{
+    display:grid;background:var(--paper-2);padding:11px 16px;
+    border-top:1px solid rgba(13,27,33,.14);
+  }
+  .prow.phead>span{
+    font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--sea);
+  }
+  .prow.phead>span:not(.cell-l){text-align:right}
+  .pl{margin-bottom:0}
+  .pv{display:block;border-top:0;padding:0;text-align:right}
+  .pv+.pv{margin-top:4px}
+  .pv-l{display:none}
+  .pv-v{font-size:1.05rem}
+  .ptable-2 .prow{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr)}
+  .issa-grid{grid-template-columns:repeat(3,1fr)}
+  .cal-row{grid-template-columns:minmax(0,1.5fr) repeat(4,minmax(0,1fr));align-items:center;gap:14px;padding:18px 20px}
+  .cal-head{
+    display:grid;grid-template-columns:minmax(0,1.5fr) repeat(4,minmax(0,1fr));gap:14px;
+    padding:0 20px 10px;border:0;background:none;
+    font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(246,243,236,.56);
+  }
+  .cal-head>span:not(:first-child){text-align:right}
+  .cal-name{grid-row:auto}
+  .cal-name p{margin-bottom:8px}
+  .cal-cell{display:block;border-top:0;padding:0;text-align:right}
+  .cal-cell .cell-l{display:none}
+  .cal-cell .cell-v{font-size:1.02rem}
+  .cal-price{grid-column:span 2;text-align:right}
+  .cal-price .cell-l{display:block;font-size:.66rem;letter-spacing:.1em;color:rgba(246,243,236,.5);margin-bottom:2px}
+  .cal-price .cell-v{font-size:1.24rem}
+  .ch-grid{grid-template-columns:1fr 1fr}
 }
 @media (min-width:860px){
   :root{--gutter:40px}
@@ -384,4 +525,11 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
 }
 @media (min-width:1100px){
   .book{grid-template-columns:1fr 1.15fr}
+}
+
+@media (min-width:760px){
+  .boats{grid-template-columns:1fr 1fr;align-items:stretch}
+  .boat{flex-direction:column}
+  .boat-img{flex:none;aspect-ratio:3/2}
+  .boat-body{flex:1 1 auto}
 }
