@@ -1073,7 +1073,7 @@
       h += '</div><aside class="summary"><h2>' + t('Kopsavilkums') + '</h2>' +
         '<div class="sumrow"><span>' + t('Preces') + ' (' + n + ')</span><span>' + money(sum + save) + '</span></div>' +
         (save > 0 ? '<div class="sumrow sumrow--save"><span>' + t('Atlaide') + '</span><span>−' + money(save) + '</span></div>' : '') +
-        '<div class="sumrow"><span>' + t('Piegāde') + '</span><span>' + t('aprēķināsim rēķinā') + '</span></div>' +
+        '<div class="sumrow"><span>' + t('Piegāde') + '</span><span>' + t('cenu aprēķināsim rēķinā') + '</span></div>' +
         '<div class="sumrow sumrow--total"><span>' + t('Preču summa (ar PVN)') + '</span><span>' + money(sum) + '</span></div>' +
         '<p class="sumrow__note">' + t('Piegādes cenu aprēķināsim pēc adreses un norādīsim rēķinā.') + '</p>';
       h += '<a class="btn btn--block" href="noformet.html">' + t('Noformēt pasūtījumu') + icon('arrow-r') + '</a>' +
@@ -1130,7 +1130,7 @@
       var esto = $('#pay-esto');
       esto.hidden = type === 'comp';
       if (type === 'comp' && pay === 'esto') { pay = 'bank'; $('#pay-bank input').checked = true; }
-      $('#co-ship').textContent = ship === 'del' ? t('aprēķināsim pēc adreses, norādīsim rēķinā') : t('bez maksas');
+      $('#co-ship').textContent = ship === 'del' ? t('cenu aprēķināsim pēc adreses, norādīsim rēķinā') : t('bez maksas');
     }
     $$('[data-type]').forEach(function (b) { b.addEventListener('click', function () { type = b.getAttribute('data-type'); apply(); }); });
     $$('input[name="ship"]').forEach(function (r) { r.addEventListener('change', function () { ship = r.value; apply(); }); });
