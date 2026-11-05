@@ -211,7 +211,7 @@ window.BV_RU = {
 "Preces uz pasūtījumu pasūtām vai sākam ražot pēc apmaksas.": "Товары под заказ заказываем или начинаем производить после оплаты.",
 "Preci jānodod atpakaļ ne vēlāk kā 14 dienu laikā pēc paziņojuma, uz to pašu noliktavu, no kuras tā sūtīta. Prece nedrīkst būt lietota vai bojāta.": "Товар нужно вернуть не позднее 14 дней после уведомления на тот же склад, с которого он отправлен. Товар не должен быть в употреблении или повреждён.",
 "Precēm ar atzīmi «Bezmaksas piegāde Latvijā» piegāde ir bez maksas.": "Для товаров с отметкой «Bezmaksas piegāde Latvijā» доставка бесплатна.",
-"Precēm ar atzīmi «Tikai ar maksas piegādi uz objektu/adresi» saņemšana noliktavā nav paredzēta.": "Для товаров с отметкой «Tikai ar maksas piegādi uz objektu/adresi» получение на складе не предусмотрено.",
+"Precēm ar atzīmi «Piegāde tikai uz adresi, par maksu» vai «Maksas piegāde uz adresi vai pakomātu» saņemšana noliktavā nav paredzēta.": "Для товаров с отметкой «Tikai ar maksas piegādi uz objektu/adresi» получение на складе не предусмотрено.",
 "Preču aprakstiem un attēliem ir informatīva nozīme; ražotājs var mainīt parametrus vai komplektāciju.": "Описания и фото товаров носят информационный характер; производитель может изменить параметры или комплектацию.",
 "Preču kategorijas": "Категории товаров",
 "Privātpersona": "Частное лицо",
