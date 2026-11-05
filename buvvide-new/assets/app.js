@@ -667,9 +667,21 @@
       var res = (browse ? r[0] : searchRank(q, r[0]).slice(0, 600)).map(function (p) { return { id: p.id, c: p.c, n: p.n, pr: p.pr, o: p.o, img: p.img, f: p.f, hv: p.hv }; });
       var T = r[1];
       if (!res.length) {
-        $('#cat-n').textContent = t('Nekas netika atrasts');
-        $('#search-empty').hidden = false; root.hidden = true;
-        // category suggestions by folded words
+        $('#cat-n').textContent = t('Atrastas kategorijas');
+        root.hidden = true;
+        // categories whose name matches the query (a visitor typing «santehnika» wants the category)
+        var fq0 = fold(q);
+        var cm = Object.keys(T.cats).filter(function (id) {
+          var cn = fold(T.cats[id].n);
+          return cn.indexOf(fq0) >= 0 || fq0.split(' ').every(function (tk) { return tk.length > 2 && cn.indexOf(tk) >= 0; });
+        }).sort(function (a, b) { return (T.cats[b].cnt || 0) - (T.cats[a].cnt || 0); }).slice(0, 8);
+        if (cm.length) {
+          $('#subcats').innerHTML = cm.map(function (id) {
+            var s = T.cats[id];
+            return '<a class="subcat" href="' + catURL(id) + '"><span class="subcat__img">' + (s.img ? '<img src="' + esc(img(s.img)) + '" alt="" loading="lazy">' : '') + '</span>' +
+              '<span class="subcat__name">' + hl(s.n, q) + (s.cnt ? '<small>' + s.cnt + ' ' + plural(s.cnt, t('prece'), t('preces')) + '</small>' : '') + '</span></a>';
+          }).join('');
+        }
         return;
       }
       $('#cat-n').textContent = t('Atrastas') + ' ' + res.length + ' ' + plural(res.length, t('prece'), t('preces'));

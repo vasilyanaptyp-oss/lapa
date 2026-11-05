@@ -22,6 +22,7 @@ window.BV_RU = {
 "Atgriešana un garantija": "Возврат и гарантия",
 "Atlaide": "Скидка",
 "Atlaide pēc pieprasījuma": "Скидка по запросу",
+"Atrastas kategorijas": "Найденные категории",
 "Atrastas": "Найдено",
 "Atrodiet vajadzīgo meklēšanā vai sāciet ar katalogu.": "Найдите нужное через поиск или начните с каталога.",
 "Atsaukt": "Отменить",
