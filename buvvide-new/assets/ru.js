@@ -57,7 +57,7 @@ window.BV_RU = {
 "Būvmateriāli, durvis, apkure un viss mājai un dārzam. Interneta veikals kopš 2015. gada.": "Стройматериалы, двери, отопление и всё для дома и сада. Интернет-магазин с 2015 года.",
 "Cena": "Цена",
 "Cena: zvaniet": "Цена: звоните",
-"Šai precei cena nav norādīta. Zvaniet, un mēs pateiksim cenu un pieejamību.": "Для этого товара цена не указана. Позвоните, и мы сообщим цену и наличие.",
+"Šai precei cena nav norādīta. Zvaniet, un mēs nosauksim cenu un pieejamību.": "Для этого товара цена не указана. Позвоните, и мы сообщим цену и наличие.",
 "Cena ar atlaidi": "Цена со скидкой",
 "Cena līdz": "Цена до",
 "Cena no": "Цена от",

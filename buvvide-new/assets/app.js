@@ -887,7 +887,7 @@
       }
       if (p.pr == null) {
         // the shop shows «Cena: zvaniet» for these: no cart button, a phone line instead
-        h += '<p class="buybox__ask">' + icon('phone') + '<span>' + t('Šai precei cena nav norādīta. Zvaniet, un mēs pateiksim cenu un pieejamību.') + ' <a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a></span></p>';
+        h += '<p class="buybox__ask">' + icon('phone') + '<span>' + t('Šai precei cena nav norādīta. Zvaniet, un mēs nosauksim cenu un pieejamību.') + ' <a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a></span></p>';
       } else {
         h += '<div class="buyrow"><div class="qty"><button type="button" data-q="-1" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input id="qty" type="number" min="1" max="999" value="1" aria-label="' + t('Daudzums') + '"><button type="button" data-q="1" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
           '<button class="btn" type="button" id="buy">' + icon('cart') + t('Ielikt grozā') + '</button></div>';
