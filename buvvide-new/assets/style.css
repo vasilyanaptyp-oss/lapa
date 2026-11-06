@@ -1240,3 +1240,240 @@ body[data-page="category"] #main, body[data-page="akcijas"] #main, body[data-pag
 
 /* Q29 tg: Telegram line in the footer */
 .ftr__lines .tg-ico { width: 20px; height: 20px; flex: none; fill: #29a9eb; }
+
+/* rt9 D: audit fixes */
+@font-face { font-family: 'Geologica'; font-style: normal; font-weight: 400 800; font-display: swap; src: url(fonts/geologica-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Geologica'; font-style: normal; font-weight: 400 800; font-display: swap; src: url(fonts/geologica-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Geologica'; font-style: normal; font-weight: 400 800; font-display: swap; src: url(fonts/geologica-cyrillic.woff2) format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+small { font-size: max(12px, .85em); }   /* С-14: <small> without a class rule fell to 11.7 px */
+.cart-count { font-size: 12px; }
+/* Б-01 checkout: the SEND step, then «Paldies» */
+.cdone__flow { list-style: none; margin: 0 0 18px; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.cdone__flow li { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 8px 10px; border-radius: var(--r-s); background: var(--c-bg-2); color: var(--ink-3); font-size: 13px; line-height: 1.25; }
+.cdone__flow li span { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; background: #fff; border: 1.5px solid var(--line-2); color: var(--ink-3); }
+.cdone__flow b { font-weight: 600; min-width: 0; }
+.cdone__flow .cdone__f1, .cdone[data-st="done"] .cdone__flow .cdone__f2 { color: var(--ink-2); }
+.cdone__flow .cdone__f1 span, .cdone[data-st="done"] .cdone__flow .cdone__f2 span { background: var(--c-accent); border-color: var(--c-accent); color: #fff; }
+.cdone:not([data-st="done"]) .cdone__flow .cdone__f2, .cdone[data-st="done"] .cdone__flow .cdone__f3 { background: var(--c-accent-bg); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--c-accent); }
+.cdone:not([data-st="done"]) .cdone__flow .cdone__f2 span, .cdone[data-st="done"] .cdone__flow .cdone__f3 span { border-color: var(--c-accent); color: var(--green); }
+.cdone__ok .cdone__i-done, .cdone[data-st="done"] .cdone__ok .cdone__i-send { display: none; }
+.cdone[data-st="done"] .cdone__ok .cdone__i-done { display: block; }
+.cdone:not([data-st="done"]) .cdone__ok { background: var(--c-accent-bg); color: var(--green); }
+.cdone[data-st="done"] .cdone__no, .cdone[data-st="done"] .cdone__send, .cdone[data-st="done"] .cdone__edit { display: none; }
+.cdone__head h2:focus { outline: none; }
+.cdone__lead a { color: var(--green); font-weight: 600; white-space: nowrap; }
+.cdone__copy { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0; border: 0; background: none; font: inherit; font-weight: 600; color: var(--ink); cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-2); }
+.cdone__copy:hover { text-decoration-color: currentColor; }
+.cdone__copy .ico { width: 18px; height: 18px; color: var(--green); }
+.cdone__ask { margin-top: 14px; padding: 14px 16px; border-radius: var(--r); background: var(--c-accent-bg); box-shadow: inset 0 0 0 1.5px var(--c-accent); }
+.cdone__ask p { display: grid; gap: 2px; font-size: 14px; color: var(--ink-2); }
+.cdone__ask b { font-size: 16px; color: var(--ink); }
+.cdone__askb { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.cdone__askb .btn { min-height: 44px; }
+.cdone[data-st="ask"] .cdone__fb { display: block; }
+.cdone__edit { margin-top: 22px; }
+.cdone__edit button { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0; border: 0; background: none; font: inherit; font-size: 14px; color: var(--ink-2); cursor: pointer; }
+.cdone__edit button:hover { color: var(--ink); }
+.cdone__edit .ico { width: 18px; height: 18px; }
+.co-next { margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+.co-consent { margin-top: 8px; font-size: 13px; color: var(--ink-3); }
+.co-consent a { color: var(--green); text-decoration: underline; text-underline-offset: 2px; }
+.co-prchg { margin: 6px 0 8px; padding: 8px 10px; border-radius: var(--r-s); background: var(--amber-bg); color: #6B4300; font-size: 13px; }
+.summary .btn.is-disabled, .summary .btn[disabled] { opacity: .45; cursor: not-allowed; }
+@media (max-width: 520px) { .cdone__flow li { flex-direction: column; align-items: flex-start; gap: 4px; padding: 8px; font-size: 12px; } }
+/* С-21 products under 47 € */
+.buybox__min { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+.buybox__min .ico { width: 17px; height: 17px; flex: none; margin-top: 1px; color: var(--ink-3); }
+.buybox__min a { color: var(--green); font-weight: 600; white-space: nowrap; }
+/* Б-04 info.html: headings inside the privacy policy */
+.prose h3 { margin: 18px 0 6px; font-size: 16px; font-weight: 700; color: var(--ink); }
+.prose h3 + p, .prose h3 + ul { margin-top: 0; }
+/* В-02 no JavaScript */
+.nojs { background: var(--amber-bg); color: #6B4300; font-size: 14px; padding: 12px 0; }
+.nojs p + p { margin-top: 4px; }
+.nojs a { color: inherit; text-decoration: underline; }
+/* В-09 404 */
+.nf { padding-top: 26px; padding-bottom: 40px; }
+.nf__box { max-width: 640px; margin: 0 auto 34px; text-align: center; }
+.nf__code { font-size: 72px; font-weight: 800; line-height: 1; letter-spacing: -.02em; color: var(--c-accent); }
+.nf__box h1 { margin-top: 8px; font-size: 28px; line-height: 1.2; }
+.nf__lead { margin: 10px auto 0; max-width: 46ch; color: var(--ink-2); }
+.nf__search { margin: 20px auto 0; max-width: 520px; text-align: left; }
+.nf__btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 18px; }
+@media (min-width: 1024px) { .nf { padding-top: 48px; } .nf__code { font-size: 96px; } .nf__box h1 { font-size: 34px; } }
+/* М-05 Kontakti: the page already lists every channel, the footer band would repeat it on the same screen */
+body[data-page="contacts"] .ftr__help { display: none; }
+/* М-07 LV/RU: a 44 px tall tap area on touch screens */
+@media (max-width: 1023px) { .lang a::after { top: -11px; bottom: -11px; } }
+/* rt9E: audit 06.11 (agent E) — product page */
+@media (min-width: 1024px) {
+  body.has-sticky { padding-bottom: 0; }   /* С-01: the sticky buy bar exists on phones only */
+  .hdr__cartsum { display: inline-block; min-width: 5.9em; font-variant-numeric: tabular-nums; }   /* С-19: «Grozs» → sum does not move «Kontakti» */
+}
+button.kspec__all { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; font-size: 14px; color: var(--c-accent-2); cursor: pointer; }
+.kspec__all .ico { transition: transform .2s; }
+.kspec__all[aria-expanded="true"] .ico { transform: rotate(180deg); }
+.buybox__avail { margin-top: 12px; display: flex; gap: 9px; align-items: flex-start; font-size: 13.5px; line-height: 1.4; color: var(--ink-2); }
+.buybox__avail .ico { width: 18px; height: 18px; flex: none; margin-top: 1px; color: var(--c-accent); }
+.models__need.is-ok { display: flex; align-items: center; background: var(--mint); color: var(--green-2); font-weight: 600; }
+#buy .ico, [data-sbuy] .ico { flex: none; }
+.series__t { display: block; -webkit-line-clamp: unset; overflow: visible; min-height: 2.5em; }   /* С-04: the whole label */
+.desc > * + * { margin-top: 10px; }
+.desc ul, .desc ol { padding-left: 22px; }
+.desc ul { list-style: disc; }
+.desc ol { list-style: decimal; }
+.desc li + li { margin-top: 4px; }
+.desc li::marker { color: var(--c-accent); }
+.desc h3, .desc h4 { color: var(--ink); font-size: 16px; font-weight: 700; margin-top: 18px; }
+.desc strong, .desc b { color: var(--ink); }
+.desc img { max-width: 100%; height: auto; }
+.desc a { color: var(--c-accent-2); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.desc a[href*="doc.php"], .desc a[href$=".pdf"], .desc a[href$=".PDF"] { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; }
+.desc a[href*="doc.php"]::before, .desc a[href$=".pdf"]::before, .desc a[href$=".PDF"]::before { content: ""; width: 18px; height: 18px; flex: none; background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6M8 13h8M8 17h5'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6M8 13h8M8 17h5'/%3E%3C/svg%3E") center / contain no-repeat; }
+.desc .desc__tw { margin: 14px 0; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-s); background: #fff; -webkit-overflow-scrolling: touch; }
+.desc__tw table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.desc__tw th, .desc__tw td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+.desc__tw tr:last-child > th, .desc__tw tr:last-child > td { border-bottom: 0; }
+.desc__tw th { width: 42%; font-weight: 500; color: var(--ink-2); background: var(--bg-2); }
+.desc__tw thead td, .desc__tw thead th { font-weight: 600; color: var(--ink); background: var(--bg-2); }
+.desc__tw td { color: var(--ink); }
+.desc__tw td > * + * { margin-top: 6px; }
+.desc__tw table:has(tr > :nth-child(3)) th { width: auto; }
+.desc__tw table:has(tr > :nth-child(3)) :is(th, td) { min-width: 88px; }
+.desc .desc__lang { font-size: 13px; color: var(--ink-3); }
+
+/* ---- rt9 F (06.11 outside audit): catalog, filters, search, home page, mobile ---- */
+/* С-07: a chip parameter is not repeated in the desktop filter column; phone: one chip row (the rest is in «Filtri»),
+   the table/cards switch sits in the «Filtri · Kārtot» row, so the first product comes up */
+@media (min-width: 1024px) { .fgroup--q { display: none; } }
+@media (max-width: 1023px) {
+  .quick__row ~ .quick__row { display: none; }
+  .toolbar { top: var(--hdr-vis, 112px); }
+  .toolbar__view { order: 3; flex: 0 0 auto; }
+  .toolbar__view button { flex: none; width: 44px; padding: 0; }
+  .toolbar__view button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+@media (max-width: 359px) {   /* too narrow for one row: the switch keeps its own row above, as before */
+  .toolbar { top: calc(var(--hdr-vis, 112px) - 51px); }
+  .toolbar__view { order: -1; flex: 1 1 100%; }
+  .toolbar__view button { flex: 1; width: auto; padding: 0 11px; }
+  .toolbar__view button span { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
+}
+/* С-08: the product name gets the free width of the table */
+@media (min-width: 1024px) { .ptable td.nm { min-width: 240px; } .ptable td.nm a { max-width: 460px; } }
+/* М-08: the note stands under the name, so the prices of neighbouring cards are on one line */
+.card__main .card__note { margin-top: 4px; }
+/* С-10: rails on a desktop scroll with arrows, no bare scrollbar */
+.railw { position: relative; }
+.railw__btn { display: none; }
+@media (min-width: 1024px) and (hover: hover) {
+  .rail { scrollbar-width: none; scroll-padding: 0; }
+  .rail::-webkit-scrollbar { display: none; }
+  .railw__btn { position: absolute; z-index: 3; top: 100px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%;
+    background: #fff; border: 1px solid var(--line); box-shadow: var(--sh); color: var(--ink); cursor: pointer; transition: border-color .15s, color .15s; }
+  .railw__btn:hover { border-color: var(--c-accent); color: var(--c-accent-ink); }
+  .railw__btn--prev { left: -20px; }
+  .railw__btn--next { right: -20px; }
+  .railw__btn[hidden] { display: none; }
+}
+/* С-12: the mega menu list fills its two columns top-down (Gita's order) */
+@media (min-width: 900px) { .mega__l { grid-auto-flow: column; } }
+/* С-13: «Viss katalogs» closes the category grid and takes the free cells of the last row */
+.cat--all { background: var(--c-accent-bg); border-color: var(--c-accent-bg-2); }
+.cat--all.is-wide { justify-content: center; }
+.cat--all .cat__img { display: grid; place-items: center; background: #fff; color: var(--c-accent-ink); }
+.cat--all .cat__img .ico { width: 26px; height: 26px; }
+.cat--all .cat__name { font-weight: 700; color: var(--ink); }
+.cat--all .cat__n { color: var(--ink-2); }
+.cat--all:not(.is-wide) .cat__n { display: none; }
+@media (min-width: 1024px) {
+  .cat--all .cat__img .ico { width: 42px; height: 42px; stroke-width: 1.5; }
+  .cat--all.is-wide { flex-direction: row; align-items: center; gap: 22px; padding: 24px 28px; }
+  .cat--all.is-wide .cat__img { width: 92px; height: 92px; aspect-ratio: auto; border-radius: 50%; flex: none; }
+  .cat--all.is-wide .cat__name { padding: 0; font-size: 20px; }
+  .cat--all.is-wide .cat__n { font-size: 14px; margin-top: 4px; }
+}
+/* С-18: no break inside a word in the hero tiles (long words get a hyphen at a syllable), menu phone and hours on two lines */
+.hero__tile-name { overflow-wrap: break-word; hyphens: manual; }
+@media (max-width: 399px) { .hero__tile-name { font-size: 11.5px; padding: 6px 6px 8px; } }
+.drawer__foot .dfoot__b { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
+.drawer__foot .dfoot__b b { font-weight: 700; }
+.drawer__foot .dfoot__b small { font-size: 12.5px; color: var(--ink-3); }
+/* М-01: on the home page the hero states delivery / invoice / prices, the top bar does not repeat them */
+body[data-page="home"] .topbar__facts { display: none; }
+/* М-04: a top category without sub-categories in the catalog */
+.cblock__brands { padding: 0 12px 14px; margin: -2px 0 0; font-size: 13.5px; color: var(--ink-2); }
+/* М-06: the footer Telegram icon is outlined like the other icons of the list */
+.ftr__lines .tg-ico { fill: none; stroke: rgba(255,255,255,.55); stroke-width: 1.5; width: 18px; height: 18px; flex: 0 0 18px; }
+/* М-09: «Skatīt visu»-type links always at the right end of the ruler line, however long the title */
+.sec__head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 16px; row-gap: 0; }
+.sec__head > div:first-child { display: contents; }
+.sec__head .sec__title { grid-column: 1 / -1; }
+.sec__head .ruler { grid-column: 1; }
+.sec__head .sec__more { grid-column: 2; grid-row: 2; }
+.sec__head .lead { grid-column: 1 / -1; }
+
+/* rt9 D С-14 type scale (generated by fix_rt9_D.py, do not edit by hand) */
+.cat__name { font-size: 14px; }
+.card__meta { font-size: 13px; }
+.price__vat { font-size: 12px; }
+.subcat__name { font-size: 13px; }
+.toolbar__filters .cnt { font-size: 12px; }
+.fopt small { font-size: 13px; }
+.gal__count { font-size: 13px; }
+.models__t th { font-size: 12px; }
+.buybox__ask { font-size: 14px; }
+.cl__name { font-size: 15px; }
+.sumrow { font-size: 15px; }
+.sumrow__note { font-size: 13px; }
+.minbar { font-size: 14px; }
+.field label { font-size: 14px; }
+.field__err { font-size: 13px; }
+.field__hint { font-size: 13px; }
+.radio span { font-size: 14px; }
+.co__items li { font-size: 14px; }
+.toast__t { font-size: 14px; }
+.toast .btn { font-size: 14px; }
+.hours { font-size: 15px; }
+.b2b li { font-size: 15px; }
+.about { font-size: 15px; }
+.ftr__pay span { font-size: 13px; }
+.cblock__list a { font-size: 14px; }
+.whnote { font-size: 14px; }
+.toolbar__view button { font-size: 14px; }
+.pcell s, .cell-prices s { font-size: 13px; }
+.unitline { font-size: 13px; }
+.ftr__hours { font-size: 14px; }
+.ftr__lines small { font-size: 13px; }
+.ftr__brand p { font-size: 14px; }
+.ftr__brand .ftr__pay { font-size: 13px; }
+.ftr__acc li a { font-size: 15px; }
+.minord { font-size: 14px; }
+.cat-intro { font-size: 15px; }
+.tdesc__b { font-size: 15px; }
+.series__p { font-size: 13px; }
+.calc__l { font-size: 15px; }
+.slist__t { font-size: 16px; }
+.cdone__fb { font-size: 14px; }
+.minord__gate { font-size: 14px; }
+.buybox__avail { font-size: 14px; }
+.drawer__foot .dfoot__b small { font-size: 13px; }
+.cblock__brands { font-size: 14px; }
+@media (min-width: 1024px) {
+  body { font-size: 16px; }
+  .mega__grp > a { font-size: 15px; }
+  .mega__grp li a { font-size: 14px; }
+  .hero__facts { font-size: 14px; }
+  .cat__name { font-size: 15px; }
+  .card__title { font-size: 15px; }
+  .series__i { font-size: 12px; }
+}
+@media (min-width: 900px) {
+  .mega__l a { font-size: 14px; }
+}
+@media (max-width: 399px) {
+  .hero__tile-name { font-size: 12px; }
+}
+/* /rt9 D С-14 */
