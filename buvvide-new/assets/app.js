@@ -16,6 +16,7 @@
   try { LANG = localStorage.getItem('bv_lang') === 'ru' ? 'ru' : 'lv'; } catch (e) {}
   var RU = w.BV_RU || {};
   function t(s) { return LANG === 'ru' && RU[s] ? RU[s] : s; }
+  function lcap(s) { s = String(s || '').trim(); if (s.length > 2 && s === s.toUpperCase()) s = s.charAt(0) + s.slice(1).toLowerCase(); return s.charAt(0).toUpperCase() + s.slice(1); }   // Q17
   function pn(k) { var m = LANG === 'ru' && w.BV_RUPARAM; return m && (m[k] || m[String(k).trim()]) || k; }   // Q8: parameter name in RU
   /* F8: category names in Russian (word by word, data/ru_categories.json -> assets/ru_cats.js) */
   var RUCATS = w.BV_RUCATS || {};          // full category name -> RU (data/ru_category_names.json)
@@ -141,7 +142,7 @@
     return x.localeCompare(y, 'lv', { numeric: true, sensitivity: 'base' });
   }
   function trDom(r) { if (LANG !== 'ru') return; $$('[data-t]', r).forEach(function (e) { var k = e.getAttribute('data-t') || e.textContent.trim(); if (RU[k]) e.textContent = RU[k]; }); }   // R10
-  var _cache = {}, DATA_V = '20261106i';   // bump when site/data changes: force-cache would keep old product files
+  var _cache = {}, DATA_V = '20261106j';   // bump when site/data changes: force-cache would keep old product files
   function getJSON(u) {
     if (!_cache[u]) _cache[u] = fetch(u + (u.indexOf('?') < 0 ? '?' : '&') + 'dv=' + DATA_V, { cache: 'force-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
     return _cache[u];
@@ -724,11 +725,13 @@
         })
         .filter(function (x) { return x[2] >= 2 && x[2] <= 60; })
         .sort(function (a, b) { return (A.quick.indexOf(b[0]) >= 0 ? 1 : 0) - (A.quick.indexOf(a[0]) >= 0 ? 1 : 0) || b[1] - a[1]; }).slice(0, 8)
-        .forEach(function (x) { S.facets.push({ k: x[0], label: pn(x[0]) }); });
+        .forEach(function (x) { S.facets.push({ k: x[0], label: lcap(pn(x[0])) }); });
       var any = S.items.some(function (p) { return offerVals(p).length; });
       if (any) S.facets.unshift({ k: '__offer', label: t('Piedāvājumi') });
       // a quick-filter parameter must also be in the sidebar (same selection, two views)
-      A.quick.forEach(function (k) { if (!S.facets.some(function (f) { return f.k === k; })) S.facets.push({ k: k, label: pn(k) }); });
+      A.quick.forEach(function (k) { if (!S.facets.some(function (f) { return f.k === k; })) S.facets.push({ k: k, label: lcap(pn(k)) }); });
+      var frank = function (f) { return A.quick.indexOf(f.k) >= 0 ? A.quick.indexOf(f.k) : f.k === '__cat' ? 10 : f.k === '__offer' ? 11 : 12; };   // Q18: the buyer's key parameters first
+      S.facets = S.facets.map(function (f, i) { return [f, i]; }).sort(function (a, b) { return frank(a[0]) - frank(b[0]) || a[1] - b[1]; }).map(function (x) { return x[0]; });
     })();
 
     function match(p, skip) {

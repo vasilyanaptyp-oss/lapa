@@ -1237,3 +1237,6 @@ body[data-page="category"] #main, body[data-page="akcijas"] #main, body[data-pag
 .minord__gate { margin: 8px 0 0; font-size: 13.5px; color: #8a4b00; }
 .models .field__hint { padding: 2px 14px 12px; margin: 0; }
 .ptable td.ar { white-space: nowrap; }
+
+/* Q29 tg: Telegram line in the footer */
+.ftr__lines .tg-ico { width: 20px; height: 20px; flex: none; fill: #29a9eb; }

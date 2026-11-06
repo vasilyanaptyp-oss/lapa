@@ -1,5 +1,6 @@
 /* RU interfeisa teksti (preču un kategoriju nosaukumi paliek latviski) */
 window.BV_RU = {
+"Telegram čats": "Чат в Telegram",
 "Šī prece citās krāsās un izmēros": "Этот товар в других цветах и размерах",
 "Rādīt mazāk": "Свернуть список",
 "Atrasta": "Найден",
@@ -116,7 +117,7 @@ window.BV_RU = {
 "Bezmaksas piegāde": "Бесплатная доставка",
 "Bezmaksas piegāde Latvijā": "Бесплатная доставка по Латвии",
 "Bezmaksas piegāde no ražotnes": "Бесплатная доставка с завода",
-"Brīvdienas novembrī: 1., 7.–8., 14.–15., 18., 21.–22., 28.–29.": "Выходные в ноябре: 1, 7–8, 14–15, 18, 21–22, 28–29.",
+"Valsts svētku dienās slēgts, piemēram, 18. novembrī.": "В государственные праздники закрыто, например 18 ноября.",
 "Būvmateriāli, durvis un apkure ar piegādi visā Latvijā": "Стройматериалы, двери и отопление с доставкой по всей Латвии",
 "Būvmateriāli, durvis, apkure un viss mājai un dārzam. Interneta veikals kopš 2015. gada.": "Стройматериалы, двери, отопление и всё для дома и сада. Интернет-магазин с 2015 года.",
 "Cena": "Цена",
