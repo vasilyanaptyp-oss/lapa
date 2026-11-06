@@ -142,7 +142,7 @@
     return x.localeCompare(y, 'lv', { numeric: true, sensitivity: 'base' });
   }
   function trDom(r) { if (LANG !== 'ru') return; $$('[data-t]', r).forEach(function (e) { var k = e.getAttribute('data-t') || e.textContent.trim(); if (RU[k]) e.textContent = RU[k]; }); }   // R10
-  var _cache = {}, DATA_V = '20261106k';   // bump when site/data changes: force-cache would keep old product files
+  var _cache = {}, DATA_V = '20261106l';   // bump when site/data changes: force-cache would keep old product files
   function getJSON(u) {
     if (!_cache[u]) _cache[u] = fetch(u + (u.indexOf('?') < 0 ? '?' : '&') + 'dv=' + DATA_V, { cache: 'force-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
     return _cache[u];
@@ -660,6 +660,7 @@
       if (x.tagName === 'IMG') { x.setAttribute('loading', 'lazy'); x.setAttribute('alt', x.getAttribute('alt') || ''); }
     });
     var box = d.createElement('div'); box.appendChild(tpl.content);
+    $$('p, div, span', box).forEach(function (x) { if (!x.textContent.replace(/\u00a0/g, ' ').trim() && !x.querySelector('img, iframe, video') && x.parentNode) x.parentNode.removeChild(x); });   // empty paragraphs from the shop editor
     var out = box.innerHTML.replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>').replace(/(<br\s*\/?>\s*)+$/i, '').trim();
     return box.textContent.trim() || /<img/i.test(out) ? out : '';
   }
