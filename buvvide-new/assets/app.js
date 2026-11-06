@@ -186,6 +186,18 @@
     akc: ['badge--akc', 'Akcija'], new: ['badge--new', 'Jaunums'], clear: ['badge--clear', 'Izpārdošana'], kit: ['badge--kit', 'Komplekts'], top: ['', 'Pieprasīts']
   };
   function pct(p) { return p.o && p.pr && p.o > p.pr ? Math.round((p.o - p.pr) / p.o * 100) : 0; }
+  // G1: the shop's model names carry an internal code and an English duplicate («m bal · Balts matēts/ White matte»);
+  // show only the Latvian part, and put the door direction in front of the size when the code is «kreisā»/«labā».
+  function vlabel(v) {
+    var code = String((v && v.code) || '').trim().replace(/!+$/, ''), model = String((v && v.model) || '').trim();
+    var m = (model.split('/')[0] || '').trim() || model;
+    if (/^(kreis|lab)/i.test(code)) {
+      var dir = code.charAt(0).toUpperCase() + code.slice(1).toLowerCase();
+      return (m && m.toLowerCase() !== code.toLowerCase()) ? dir + ', ' + m : dir;
+    }
+    if (!m) return code;
+    return m.charAt(0).toUpperCase() + m.slice(1);
+  }
   function badges(p) {
     var h = '', n = pct(p);
     if (n >= 1) h += '<span class="badge badge--sale">-' + n + '%</span>';
@@ -861,7 +873,11 @@
       h += '</div><div class="pp__info">';
       if (p.brand) h += '<p class="pp__brand">' + t('Ražotājs') + ': ' + esc(p.brand) + '</p>';
       h += '<h1>' + esc(p.n) + '</h1><div class="pp__ids"><span>ID: ' + id + '</span>' + (p.code ? '<span>' + t('Kods') + ': ' + esc(p.code) + '</span>' : '') + '</div>';
-      if (p.s) h += '<p class="pp__short">' + esc(p.s) + '</p>';
+      // G5: when the product has models, a subtitle that only announces the choice («izvēle pēc stikla krāsas»,
+      // «stiklu toņu izvēle preces saturā») says nothing new: the models block below shows it.
+      var shortTxt = String(p.s || '').trim();
+      if (variants.length > 1 && /izvēl|ton[iī]|krās/i.test(shortTxt)) shortTxt = '';
+      if (shortTxt) h += '<p class="pp__short">' + esc(shortTxt) + '</p>';
       var bh = '';
       if (sale) bh += '<span class="badge badge--sale">-' + pct(p) + '%</span>';
       flags.forEach(function (f) { if (FLAG[f]) bh += '<span class="badge ' + FLAG[f][0] + '">' + t(FLAG[f][1]) + '</span>'; });
@@ -876,12 +892,13 @@
         var multi = variants.length > 1;
         h += '<div class="models" id="izvele"><div class="models__h">' + (side ? t('Izvēlieties izmēru un virzienu') : t('Izvēlieties modeli')) +
           (multi ? ' <span class="models__n">' + variants.length + ' ' + plural(variants.length, t('modelis'), t('modeļi')) + '</span>' : '') + '</div>' +
-          '<table class="models__t"><thead><tr><th>' + t('Modelis') + '</th>' + (vdiff ? '<th>' + t('Cena') + '</th>' : '') + '<th></th></tr></thead><tbody>' +
+          '<table class="models__t"><thead><tr><th>' + t('Modelis') + '</th>' + (vdiff ? '<th>' + t('Cena') + '</th>' : '') + '</tr></thead><tbody>' +
           variants.map(function (v, i) {
-            var lab = [v.code, v.model].filter(Boolean).join(' · ');
-            return '<tr class="models__r' + (i === ci ? ' is-on' : '') + '" data-var="' + i + '"><td><button type="button" class="models__pick" data-var="' + i + '">' + esc(lab) + '</button></td>' +
+            var lab = vlabel(v);
+            return '<tr class="models__r' + (i === ci ? ' is-on' : '') + (v.price ? '' : ' is-off') + '" data-var="' + i + '">' +
+              '<td><label class="models__pick"><input type="radio" name="varmodel" value="' + i + '"' + (i === ci ? ' checked' : '') + (v.price ? '' : ' disabled') + '><span>' + esc(lab) + '</span></label></td>' +
               (vdiff ? '<td class="models__p">' + (v.price ? money(v.price) : '') + '</td>' : '') +
-              '<td class="models__a">' + (v.price ? '<button type="button" class="btn btn--sm" data-vadd="' + i + '" aria-label="' + t('Ielikt grozā') + ': ' + esc(lab) + '">' + icon('cart') + t('Grozā') + '</button>' : '') + '</td></tr>';
+              '</tr>';
           }).join('') + '</tbody></table>' +
           (side ? '<p class="field__hint">' + t('Pasūtot jānorāda vēršanas virziens — kreisās vai labās durvis.') + '</p>' : '') + '</div>';
       }
@@ -965,7 +982,7 @@
         // F4: the whole set = the main product (cheapest model if it has models) + its accessories
         var vs3 = variants || [], v3 = null;
         if (vs3.length) { var cb3 = Infinity; vs3.forEach(function (v) { if (v.price && v.price < cb3) { cb3 = v.price; v3 = v; } }); }
-        var lab3 = v3 ? [v3.code, v3.model].filter(Boolean).join(' · ') : '';
+        var lab3 = v3 ? vlabel(v3) : '';
         Cart.add(p, 1, lab3, v3 && v3.price ? v3.price : null);
         acc.forEach(function (x) { if (P[x.id]) Cart.add(P[x.id], 1); });
         msg(t('Grozā ielikta prece un') + ' ' + acc.length + ' ' + t('piederumi'));
@@ -980,7 +997,7 @@
         if (vi < 0) vi = 0;
         var v0 = variants[vi];
         if (v0.price) $('#pprice').innerHTML = priceHTML({ pr: v0.price, o: p.o && v0.price === p.pr ? p.o : null }, true);
-        var os0 = $('#optsel'); if (os0) os0.textContent = [v0.code, v0.model].filter(Boolean).join(' · ');
+        var os0 = $('#optsel'); if (os0) os0.textContent = vlabel(v0);
       }
       // gallery
       var main = $('#galmain'), n = images.length;
@@ -1009,31 +1026,28 @@
       });
       // accordions
       $$('.acc__h').forEach(function (b) { b.setAttribute('aria-expanded', b.parentNode.classList.contains('is-open')); b.addEventListener('click', function () { var s = b.parentNode; s.classList.toggle('is-open'); b.setAttribute('aria-expanded', s.classList.contains('is-open')); }); });
-      // variants
-      $$('[data-var]').forEach(function (b) {
-        b.addEventListener('click', function () {
-          if (b.hasAttribute('data-vadd')) return;
-          vi = +b.getAttribute('data-var');
-          $$('[data-var]').forEach(function (x) { x.classList.toggle('is-on', x === b); });
-          var v = variants[vi], lab0 = [v.code, v.model].filter(Boolean).join(' · ');
-          $$('.models__r').forEach(function (tr) { tr.classList.toggle('is-on', +tr.getAttribute('data-var') === vi); });
-          if (v.price) {
-            var vp = { pr: v.price, o: p.o && v.price === p.pr ? p.o : null };
-            $('#pprice').innerHTML = priceHTML(vp, true);
-          }
-          $('#pwa').href = waLink(t('Labdien! Vēlos pasūtīt') + ': ' + p.n + ' (ID ' + p.id + '), ' + lab0);
+      // variants: one buying pattern — a radio row selects the model, the single «Ielikt grozā» adds it
+      function pickVar(i) {
+        var v = variants[i];
+        if (!v) return;
+        vi = i;
+        $$('.models__r').forEach(function (tr) { tr.classList.toggle('is-on', +tr.getAttribute('data-var') === i); });
+        var rd = $('input[name="varmodel"][value="' + i + '"]'); if (rd) rd.checked = true;
+        if (v.price) {
+          var vp = { pr: v.price, o: p.o && v.price === p.pr ? p.o : null };
+          $('#pprice').innerHTML = priceHTML(vp, true);
+        }
+        $('#pwa').href = waLink(t('Labdien! Vēlos pasūtīt') + ': ' + p.n + ' (ID ' + p.id + '), ' + vlabel(v));
+      }
+      $$('.models__r').forEach(function (tr) {
+        tr.addEventListener('click', function (ev) {
+          if (ev.target && ev.target.tagName === 'INPUT') return;   // the radio handles its own change
+          if (tr.classList.contains('is-off')) return;
+          pickVar(+tr.getAttribute('data-var'));
         });
       });
-      // F9: add one model straight to the cart
-      $$('[data-vadd]').forEach(function (b) {
-        b.addEventListener('click', function (ev) {
-          ev.stopPropagation();
-          var i2 = +b.getAttribute('data-vadd'), v2 = variants[i2];
-          if (!v2 || !v2.price) return;
-          var lab2 = [v2.code, v2.model].filter(Boolean).join(' · ');
-          Cart.add({ id: p.id, c: p.c, n: p.n, pr: p.pr, img: p.img, f: p.f }, 1, lab2, v2.price);
-          toast({ n: p.n, img: p.img }, 1, lab2);
-        });
+      $$('input[name="varmodel"]').forEach(function (rd) {
+        rd.addEventListener('change', function () { if (rd.checked) pickVar(+rd.getAttribute('value')); });
       });
       // qty
       $$('[data-q]').forEach(function (b) { b.addEventListener('click', function () { qty.value = Math.max(1, Math.min(999, (+qty.value || 1) + +b.getAttribute('data-q'))); }); });
@@ -1042,7 +1056,7 @@
       $('#buy').addEventListener('click', function () {
         if (variants.length && vi < 0) vi = 0;   // never a dead end: the cheapest model is the default
         var q = Math.max(1, Math.min(999, Math.round(+qty.value) || 1)), v = vi >= 0 ? variants[vi] : null;
-        var lab = v ? [v.code, v.model].filter(Boolean).join(' · ') : '';
+        var lab = v ? vlabel(v) : '';
         Cart.add(p, q, lab, v && v.price ? v.price : null);
         toast(p, q, lab);
       });
