@@ -920,6 +920,8 @@ img.img-fail { object-fit: contain; padding: 18%; opacity: .55; mix-blend-mode: 
 .ftr__hours { margin: 8px 0 0; font-size: 13.5px; color: rgba(255,255,255,.55); }
 .ftr__lines { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(255,255,255,.1); }
 .ftr__lines li { border-bottom: 1px solid rgba(255,255,255,.1); }
+.ftr__lines li:last-child { border-bottom: 0; }
+.ftr__help { padding-bottom: 14px; }
 .ftr__lines a { display: flex; align-items: center; gap: 12px; min-height: 52px; color: #fff; text-decoration: none; }
 .ftr__lines a:hover { text-decoration: none; }
 .ftr__lines a:hover span { text-decoration: underline; text-underline-offset: 3px; }
