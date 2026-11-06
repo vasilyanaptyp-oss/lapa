@@ -140,7 +140,7 @@
     return x.localeCompare(y, 'lv', { numeric: true, sensitivity: 'base' });
   }
   function trDom(r) { if (LANG !== 'ru') return; $$('[data-t]', r).forEach(function (e) { var k = e.getAttribute('data-t') || e.textContent.trim(); if (RU[k]) e.textContent = RU[k]; }); }   // R10
-  var _cache = {}, DATA_V = '20261106f';   // bump when site/data changes: force-cache would keep old product files
+  var _cache = {}, DATA_V = '20261106g';   // bump when site/data changes: force-cache would keep old product files
   function getJSON(u) {
     if (!_cache[u]) _cache[u] = fetch(u + (u.indexOf('?') < 0 ? '?' : '&') + 'dv=' + DATA_V, { cache: 'force-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
     return _cache[u];
@@ -813,7 +813,7 @@
         if (many) h += '<button class="fmore" type="button" data-fmore>' + t('Rādīt visus') + ' (' + vals.length + ')</button>';
         h += '</div></div>';
       });
-      if (hi > lo) h += '<div class="fgroup" data-fk="__price"><button class="fgroup__h" type="button" aria-expanded="true">' + t('Cena') + ', €' + icon('chev-d') + '</button><div class="fgroup__b">' +
+      if (prices.length && Math.max.apply(null, prices) - Math.min.apply(null, prices) >= 0.01) h += '<div class="fgroup" data-fk="__price"><button class="fgroup__h" type="button" aria-expanded="true">' + t('Cena') + ', €' + icon('chev-d') + '</button><div class="fgroup__b">' +
         '<div class="frange"><input type="number" inputmode="decimal" min="0" placeholder="' + lo + '" value="' + (S.pmin != null ? S.pmin : '') + '" data-pmin aria-label="' + t('Cena no') + '"><span>–</span>' +
         '<input type="number" inputmode="decimal" min="0" placeholder="' + hi + '" value="' + (S.pmax != null ? S.pmax : '') + '" data-pmax aria-label="' + t('Cena līdz') + '"></div></div></div>';
       return h;
@@ -1812,6 +1812,7 @@
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(ph);
     w.addEventListener('resize', function () { clearTimeout(phT); phT = setTimeout(ph, 150); });
     // RU: the sale page kept its Latvian H1 and title
+    if (LANG === 'ru') { var tt0 = d.title.split(' — '); if (RU[d.title]) d.title = RU[d.title]; else if (tt0.length === 2 && RU[tt0[0]]) d.title = RU[tt0[0]] + ' — ' + tt0[1]; }   // RU page titles
     if (PAGE === 'akcijas' && LANG === 'ru') { var h1 = $('#cat-h1'); if (h1) h1.textContent = t('Akcijas un atlaides'); d.title = t('Akcijas un atlaides') + ' — BUVVide.lv'; }
   })();
   Cart.badge();

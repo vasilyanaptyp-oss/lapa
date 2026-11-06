@@ -1,5 +1,8 @@
 /* RU interfeisa teksti (preču un kategoriju nosaukumi paliek latviski) */
 window.BV_RU = {
+"BUVVide.lv — būvmateriāli, durvis, apkure ar piegādi visā Latvijā": "BUVVide.lv — стройматериалы, двери, отопление с доставкой по всей Латвии",
+"Veikala iestatījumi": "Настройки магазина",
+"Prece": "Товар",
 /* rt6 agent C */
 "Piedāvājam būvmateriālus, durvis, apkures iekārtas, santehniku, instrumentus un preces dārzam. Labiekārtošanai — Latvijā ražoti parku soli, atkritumu urnas, velostatīvi, karoga masti, pastkastes un puķu podi.": "Предлагаем стройматериалы, двери, отопительное оборудование, сантехнику, инструменты и товары для сада. Для благоустройства — сделанные в Латвии парковые скамейки, урны, велостойки, флагштоки, почтовые ящики и цветочные вазоны.",
 "Būvmateriāli, durvis, apkure un viss mājai un dārzam.": "Стройматериалы, двери, отопление и всё для дома и сада.",
