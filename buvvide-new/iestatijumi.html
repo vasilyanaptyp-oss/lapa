@@ -48,6 +48,20 @@ a{color:var(--acc)}
 @media (max-width:700px){.dv{grid-template-columns:1fr}.prev{height:420px}}
 .ok{color:var(--acc);font-weight:600;font-size:14px;align-self:center}
 .qfp{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.qfp:empty{display:none}.qfp label{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:14px;cursor:pointer}.qfp label small{color:var(--ink2);font-size:12px}.qfp label.on{border-color:var(--acc);background:#eef7f2}
+.tr [hidden],.card[hidden]{display:none!important}
+.trtools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.trtools input{flex:1 1 240px;height:42px;border:1.5px solid #cfd5d8;border-radius:9px;padding:0 12px;font:inherit}
+.tr{border:1px solid var(--line);border-radius:10px;max-height:70vh;overflow:auto}
+.tr__r{display:grid;grid-template-columns:minmax(0,1fr) 128px minmax(150px,240px);gap:8px;align-items:center;padding:6px 10px;border-bottom:1px solid #eef0f1;font-size:14px}
+.tr__r:hover{background:#f7f9f8}.tr__nm{display:flex;align-items:center;gap:6px;min-width:0}
+.tr__tg{width:26px;height:26px;flex:none;border:0;background:none;cursor:pointer;color:var(--ink2);font-size:13px;border-radius:6px}.tr__tg:hover{background:#eef0f1}.tr__tg[aria-expanded="true"]{transform:rotate(90deg)}
+.tr__sp{width:26px;flex:none}.tr__nm a{color:var(--ink);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tr__nm a:hover{text-decoration:underline}
+.tr__nm small{color:var(--ink2);font-size:12px;flex:none}.tr__r[data-d="0"] .tr__nm a{font-weight:700}
+.tr__r select{height:34px;border:1px solid #cfd5d8;border-radius:8px;font:inherit;font-size:13px;padding:0 6px;background:#fff}
+.tr__qf{height:34px;border:1px solid #cfd5d8;border-radius:8px;background:#fff;font:inherit;font-size:13px;text-align:left;padding:0 10px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tr__qf.is-set,.tr__r select.is-set{border-color:var(--acc);background:#eef8f2}
+.tr__p{padding:8px 10px 12px 44px;border-bottom:1px solid #eef0f1;background:#fafbfa}.tr__p .qfp{margin-top:0}
+.tr__p .tr__pb{display:flex;gap:8px;margin-top:10px}.tr__hd{position:sticky;top:0;z-index:1;background:#fff;font-size:12px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.03em}
+@media (max-width:640px){.tr__r{grid-template-columns:minmax(0,1fr) 110px}.tr__r .tr__qf{grid-column:1/-1}.tr__hd span:last-child{display:none}}
 </style>
 </head>
 <body>
@@ -69,7 +83,14 @@ a{color:var(--acc)}
     <div class="row"><button class="btn" id="bSave" type="button">Saglabāt blokus</button><button class="btn g" id="bReset" type="button">Atjaunot sākotnējo</button><span class="ok" id="bOk"></span></div>
   </section>
 
-  <section class="card">
+  <section class="card" id="tree">
+    <h2>Kategoriju iestatījumi pa kataloga koku</h2>
+    <p class="d">Viss kataloga koks vienā vietā, kā «Kataloga Properties» adminā. Katrai kategorijai: skats, kurā tā atveras pirmo reizi (tabula vai kartītes), un ātrie filtri virs preču saraksta (1–2 parametri). «Automātiski» nozīmē, ka veikals izvēlas pats. Izmaiņas saglabājas uzreiz.</p>
+    <div class="trtools"><input type="search" id="trQ" placeholder="Meklēt kategoriju, piem. ārdurvis" aria-label="Meklēt kategoriju"><button class="btn g" id="trOpen" type="button">Atvērt visu</button><button class="btn g" id="trClose" type="button">Aizvērt visu</button></div>
+    <div class="tr" id="trBox"><div class="tr__r tr__hd"><span>Kategorija</span><span>Skats</span><span>Ātrie filtri</span></div></div>
+  </section>
+
+  <section class="card" hidden>
     <h2>Kategorijas noklusējuma skats</h2>
     <p class="d">Kurā skatā kategorija atveras pirmo reizi: tabula (kur preces atšķiras pēc parametriem) vai kartītes. Klients pats var pārslēgt.</p>
     <div class="dv"><input type="text" id="dvCat" list="dvCats" placeholder="Kategorija, piem. Saplāksnis"><datalist id="dvCats"></datalist>
@@ -78,7 +99,7 @@ a{color:var(--acc)}
     <div class="dvlist" id="dvList"></div>
   </section>
 
-  <section class="card" id="qf">
+  <section class="card" id="qf" hidden>
     <h2>Ātrie filtri kategorijā</h2>
     <p class="d">Pogas virs preču saraksta, ar kurām pircējs vienā klikšķī atlasa vajadzīgo: ārdurvīm — kārbas platums un pielietojums, saplāksnim — biezums. Izvēlieties kategoriju un 1–2 parametrus. Ja nav iestatīts, veikals parametrus izvēlas pats.</p>
     <div class="dv"><input type="text" id="qfCat" list="dvCats" placeholder="Kategorija, piem. Ārdurvis"><button class="btn g" id="qfLoad" type="button">Rādīt parametrus</button><button class="btn" id="qfSave" type="button">Saglabāt</button></div>
@@ -167,6 +188,50 @@ a{color:var(--acc)}
   $('qfSave').onclick=function(){if(!cur){$('qfLoad').click();return;}var v=[].filter.call(document.querySelectorAll('#qfParams input'),function(i){return i.checked;}).map(function(i){return i.value;});
     var m=get('bv_quick')||{};if(v.length)m['c'+cur]=v;else delete m['c'+cur];set('bv_quick',m);draw();};
   $('qfList').addEventListener('click',function(e){var k=e.target.getAttribute('data-qdel');if(k){var m=get('bv_quick')||{};delete m[k];set('bv_quick',m);draw();}});
+})();
+</script>
+<script>
+(function(){   // 06.11 Gita: default view + quick filters on the whole catalogue tree
+  var QCAT={c7:['Kārbas platums','Ieteicamais pielietojums'],c310:['Biezums']};
+  function get(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
+  function set(k,v){try{if(v==null)localStorage.removeItem(k);else localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  var box=document.getElementById('trBox'),C={},open={},par={};
+  function qLabel(id){var q=(get('bv_quick')||{})['c'+id];return q&&q.length?{t:q.join(', '),set:1}:(QCAT['c'+id]?{t:QCAT['c'+id].join(', ')+' (veikals)',set:0}:{t:'Automātiski',set:0});}
+  function row(id,d){var c=C[id],kids=(c.k||[]).filter(function(x){return C[x];}),v=(get('bv_defview')||{})['c'+id]||'',q=qLabel(id);
+    return '<div class="tr__r" data-id="'+id+'" data-d="'+d+'"'+(d?' hidden':'')+'><div class="tr__nm" style="padding-left:'+(d*18)+'px">'+
+      (kids.length?'<button class="tr__tg" type="button" data-tg="'+id+'" aria-expanded="false" aria-label="Atvērt">&#9656;</button>':'<span class="tr__sp"></span>')+
+      '<a href="kategorija.html?c='+id+'" target="_blank" title="'+esc(c.n)+'">'+esc(c.n)+'</a><small>'+(c.cnt||0)+'</small></div>'+
+      '<select data-view="'+id+'" class="'+(v?'is-set':'')+'" aria-label="Skats: '+esc(c.n)+'"><option value="">Automātiski</option><option value="table"'+(v==='table'?' selected':'')+'>Tabula</option><option value="grid"'+(v==='grid'?' selected':'')+'>Kartītes</option></select>'+
+      '<button class="tr__qf'+(q.set?' is-set':'')+'" type="button" data-qf="'+id+'" title="'+esc(q.t)+'">'+esc(q.t)+'</button></div>'+
+      '<div class="tr__p" data-p="'+id+'" hidden></div>'+kids.map(function(x){par[x]=id;return row(x,d+1);}).join('');}
+  fetch('data/tree.json').then(function(r){return r.json();}).then(function(T){C=T.cats||{};
+    var top=(T.top||[]).filter(function(x){return C[x];});if(!top.length)top=Object.keys(C).filter(function(x){return !C[x].p;});
+    box.insertAdjacentHTML('beforeend',top.map(function(x){return row(String(x),0);}).join(''));});
+  function kidsOf(id){return [].filter.call(box.querySelectorAll('.tr__r'),function(r){return par[r.getAttribute('data-id')]===String(id);});}
+  function setOpen(id,on){open[id]=on;var tg=box.querySelector('[data-tg="'+id+'"]');if(tg)tg.setAttribute('aria-expanded',on?'true':'false');
+    kidsOf(id).forEach(function(r){r.hidden=!on;var k=r.getAttribute('data-id');if(!on){var p=box.querySelector('[data-p="'+k+'"]');if(p)p.hidden=true;if(open[k])setOpen(k,false);}});}
+  box.addEventListener('click',function(e){var t=e.target.closest('[data-tg]');if(t){var id=t.getAttribute('data-tg');setOpen(id,!open[id]);return;}
+    t=e.target.closest('[data-qf]');if(t){var id2=t.getAttribute('data-qf'),pn=box.querySelector('[data-p="'+id2+'"]');if(!pn.hidden){pn.hidden=true;return;}
+      pn.hidden=false;pn.innerHTML='<span class="d">Ielādē parametrus…</span>';
+      fetch('data/c/'+id2+'.json').then(function(r){return r.json();}).then(function(j){var st={};(j.items||[]).forEach(function(p){(p.prm||[]).forEach(function(kv){if(!kv[1]||kv[0]==='Preces tips'||kv[0]==='Pārdošanas vienība')return;(st[kv[0]]=st[kv[0]]||{})[kv[1]]=1;});});
+        var ks=Object.keys(st).filter(function(k){return Object.keys(st[k]).length>=2;}),have=(get('bv_quick')||{})['c'+id2]||QCAT['c'+id2]||[];
+        pn.innerHTML=ks.length?'<div class="qfp">'+ks.map(function(k){var on=have.indexOf(k)>=0;return '<label class="'+(on?'on':'')+'"><input type="checkbox" value="'+esc(k)+'"'+(on?' checked':'')+'> '+esc(k)+' <small>'+Object.keys(st[k]).length+' vērt.</small></label>';}).join('')+'</div>'+
+          '<div class="tr__pb"><button class="btn" type="button" data-qsave="'+id2+'">Saglabāt</button><button class="btn g" type="button" data-qauto="'+id2+'">Automātiski</button></div>'
+          :'<span class="d">Šai kategorijai nav parametru, pēc kuriem atlasīt (vai tai ir tikai apakškategorijas).</span>';}).catch(function(){pn.innerHTML='<span class="d">Šai kategorijai nav preču saraksta.</span>';});return;}
+    t=e.target.closest('[data-qsave],[data-qauto]');if(t){var id3=t.getAttribute('data-qsave')||t.getAttribute('data-qauto'),m=get('bv_quick')||{};
+      if(t.hasAttribute('data-qsave')){var v=[].filter.call(box.querySelectorAll('[data-p="'+id3+'"] input'),function(i){return i.checked;}).map(function(i){return i.value;});if(v.length)m['c'+id3]=v;else delete m['c'+id3];}else delete m['c'+id3];
+      set('bv_quick',Object.keys(m).length?m:null);var q=qLabel(id3),b=box.querySelector('[data-qf="'+id3+'"]');b.textContent=q.t;b.title=q.t;b.classList.toggle('is-set',!!q.set);box.querySelector('[data-p="'+id3+'"]').hidden=true;}});
+  box.addEventListener('change',function(e){var t=e.target;
+    if(t.hasAttribute('data-view')){var id=t.getAttribute('data-view'),m=get('bv_defview')||{};if(t.value)m['c'+id]=t.value;else delete m['c'+id];set('bv_defview',Object.keys(m).length?m:null);try{localStorage.removeItem('bv_view_c'+id);}catch(x){}t.classList.toggle('is-set',!!t.value);return;}
+    if(t.type==='checkbox'&&t.closest('.tr__p')){var all=[].filter.call(t.closest('.tr__p').querySelectorAll('input'),function(i){return i.checked;});if(all.length>2){t.checked=false;alert('Ne vairāk kā 2 parametri');}
+      [].forEach.call(t.closest('.tr__p').querySelectorAll('label'),function(l){l.classList.toggle('on',l.querySelector('input').checked);});}});
+  document.getElementById('trOpen').onclick=function(){[].forEach.call(box.querySelectorAll('[data-tg]'),function(b){var id=b.getAttribute('data-tg');open[id]=true;b.setAttribute('aria-expanded','true');});[].forEach.call(box.querySelectorAll('.tr__r[data-id]'),function(r){r.hidden=false;});};
+  document.getElementById('trClose').onclick=function(){[].forEach.call(box.querySelectorAll('[data-tg]'),function(b){open[b.getAttribute('data-tg')]=false;b.setAttribute('aria-expanded','false');});[].forEach.call(box.querySelectorAll('.tr__r[data-id]'),function(r){r.hidden=r.getAttribute('data-d')!=='0';});[].forEach.call(box.querySelectorAll('.tr__p'),function(p){p.hidden=true;});};
+  function fold(s){return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+  document.getElementById('trQ').addEventListener('input',function(){var q=fold(this.value.trim());if(!q){document.getElementById('trClose').click();return;}
+    var show={};[].forEach.call(box.querySelectorAll('.tr__r[data-id]'),function(r){var id=r.getAttribute('data-id');if(fold(C[id].n).indexOf(q)>=0){var x=id;while(x){show[x]=1;x=par[x];}}});
+    [].forEach.call(box.querySelectorAll('.tr__r[data-id]'),function(r){var id=r.getAttribute('data-id');r.hidden=!show[id];var b=box.querySelector('[data-tg="'+id+'"]');if(b){var o=kidsOf(id).some(function(k){return show[k.getAttribute('data-id')];});open[id]=o;b.setAttribute('aria-expanded',o?'true':'false');}});});
 })();
 </script>
 </body>

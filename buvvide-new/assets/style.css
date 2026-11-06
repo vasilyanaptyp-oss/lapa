@@ -1225,3 +1225,15 @@ body[data-page="category"] #main, body[data-page="akcijas"] #main, body[data-pag
   /* visual pass: info.html sections were glued together on phones (desktop has a 40 px gap) */
   .info__main { display: grid; gap: 36px; }
 }
+
+/* ---- red team 2 (06.11) ---- */
+@media (min-width: 1024px) { .hdr__cartsum { margin-left: 14px; } }
+@media (min-width: 1024px) { .ptypes__x { display: none; } }
+.ptypes__mo { display: none; }
+@media (min-width: 1024px) { .ptypes__mo { display: block; } .ptypes__more { background: none; border: 0; padding: 6px 10px; min-height: 36px; color: var(--c-accent-ink, var(--c-accent-2)); font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; } }
+.no-filters #fsheet, .no-filters .toolbar__filters { display: none !important; }
+@media (min-width: 1024px) { .layout.no-side { grid-template-columns: 1fr; } .no-side .side { display: none; } }
+.btn.is-disabled { opacity: .45; pointer-events: none; cursor: not-allowed; }
+.minord__gate { margin: 8px 0 0; font-size: 13.5px; color: #8a4b00; }
+.models .field__hint { padding: 2px 14px 12px; margin: 0; }
+.ptable td.ar { white-space: nowrap; }
