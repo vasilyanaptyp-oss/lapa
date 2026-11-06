@@ -16,6 +16,7 @@
   try { LANG = localStorage.getItem('bv_lang') === 'ru' ? 'ru' : 'lv'; } catch (e) {}
   var RU = w.BV_RU || {};
   function t(s) { return LANG === 'ru' && RU[s] ? RU[s] : s; }
+  function pn(k) { var m = LANG === 'ru' && w.BV_RUPARAM; return m && (m[k] || m[String(k).trim()]) || k; }   // Q8: parameter name in RU
   /* F8: category names in Russian (word by word, data/ru_categories.json -> assets/ru_cats.js) */
   var RUCATS = w.BV_RUCATS || {};          // full category name -> RU (data/ru_category_names.json)
   var RUNAME = w.BV_RUNAMES || {};         // category id -> RU (same file, by id)
@@ -140,7 +141,7 @@
     return x.localeCompare(y, 'lv', { numeric: true, sensitivity: 'base' });
   }
   function trDom(r) { if (LANG !== 'ru') return; $$('[data-t]', r).forEach(function (e) { var k = e.getAttribute('data-t') || e.textContent.trim(); if (RU[k]) e.textContent = RU[k]; }); }   // R10
-  var _cache = {}, DATA_V = '20261106h';   // bump when site/data changes: force-cache would keep old product files
+  var _cache = {}, DATA_V = '20261106i';   // bump when site/data changes: force-cache would keep old product files
   function getJSON(u) {
     if (!_cache[u]) _cache[u] = fetch(u + (u.indexOf('?') < 0 ? '?' : '&') + 'dv=' + DATA_V, { cache: 'force-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
     return _cache[u];
@@ -238,7 +239,7 @@
     if (p.s) bits.push(p.s);
     (p.prm || []).forEach(function (kv) {
       if (bits.length >= 3 || kv[0] === 'Preces tips' || kv[0] === 'Pārdošanas vienība' || !kv[1] || kv[1].length > 24 || isUnitVal(kv[1])) return;
-      var lab = String(kv[0]).toLowerCase();
+      var lab = String(pn(kv[0])).toLowerCase();
       bits.push(lab.length <= 14 && !/^\d/.test(lab) ? lab + ' ' + kv[1] : kv[1]);
     });
     return bits.join(' · ');
@@ -723,11 +724,11 @@
         })
         .filter(function (x) { return x[2] >= 2 && x[2] <= 60; })
         .sort(function (a, b) { return (A.quick.indexOf(b[0]) >= 0 ? 1 : 0) - (A.quick.indexOf(a[0]) >= 0 ? 1 : 0) || b[1] - a[1]; }).slice(0, 8)
-        .forEach(function (x) { S.facets.push({ k: x[0], label: x[0] }); });
+        .forEach(function (x) { S.facets.push({ k: x[0], label: pn(x[0]) }); });
       var any = S.items.some(function (p) { return offerVals(p).length; });
       if (any) S.facets.unshift({ k: '__offer', label: t('Piedāvājumi') });
       // a quick-filter parameter must also be in the sidebar (same selection, two views)
-      A.quick.forEach(function (k) { if (!S.facets.some(function (f) { return f.k === k; })) S.facets.push({ k: k, label: k }); });
+      A.quick.forEach(function (k) { if (!S.facets.some(function (f) { return f.k === k; })) S.facets.push({ k: k, label: pn(k) }); });
     })();
 
     function match(p, skip) {
@@ -851,12 +852,12 @@
           return '<button class="qchip' + (!c && !on ? ' is-zero' : '') + '" type="button" aria-pressed="' + (on ? 'true' : 'false') + '" data-qk="' + esc(k) + '" data-qv="' + esc(g) + '">' + esc(lb[g]) + '<small>' + c + '</small></button>';
         }).join('');
         if (hid) h += '<button class="qchip qchip--more" type="button" data-qmore="' + esc(k) + '">+ ' + hid + ' ' + t('vēl') + '</button>';
-        var lab = String(k).trim(); lab = lab === lab.toUpperCase() ? lab.charAt(0) + lab.slice(1).toLowerCase() : lab.charAt(0).toUpperCase() + lab.slice(1);   // «IZMĒRI», «izmēri» → «Izmēri»
+        var lab = String(pn(k)).trim(); lab = lab === lab.toUpperCase() ? lab.charAt(0) + lab.slice(1).toLowerCase() : lab.charAt(0).toUpperCase() + lab.slice(1);   // «IZMĒRI», «izmēri» → «Izmēri»
         return '<div class="quick__row" role="group" aria-label="' + esc(lab) + '"><b>' + esc(lab) + ':</b>' + h + '</div>';
       }).join('');
     }
     /* J4: table — columns = the category's main parameters (+ unit pricing) */
-    function colLabel(k) { return k === 'VEIDS' ? 'Veids' : k; }
+    function colLabel(k) { return LANG === 'ru' ? pn(k) : k === 'VEIDS' ? 'Veids' : k; }
     function theadHTML() {
       function th(label, key, cls) {
         var dir = '';
@@ -1266,7 +1267,7 @@
       }).sort(function (a, b) { return pri(a[0][0]) - pri(b[0][0]) || a[1] - b[1]; }).slice(0, 6).map(function (a) { return a[0]; });
       return { rows: rows, more: all.length > rows.length };
     }
-    function plab(s) { s = String(s || '').trim(); if (s.length > 2 && s === s.toUpperCase()) s = s.charAt(0) + s.slice(1).toLowerCase(); return s.charAt(0).toUpperCase() + s.slice(1); }
+    function plab(s) { s = String(pn(s) || '').trim(); if (s.length > 2 && s === s.toUpperCase()) s = s.charAt(0) + s.slice(1).toLowerCase(); return s.charAt(0).toUpperCase() + s.slice(1); }
     function draw(det, base, list, T) {
       base = base || {};   // a product can be missing from its category list (live site sells it without a price)
       var p = {
