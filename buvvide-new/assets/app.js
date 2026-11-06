@@ -128,10 +128,10 @@
     return _cache[u];
   }
   function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
-  function plural(n, one, many) {  // Latvian: 1 prece, 2 preces, 10 preču (genitive after 0 and 10-20, 30...)
+  function plural(n, one, many, gen) {  // Latvian: 1 prece, 2 preces, 10 preču (genitive after 0 and 10-20, 30...)
     var m = n % 100, d = n % 10;
     if (d === 1 && m !== 11) return one;
-    if (d === 0 || (m >= 11 && m <= 19)) return t('preču');
+    if (d === 0 || (m >= 11 && m <= 19)) return t(gen || 'preču');
     return many;
   }
   function prodURL(p) { return 'prece.html?id=' + p.id + '&c=' + p.c; }
@@ -149,7 +149,7 @@
       var a = Cart.get(), k = p.id + '|' + (v || ''), f = null;
       a.forEach(function (it) { if (Cart.key(it) === k) f = it; });
       if (f) f.q = Math.min(999, f.q + q);
-      else a.push({ id: p.id, c: p.c, n: p.n, pr: vp != null ? vp : p.pr, o: vp != null ? null : (p.o || null), img: p.img, v: v || '', q: q, f: p.f || [] });
+      else a.push({ id: p.id, c: p.c, n: p.n, pr: vp != null ? vp : p.pr, o: vp != null ? null : (p.o || null), img: p.img, v: v || '', q: q, f: p.f || [], u: (!v && p.u) ? { ar: p.u.ar, ppm: p.u.ppm, un: p.u.un } : null });
       Cart.set(a);
     },
     count: function () { return Cart.get().reduce(function (s, it) { return s + it.q; }, 0); },
@@ -214,7 +214,7 @@
     var bits = [];
     if (p.s) bits.push(p.s);
     (p.prm || []).forEach(function (kv) {
-      if (bits.length >= 3 || kv[0] === 'Preces tips' || !kv[1] || kv[1].length > 24) return;
+      if (bits.length >= 3 || kv[0] === 'Preces tips' || kv[0] === 'Pārdošanas vienība' || !kv[1] || kv[1].length > 24 || isUnitVal(kv[1])) return;
       var lab = String(kv[0]).toLowerCase();
       bits.push(lab.length <= 14 && !/^\d/.test(lab) ? lab + ' ' + kv[1] : kv[1]);
     });
@@ -230,8 +230,8 @@
       (p.img ? '<img loading="lazy" decoding="async" width="300" height="300" src="' + esc(img(p.img)) + '" alt="">' : '<svg class="card__ph" aria-hidden="true"><use href="#i-box"/></svg>') + '</a>' +
       '<div class="card__body"><div class="card__main"><a class="card__title" href="' + prodURL(p) + '">' + esc(p.n) + '</a>' +
       (meta ? '<p class="card__meta">' + esc(meta) + '</p>' : '') + '</div>' +
-      '<div class="card__foot">' + priceHTML(p, false) + notes +
-      (p.pr == null ? '' : '<div class="card__add"><button class="btn btn--sm" type="button" data-add="' + p.id + '">' + icon('cart') + '<span>' + t('Grozā') + '</span></button></div>') +
+      '<div class="card__foot">' + priceHTML(p, false) + unitLine(p) + notes +
+      (p.pr == null ? '' : '<div class="card__add"><button class="btn btn--sm" type="button" data-add="' + p.id + '">' + icon(p.hv ? 'chev-r' : 'cart') + '<span>' + t(p.hv ? 'Izvēlēties' : 'Grozā') + '</span></button></div>') +
       '</div></div></article>';
   }
 
@@ -243,13 +243,16 @@
       var p = P[b.getAttribute('data-add')];
       if (!p) return;
       if (p.hv) { location.href = prodURL(p) + '#izvele'; return; }   // has variants: choose first
-      Cart.add(p, 1);
-      toast(p, 1);
+      var rowEl = b.closest('tr, article, .card'), qIn = rowEl && rowEl.querySelector('.qty input'), q = qIn ? Math.max(1, Math.min(999, Math.round(+qIn.value) || 1)) : 1;
+      Cart.add(p, q);
+      toast(p, q);
       b.classList.add('is-added');
       var s = b.querySelector('span'); if (s) s.textContent = t('Ielikts');
       setTimeout(function () { b.classList.remove('is-added'); if (s) s.textContent = t('Grozā'); }, 1800);
       return;
     }
+    var cm = e.target.closest('[data-cmore]');   // «+ N vēl» in the mega menu / catalog page: show the hidden siblings
+    if (cm) { var ul = cm.closest('ul'); $$('li[hidden]', ul).forEach(function (li) { li.hidden = false; }); cm.parentNode.remove(); return; }
     var l = e.target.closest('[data-lang]');
     if (l) {
       e.preventDefault();
@@ -438,8 +441,9 @@
         h += '<div class="mega__grp"><a href="' + catURL(sid) + '">' + esc(cn(s.n)) + (s.cnt ? '<small>' + s.cnt + '</small>' : '') + '</a>';
         if (s.k && s.k.length) {
           h += '<ul>';
-          s.k.slice(0, 8).forEach(function (x) { var g = C[x]; if (g) h += '<li><a href="' + catURL(x) + '">' + esc(cn(g.n)) + '</a></li>'; });
-          if (s.k.length > 8) h += '<li><a href="' + catURL(sid) + '">' + t('vēl') + ' ' + (s.k.length - 8) + ' →</a></li>';
+          // J3: long sub-lists collapse behind «+ N vēl» and open in place
+          s.k.forEach(function (x, k) { var g = C[x]; if (g) h += '<li' + (k >= 6 ? ' hidden' : '') + '><a href="' + catURL(x) + '">' + esc(cn(g.n)) + '</a></li>'; });
+          if (s.k.length > 6) h += '<li><button class="mega__more" type="button" data-cmore>+ ' + (s.k.length - 6) + ' ' + t('vēl') + '</button></li>';
           h += '</ul>';
         }
         h += '</div>';
@@ -467,12 +471,104 @@
     });
   })();
 
-  /* ═════════ LISTING (category, akcijas, search) ═════════ */
-  var SORTS = [['rec', 'Ieteicamās'], ['asc', 'Lētākās vispirms'], ['desc', 'Dārgākās vispirms'], ['disc', 'Lielākā atlaide'], ['az', 'Nosaukums A–Ž']];
+  /* ═════════ LISTING (category, akcijas, search) ═════════
+     J4 table / cards per category (remembered), J5 unit pricing (per piece/pack AND per m²),
+     J7 filters always visible on desktop, J8 quick chips for the 1–2 key parameters. */
+  var SORTS = [['rec', 'Ieteicamās'], ['asc', 'Lētākās vispirms'], ['desc', 'Dārgākās vispirms'], ['ppm', 'Cena par m²: lētākās'], ['disc', 'Lielākā atlaide'], ['az', 'Nosaukums A–Ž']];
   var OFFERS = [['sale', 'Ar atlaidi'], ['free', 'Bezmaksas piegāde'], ['akc', 'Akcijas prece'], ['ask', 'Atlaide pēc pieprasījuma'], ['clear', 'Izpārdošana']];
+  var NOCOL = { 'Preces tips': 1, 'Pārdošanas vienība': 1, 'Ražotājs': 1, 'Garantija': 1, 'Garantijas termiņš': 1 };
+  // the order in which a parameter wins a table column / quick-filter slot (the most «shoppable» first)
+  var COLPRI = ['Biezums', 'Izmēri', 'Izmērs', 'Garums', 'Platums', 'Augstums', 'Diametrs', 'Svars', 'Jauda', 'Tilpums', 'Apjoms', 'Krāsa', 'Materiāls', 'Koksne', 'Klase', 'Modelis', 'Veids', 'VEIDS'];
+  var UNITRE = /([\d.,]+)\s*m[2²](?:\b|\s|\().*?([\d.,]+)\s*€\s*\/\s*m[2²]/i;    // «3.125m2 (12.78 €/m2)»
+  var AREARE = /^\s*([\d.,]+)\s*m[2²]\s*$/i;                                      // «2.5 m2»
+  function fnum(s) { return parseFloat(String(s).replace(',', '.')); }
+  function m2(v) { return (Math.round(v * 1000) / 1000).toFixed(v * 1000 % 10 ? 3 : 2).replace('.', ',') + ' m²'; }
+  function isUnitVal(v) { return UNITRE.test(v) || AREARE.test(v); }
+  /* J5: unit pricing from the shop's own parameters — area per sold unit and the price per m² */
+  function unitInfo(p) {
+    if (p.u !== undefined) return p.u;
+    var u = null, un = '';
+    (p.prm || []).forEach(function (kv) {
+      if (kv[0] === 'Pārdošanas vienība') { un = kv[1]; return; }
+      if (u) return;
+      var m = UNITRE.exec(kv[1]);
+      if (m) { u = { ar: fnum(m[1]), ppm: fnum(m[2]), k: kv[0] }; return; }
+      m = AREARE.exec(kv[1]);
+      if (m && /laukum|platīb|pak/i.test(kv[0]) && p.pr) { u = { ar: fnum(m[1]), ppm: p.pr / fnum(m[1]), k: kv[0] }; }
+    });
+    if (u && (!(u.ar > 0) || !(u.ppm > 0))) u = null;
+    if (u) u.un = un || (/pak/i.test(u.k) ? 'paka' : 'gab.');
+    p.u = u;
+    return u;
+  }
+  function unitLine(p) {   // «12,70 €/m² · 2 m² pakā»
+    var u = unitInfo(p);
+    if (!u) return '';
+    return '<p class="unitline"><b>' + money(u.ppm) + '/m²</b> · ' + m2(u.ar) + ' ' + esc(unitIn(u.un)) + '</p>';
+  }
+  function unitAcc(un) {   // accusative: cena par loksni / paku / gabalu
+    var s = String(un || '').trim().toLowerCase();
+    if (/^pak/.test(s)) return t('paku'); if (/^loksn/.test(s)) return t('loksni'); if (/^rull/.test(s)) return t('rulli');
+    if (/^iepak/.test(s)) return t('iepakojumu'); if (/^palet/.test(s)) return t('paleti'); if (!s || /^gab/.test(s)) return t('gabalu');
+    return s;
+  }
+  function unitLab(un) {   // nominative singular of the sold unit
+    var s = String(un || '').trim().toLowerCase();
+    if (/^pak/.test(s)) return t('paka'); if (/^loksn/.test(s)) return t('loksne'); if (/^rull/.test(s)) return t('rullis');
+    if (/^iepak/.test(s)) return t('iepakojums'); if (/^palet/.test(s)) return t('palete'); if (!s || /^gab/.test(s)) return t('gab.');
+    return s;
+  }
+  function unitLabPl(un) {   // plural
+    var s = String(un || '').trim().toLowerCase();
+    if (/^pak/.test(s)) return t('pakas'); if (/^loksn/.test(s)) return t('loksnes'); if (/^rull/.test(s)) return t('ruļļi');
+    if (/^iepak/.test(s)) return t('iepakojumi'); if (/^palet/.test(s)) return t('paletes'); if (!s || /^gab/.test(s)) return t('gab.');
+    return s;
+  }
+  function unitIn(un) {   // locative of the sold unit: loksne → loksnē, paka → pakā, gab. → gab.
+    var s = String(un || '').trim().toLowerCase();
+    if (/^pak/.test(s)) return t('pakā');
+    if (/^loksn/.test(s)) return t('loksnē');
+    if (/^rull/.test(s)) return t('rullī');
+    if (/^iepak/.test(s)) return t('iepakojumā');
+    if (/^palet/.test(s)) return t('paletē');
+    if (!s || /^gab/.test(s)) return t('vienībā');
+    return s;
+  }
+  function qtyHTML(p, cls) {
+    var u = unitInfo(p);
+    return '<div class="qty' + (cls || '') + '"><button type="button" data-tq="-1" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input type="number" min="1" max="999" value="1" data-qid="' + p.id + '" aria-label="' + t('Daudzums') + '"><button type="button" data-tq="1" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
+      (u ? '<span class="m2" data-m2="' + p.id + '">= ' + m2(u.ar) + '</span>' : '');
+  }
+  function analyze(items, mixed) {
+    var n = items.length, stat = {};
+    items.forEach(function (p) {
+      unitInfo(p);
+      (p.prm || []).forEach(function (kv) {
+        if (!kv[1] || NOCOL[kv[0]] || isUnitVal(kv[1])) return;
+        var st = stat[kv[0]] || (stat[kv[0]] = { n: 0, v: {}, num: 0 });
+        st.n++; st.v[kv[1]] = (st.v[kv[1]] || 0) + 1;
+        if (/^\s*[\d.,]+/.test(kv[1])) st.num++;
+      });
+    });
+    function pri(k) { var i = COLPRI.indexOf(k); return i < 0 ? 99 : i; }
+    var keys = Object.keys(stat).map(function (k) { var st = stat[k]; return { k: k, cov: st.n / n, d: Object.keys(st.v).length, num: st.num / st.n, vals: st.v }; });
+    var unit = items.some(function (p) { return p.u; });
+    // the table must fit next to the filter column at 1366 px: 3 parameter columns, 2 when the m² columns are shown
+    var cols = keys.filter(function (x) { return x.cov >= 0.5 && x.d >= 2 && n >= 2; })
+      .sort(function (a, b) { return pri(a.k) - pri(b.k) || b.cov - a.cov; }).slice(0, unit ? 2 : 3);
+    var quick = keys.filter(function (x) { return x.cov >= 0.6 && x.d >= 3 && x.d <= 12 && n >= 4; })
+      .sort(function (a, b) { return (b.num >= 0.7 ? 1 : 0) - (a.num >= 0.7 ? 1 : 0) || pri(a.k) - pri(b.k) || b.cov - a.cov; }).slice(0, 2);
+    var table = !mixed && n >= 3 && (cols.length >= 1 || unit);
+    return { cols: cols, quick: quick.map(function (x) { return x.k; }), unit: unit, table: table };
+  }
 
   function Listing(opts) {
-    var S = { items: opts.items, sort: qp('sort') || 'rec', sel: {}, pmin: null, pmax: null, show: 24, view: store('bv_view') || 'grid', facets: [] };
+    var A = analyze(opts.items, !!opts.mixed);
+    var key = opts.key || 'x';
+    var S = { items: opts.items, sort: qp('sort') || 'rec', sel: {}, pmin: null, pmax: null, show: 24, facets: [],
+      view: store('bv_view_' + key) || (A.table ? 'table' : 'grid') };
+    if (S.view === 'list') S.view = 'grid';
+    S.show = S.view === 'table' ? 50 : 24;
     var root = opts.root;
     var pageKey = 'bv_ls_' + location.pathname + location.search.replace(/&?(sort|f|pmin|pmax)=[^&]*/g, '');
     // restore filters from URL
@@ -504,7 +600,7 @@
       var types = {};
       S.items.forEach(function (p) { var v = pval(p, '__type'); if (v) types[v] = 1; });
       if (Object.keys(types).length > 1) S.facets.push({ k: '__type', label: t('Preces tips') });
-      S.items.forEach(function (p) { (p.prm || []).forEach(function (kv) { if (kv[0] !== 'Preces tips') keys[kv[0]] = (keys[kv[0]] || 0) + 1; }); });
+      S.items.forEach(function (p) { (p.prm || []).forEach(function (kv) { if (kv[0] !== 'Preces tips' && kv[0] !== 'Pārdošanas vienība' && !isUnitVal(kv[1])) keys[kv[0]] = (keys[kv[0]] || 0) + 1; }); });
       Object.keys(keys).filter(function (k) { return keys[k] >= Math.max(2, n * 0.25); })
         .map(function (k) {
           var vals = {};
@@ -512,10 +608,12 @@
           return [k, keys[k], Object.keys(vals).length];
         })
         .filter(function (x) { return x[2] >= 2 && x[2] <= 60; })
-        .sort(function (a, b) { return b[1] - a[1]; }).slice(0, 7)
+        .sort(function (a, b) { return (A.quick.indexOf(b[0]) >= 0 ? 1 : 0) - (A.quick.indexOf(a[0]) >= 0 ? 1 : 0) || b[1] - a[1]; }).slice(0, 8)
         .forEach(function (x) { S.facets.push({ k: x[0], label: x[0] }); });
       var any = S.items.some(function (p) { return offerVals(p).length; });
       if (any) S.facets.unshift({ k: '__offer', label: t('Piedāvājumi') });
+      // a quick-filter parameter must also be in the sidebar (same selection, two views)
+      A.quick.forEach(function (k) { if (!S.facets.some(function (f) { return f.k === k; })) S.facets.push({ k: k, label: k }); });
     })();
 
     function match(p, skip) {
@@ -530,12 +628,18 @@
       }
       return true;
     }
+    function ppmOf(p) { var u = unitInfo(p); return u ? u.ppm : Infinity; }
     function sorted(list) {
       var a = list.slice(), np = function (v) { return v == null ? Infinity : v; };   // «Cena: zvaniet» sorts last on the cheap-first side
       if (S.sort === 'asc') a.sort(function (x, y) { return np(x.pr) - np(y.pr); });
       else if (S.sort === 'desc') a.sort(function (x, y) { return (y.pr == null ? -1 : y.pr) - (x.pr == null ? -1 : x.pr); });
+      else if (S.sort === 'ppm') a.sort(function (x, y) { return ppmOf(x) - ppmOf(y) || np(x.pr) - np(y.pr); });
       else if (S.sort === 'disc') a.sort(function (x, y) { return pct(y) - pct(x) || np(x.pr) - np(y.pr); });
       else if (S.sort === 'az') a.sort(function (x, y) { return natCmp(x.n, y.n); });
+      else if (S.sort.indexOf('col:') === 0) {
+        var parts = S.sort.split(':'), k = decodeURIComponent(parts[1]), dir = parts[2] === 'desc' ? -1 : 1;
+        a.sort(function (x, y) { var vx = pval(x, k), vy = pval(y, k); if (!vx && vy) return 1; if (vx && !vy) return -1; return dir * natCmp(vx, vy); });
+      }
       return a;
     }
     function filtered() { return S.items.filter(function (p) { return match(p); }); }
@@ -555,7 +659,16 @@
     function valLabel(f, v) {
       if (f.k === '__offer') { for (var i = 0; i < OFFERS.length; i++) if (OFFERS[i][0] === v) return t(OFFERS[i][1]); }
       if (f.k === '__cat') return f.map[v] || v;
-      return v;
+      return String(v).replace(/,\s*$/, '');
+    }
+    function countsFor(k) {
+      var counts = {};
+      S.items.forEach(function (p) {
+        if (!match(p, k)) return;
+        if (k === '__offer') offerVals(p).forEach(function (v) { counts[v] = (counts[v] || 0) + 1; });
+        else { var v = pval(p, k); if (v) counts[v] = (counts[v] || 0) + 1; }
+      });
+      return counts;
     }
 
     var open = store('bv_fopen') || {};
@@ -563,16 +676,8 @@
       var h = '';
       var prices = S.items.map(function (p) { return p.pr; }).filter(function (x) { return x > 0; });
       var lo = Math.floor(Math.min.apply(null, prices)), hi = Math.ceil(Math.max.apply(null, prices));
-      h += '<div class="fgroup" data-fk="__price"><button class="fgroup__h" type="button">' + t('Cena') + ', €' + icon('chev-d') + '</button><div class="fgroup__b">' +
-        '<div class="frange"><input type="number" inputmode="decimal" min="0" placeholder="' + lo + '" value="' + (S.pmin != null ? S.pmin : '') + '" data-pmin aria-label="' + t('Cena no') + '"><span>–</span>' +
-        '<input type="number" inputmode="decimal" min="0" placeholder="' + hi + '" value="' + (S.pmax != null ? S.pmax : '') + '" data-pmax aria-label="' + t('Cena līdz') + '"></div></div></div>';
       S.facets.forEach(function (f) {
-        var counts = {};
-        S.items.forEach(function (p) {
-          if (!match(p, f.k)) return;
-          if (f.k === '__offer') offerVals(p).forEach(function (v) { counts[v] = (counts[v] || 0) + 1; });
-          else { var v = pval(p, f.k); if (v) counts[v] = (counts[v] || 0) + 1; }
-        });
+        var counts = countsFor(f.k);
         var all = {};
         S.items.forEach(function (p) {
           if (f.k === '__offer') offerVals(p).forEach(function (v) { all[v] = 1; });
@@ -582,9 +687,9 @@
         if (f.k === '__offer') vals.sort(function (a, b) { return OFFERS.map(function (o) { return o[0]; }).indexOf(a) - OFFERS.map(function (o) { return o[0]; }).indexOf(b); });
         else if (f.k === '__cat' || f.k === '__type') vals.sort(function (a, b) { return (counts[b] || 0) - (counts[a] || 0) || natCmp(valLabel(f, a), valLabel(f, b)); });
         else vals.sort(natCmp);
-        var sel = S.sel[f.k] || [], isOpen = open[f.k] != null ? open[f.k] : (f.k === '__offer' || f.k === '__type' || f.k === '__cat' || S.facets.indexOf(f) < 4 || sel.length);
-        var limit = 6, many = vals.length > limit + 2;
-        h += '<div class="fgroup' + (isOpen ? '' : ' is-closed') + '" data-fk="' + esc(f.k) + '"><button class="fgroup__h" type="button">' + esc(f.label) + (sel.length ? ' (' + sel.length + ')' : '') + icon('chev-d') + '</button><div class="fgroup__b">';
+        var sel = S.sel[f.k] || [], isOpen = open[f.k] != null ? open[f.k] : true;   // Gita 06.11: every filter group visible by default
+        var limit = 8, many = vals.length > limit + 2;
+        h += '<div class="fgroup' + (isOpen ? '' : ' is-closed') + '" data-fk="' + esc(f.k) + '"><button class="fgroup__h" type="button" aria-expanded="' + (isOpen ? 'true' : 'false') + '">' + esc(f.label) + (sel.length ? ' (' + sel.length + ')' : '') + icon('chev-d') + '</button><div class="fgroup__b">';
         if (vals.length > 14) h += '<input class="fsearch" type="search" placeholder="' + t('Meklēt') + '…" data-fsearch aria-label="' + t('Meklēt') + ' ' + esc(f.label) + '">';
         vals.forEach(function (v, i) {
           var c = counts[v] || 0, on = sel.indexOf(v) >= 0;
@@ -594,36 +699,94 @@
         if (many) h += '<button class="fmore" type="button" data-fmore>' + t('Rādīt visus') + ' (' + vals.length + ')</button>';
         h += '</div></div>';
       });
+      h += '<div class="fgroup" data-fk="__price"><button class="fgroup__h" type="button" aria-expanded="true">' + t('Cena') + ', €' + icon('chev-d') + '</button><div class="fgroup__b">' +
+        '<div class="frange"><input type="number" inputmode="decimal" min="0" placeholder="' + lo + '" value="' + (S.pmin != null ? S.pmin : '') + '" data-pmin aria-label="' + t('Cena no') + '"><span>–</span>' +
+        '<input type="number" inputmode="decimal" min="0" placeholder="' + hi + '" value="' + (S.pmax != null ? S.pmax : '') + '" data-pmax aria-label="' + t('Cena līdz') + '"></div></div></div>';
       return h;
     }
     function chipsHTML() {
       var h = '';
       S.facets.forEach(function (f) {
-        (S.sel[f.k] || []).forEach(function (v) { h += '<button class="chip" type="button" data-unsel="' + esc(f.k) + '" data-v="' + esc(v) + '">' + esc(valLabel(f, v)) + icon('x') + '</button>'; });
+        (S.sel[f.k] || []).forEach(function (v) { h += '<button class="chip" type="button" data-unsel="' + esc(f.k) + '" data-v="' + esc(v) + '">' + (f.k === '__offer' || f.k === '__cat' || f.k === '__type' ? '' : esc(f.label) + ': ') + esc(valLabel(f, v)) + icon('x') + '</button>'; });
       });
       if (S.pmin != null || S.pmax != null) h += '<button class="chip" type="button" data-unprice>' + (S.pmin != null ? money(S.pmin) : '0') + ' – ' + (S.pmax != null ? money(S.pmax) : '…') + icon('x') + '</button>';
       if (h) h += '<button class="chip chip--clear" type="button" data-clearall>' + t('Notīrīt visu') + '</button>';
       return h;
     }
+    /* J8: quick chips above the list for the category's 1–2 key parameters; same selection as the sidebar */
+    function quickHTML() {
+      if (!A.quick.length) return '';
+      return A.quick.map(function (k) {
+        var counts = countsFor(k), all = {};
+        S.items.forEach(function (p) { var v = pval(p, k); if (v) all[v] = 1; });
+        var vals = Object.keys(all).sort(natCmp), sel = S.sel[k] || [];
+        return '<div class="quick__row" role="group" aria-label="' + esc(k) + '"><b>' + esc(k) + ':</b>' + vals.map(function (v) {
+          var on = sel.indexOf(v) >= 0, c = counts[v] || 0;
+          return '<button class="qchip' + (!c && !on ? ' is-zero' : '') + '" type="button" aria-pressed="' + (on ? 'true' : 'false') + '" data-qk="' + esc(k) + '" data-qv="' + esc(v) + '">' + esc(String(v).replace(/,\s*$/, '')) + '<small>' + c + '</small></button>';
+        }).join('') + '</div>';
+      }).join('');
+    }
+    /* J4: table — columns = the category's main parameters (+ unit pricing) */
+    function colLabel(k) { return k === 'VEIDS' ? 'Veids' : k; }
+    function theadHTML() {
+      function th(label, key, cls) {
+        var dir = '';
+        if (key && S.sort === key) dir = 'asc'; else if (key && S.sort === key + ':desc') dir = 'desc';
+        return '<th' + (cls ? ' class="' + cls + '"' : '') + (key ? ' data-s="' + esc(key) + '" tabindex="0" role="button"' : '') + (dir ? ' data-dir="' + dir + '"' : '') + '>' + label + '</th>';
+      }
+      var h = '<tr><th></th>' + th(t('Nosaukums'), 'az');
+      A.cols.forEach(function (c) { h += th(esc(colLabel(c.k)), 'col:' + encodeURIComponent(c.k), 'pc' + (c.num >= 0.7 ? ' num' : '')); });
+      if (A.unit) h += th('<abbr title="' + t('m² vienā pārdošanas vienībā') + '">m²</abbr>', null, 'num ar') + th(t('Cena par m²'), 'ppm', 'num');
+      h += th(t('Cena'), 'asc', 'num') + '<th>' + t('Daudzums') + '</th><th></th></tr>';
+      return h;
+    }
+    function rowHTML(p) {
+      P[p.id] = p;
+      var u = unitInfo(p), sale = pct(p) >= 1;
+      var pr = p.pr == null ? '<span class="pr pr--ask">' + t('Cena: zvaniet') + '</span>' : '<span class="pr' + (sale ? ' pr--sale' : '') + '">' + money(p.pr) + '</span>' + (sale ? '<s>' + money(p.o) + '</s>' : '');
+      var ppm = u ? '<b>' + money(u.ppm) + '/m²</b>' : '';
+      var pcs = A.cols.map(function (c) { return pval(p, c.k); });
+      var meta = pcs.filter(Boolean).map(function (v) { return esc(String(v).replace(/,\s*$/, '')); }).join(' · ');
+      var h = '<tr data-id="' + p.id + '"><td class="im"><a href="' + prodURL(p) + '" tabindex="-1" aria-hidden="true">' + (p.img ? '<img src="' + esc(img(p.img)) + '" alt="" loading="lazy" width="54" height="54">' : '<svg class="card__ph" aria-hidden="true"><use href="#i-box"/></svg>') + '</a></td>' +
+        '<td class="nm"><a href="' + prodURL(p) + '">' + esc(p.n) + '</a><small>ID ' + p.id + (u ? ' · ' + t('cena par') + ' ' + esc(unitAcc(u.un)) : '') + (p.hv ? ' · ' + t('vairāki modeļi') : '') + '</small>' +
+        (p.nt && p.nt.length ? '<small class="' + (p.nt[0][1] === 'g' ? 'note-g' : p.nt[0][1] === 'a' ? 'note-a' : '') + '">' + esc(t(p.nt[0][0])) + '</small>' : '') + '</td>';
+      A.cols.forEach(function (c, i) { h += '<td class="pc' + (c.num >= 0.7 ? ' num' : '') + '">' + esc(String(pcs[i] || '').replace(/,\s*$/, '')) + '</td>'; });
+      if (A.unit) h += '<td class="num ar">' + (u ? m2(u.ar) : '') + '</td><td class="num pm">' + ppm + '</td>';
+      h += '<td class="num pcell">' + pr + '</td>' +
+        '<td class="cell-prices">' + pr + '<span class="pm">' + (ppm ? ppm + (u ? ' · ' + m2(u.ar) + ' ' + esc(unitIn(u.un)) : '') : '') + (meta ? (ppm ? ' · ' : '') + meta : '') + '</span></td>';
+      if (p.pr == null) h += '<td class="qtd"></td><td class="ad"><a class="btn btn--ghost btn--sm" href="' + prodURL(p) + '">' + t('Skatīt') + '</a></td>';
+      else h += '<td class="qtd">' + qtyHTML(p, ' qty--sm') + '</td><td class="ad"><button class="btn btn--sm add" type="button" data-add="' + p.id + '">' + icon(p.hv ? 'chev-r' : 'cart') + '<span>' + t(p.hv ? 'Izvēlēties' : 'Grozā') + '</span></button></td>';
+      return h + '</tr>';
+    }
     function render(keepFacets) {
       var list = sorted(filtered()), n = list.length;
-      var grid = $('[data-grid]', root);
-      grid.classList.toggle('is-list', S.view === 'list');
-      grid.innerHTML = n ? list.slice(0, S.show).map(card).join('') :
-        (S.items.length ? '<div class="empty" style="grid-column:1/-1"><h3>' + t('Ar šiem filtriem preču nav') + '</h3><p>' + t('Noņemiet kādu filtru vai notīriet visus.') + '</p><button class="btn" type="button" data-clearall>' + t('Notīrīt filtrus') + '</button></div>'
-          : '<div class="empty" style="grid-column:1/-1"><h3>' + t('Šajā kategorijā preces vēl tiek pievienotas') + '</h3><p>' + t('Apskatiet citas kategorijas vai pajautājiet mums pa tālruni.') + '</p><a class="btn" href="katalogs.html">' + t('Uz katalogu') + '</a></div>');
-      var more = $('[data-more]', root);
+      var grid = $('[data-grid]', root), tbl = $('[data-table]', root);
+      var isT = S.view === 'table';
+      root.classList.toggle('view-table', isT);
+      grid.hidden = isT; if (tbl) tbl.hidden = !isT;
+      var emptyH = S.items.length ? '<div class="empty"><h3>' + t('Ar šiem filtriem preču nav') + '</h3><p>' + t('Noņemiet kādu filtru vai notīriet visus.') + '</p><button class="btn" type="button" data-clearall>' + t('Notīrīt filtrus') + '</button></div>'
+        : '<div class="empty"><h3>' + t('Šajā kategorijā preces vēl tiek pievienotas') + '</h3><p>' + t('Apskatiet citas kategorijas vai pajautājiet mums pa tālruni.') + '</p><a class="btn" href="katalogs.html">' + t('Uz katalogu') + '</a></div>';
+      if (isT && tbl) {
+        $('[data-thead]', tbl).innerHTML = theadHTML();
+        var cs = 4 + A.cols.length + (A.unit ? 2 : 0);
+        $('[data-rows]', tbl).innerHTML = n ? list.slice(0, S.show).map(rowHTML).join('') : '<tr class="empty-row"><td colspan="' + cs + '">' + emptyH + '</td></tr>';
+      } else {
+        grid.innerHTML = n ? list.slice(0, S.show).map(card).join('') : '<div style="grid-column:1/-1">' + emptyH + '</div>';
+      }
+      var more = $('[data-more]', root), step = isT ? 50 : 24;
       if (n > S.show) {
         more.innerHTML = '<span class="more__n">' + t('Rādītas') + ' ' + Math.min(S.show, n) + ' ' + t('no') + ' ' + n + '</span><span class="more__bar"><i style="width:' + Math.round(S.show / n * 100) + '%"></i></span>' +
-          '<button class="btn btn--ghost" type="button" data-showmore>' + t('Rādīt vēl') + ' ' + Math.min(24, n - S.show) + '</button>';
+          '<button class="btn btn--ghost" type="button" data-showmore>' + t('Rādīt vēl') + ' ' + Math.min(step, n - S.show) + '</button>';
       } else more.innerHTML = n > 24 ? '<span class="more__n">' + t('Rādītas visas') + ' ' + n + ' ' + plural(n, t('prece'), t('preces')) + '</span>' : '';
       $$('[data-count]', root).forEach(function (e) { e.textContent = n + ' ' + plural(n, t('prece'), t('preces')); });
       $$('[data-showbtn]').forEach(function (e) { e.textContent = t('Rādīt') + ' ' + n + ' ' + plural(n, t('preci'), t('preces')); });
       var sc = selCount();
       $$('[data-fcnt]').forEach(function (e) { e.textContent = sc ? sc : ''; });
       $('[data-chips]', root).innerHTML = chipsHTML();
+      $$('[data-quick]').forEach(function (e) { e.innerHTML = quickHTML(); e.hidden = !A.quick.length; });
       if (!keepFacets) $$('[data-facets]').forEach(function (e) { var st = e.scrollTop; e.innerHTML = facetHTML(); e.scrollTop = st; });
       else $$('[data-facets]').forEach(function (e) { refreshCounts(e); });
+      $$('[data-view]', root).forEach(function (b) { var on = b.getAttribute('data-view') === S.view; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
       try { sessionStorage.setItem(pageKey, JSON.stringify({ show: S.show })); } catch (e) {}
     }
     function refreshCounts(box) {
@@ -631,12 +794,7 @@
       S.facets.forEach(function (f) {
         var g = box.querySelector('.fgroup[data-fk="' + (w.CSS && CSS.escape ? CSS.escape(f.k) : f.k) + '"]');
         if (!g) return;
-        var counts = {};
-        S.items.forEach(function (p) {
-          if (!match(p, f.k)) return;
-          if (f.k === '__offer') offerVals(p).forEach(function (v) { counts[v] = (counts[v] || 0) + 1; });
-          else { var v = pval(p, f.k); if (v) counts[v] = (counts[v] || 0) + 1; }
-        });
+        var counts = countsFor(f.k);
         $$('.fopt', g).forEach(function (l) {
           var inp = $('input', l), c = counts[inp.value] || 0;
           $('small', l).textContent = c;
@@ -644,17 +802,16 @@
         });
       });
     }
-    function changed(keepFacets) { S.show = 24; syncURL(); render(keepFacets); }
+    function changed(keepFacets) { S.show = S.view === 'table' ? 50 : 24; syncURL(); render(keepFacets); }
 
     // toolbar
     var sortSel = $('[data-sort]', root);
-    sortSel.innerHTML = SORTS.map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === S.sort ? ' selected' : '') + '>' + t(s[1]) + '</option>'; }).join('');
+    sortSel.innerHTML = SORTS.filter(function (s) { return s[0] !== 'ppm' || A.unit; }).map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === S.sort ? ' selected' : '') + '>' + t(s[1]) + '</option>'; }).join('');
     sortSel.addEventListener('change', function () { S.sort = sortSel.value; changed(true); });
     $$('[data-view]', root).forEach(function (b) {
-      b.classList.toggle('is-on', b.getAttribute('data-view') === S.view);
       b.addEventListener('click', function () {
-        S.view = b.getAttribute('data-view'); store('bv_view', S.view);
-        $$('[data-view]', root).forEach(function (x) { x.classList.toggle('is-on', x === b); });
+        S.view = b.getAttribute('data-view'); store('bv_view_' + key, S.view);   // remembered per category (J4)
+        S.show = S.view === 'table' ? 50 : 24;
         render(true);
       });
     });
@@ -688,19 +845,31 @@
     });
     d.addEventListener('input', function (e) {
       var s = e.target;
-      if (!s.hasAttribute || !s.hasAttribute('data-fsearch')) return;
-      var q = fold(s.value), g = s.closest('.fgroup');
-      $$('.fopt', g).forEach(function (l) { l.hidden = q ? fold($('span', l).textContent).indexOf(q) < 0 : l.hasAttribute('data-extra') && !g.classList.contains('is-all'); });
+      if (!s.hasAttribute) return;
+      if (s.hasAttribute('data-fsearch')) {
+        var q = fold(s.value), g = s.closest('.fgroup');
+        $$('.fopt', g).forEach(function (l) { l.hidden = q ? fold($('span', l).textContent).indexOf(q) < 0 : l.hasAttribute('data-extra') && !g.classList.contains('is-all'); });
+      } else if (s.hasAttribute('data-qid')) updM2(s);
     });
+    function updM2(inp) {
+      var p = P[inp.getAttribute('data-qid')], u = p && unitInfo(p), q = Math.max(1, Math.round(+inp.value) || 1);
+      $$('[data-m2="' + inp.getAttribute('data-qid') + '"]').forEach(function (el) { el.textContent = u ? '= ' + m2(u.ar * q) : ''; });
+    }
     d.addEventListener('click', function (e) {
       var x;
       if ((x = e.target.closest('.fgroup__h'))) {
         var g = x.closest('.fgroup'); g.classList.toggle('is-closed');
-        open[g.getAttribute('data-fk')] = !g.classList.contains('is-closed'); store('bv_fopen', open); return;
+        var isO = !g.classList.contains('is-closed'); x.setAttribute('aria-expanded', isO ? 'true' : 'false');
+        open[g.getAttribute('data-fk')] = isO; store('bv_fopen', open); return;
       }
       if ((x = e.target.closest('[data-fmore]'))) {
         var g2 = x.closest('.fgroup'); g2.classList.add('is-all');
         $$('[data-extra]', g2).forEach(function (l) { l.hidden = false; }); x.remove(); return;
+      }
+      if ((x = e.target.closest('[data-qk]'))) {   // quick chip = toggle the same value in the sidebar selection
+        var qk = x.getAttribute('data-qk'), qv = x.getAttribute('data-qv'), qa = S.sel[qk] || (S.sel[qk] = []), qi = qa.indexOf(qv);
+        if (qi >= 0) qa.splice(qi, 1); else qa.push(qv);
+        changed(false); return;
       }
       if ((x = e.target.closest('[data-unsel]'))) {
         var k = x.getAttribute('data-unsel'), v = x.getAttribute('data-v'), a = S.sel[k] || [];
@@ -708,8 +877,21 @@
       }
       if (e.target.closest('[data-unprice]')) { S.pmin = S.pmax = null; changed(false); return; }
       if (e.target.closest('[data-clearall]')) { S.sel = {}; S.pmin = S.pmax = null; changed(false); return; }
-      if (e.target.closest('[data-showmore]')) { S.show += 24; render(true); return; }
+      if (e.target.closest('[data-showmore]')) { S.show += S.view === 'table' ? 50 : 24; render(true); return; }
+      if ((x = e.target.closest('[data-tq]'))) {   // ± in a table row / card
+        var qi2 = x.parentNode.querySelector('input'); qi2.value = Math.max(1, Math.min(999, (+qi2.value || 1) + +x.getAttribute('data-tq'))); updM2(qi2); return;
+      }
+      if ((x = e.target.closest('th[data-s]'))) {   // sortable column header
+        var sk = x.getAttribute('data-s');
+        if (sk.indexOf('col:') === 0) S.sort = S.sort === sk ? sk + ':desc' : sk;
+        else if (sk === 'asc') S.sort = S.sort === 'asc' ? 'desc' : 'asc';
+        else S.sort = sk;
+        var opt = SORTS.some(function (s) { return s[0] === S.sort; }) ? S.sort : 'rec';
+        sortSel.value = opt;
+        changed(true); return;
+      }
     });
+    d.addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target.matches && e.target.matches('th[data-s]')) e.target.click(); });
     render(false);
     // restore scroll after back navigation
     if (saved && saved.y && performance.getEntriesByType && (performance.getEntriesByType('navigation')[0] || {}).type === 'back_forward') {
@@ -753,7 +935,8 @@
           if (Object.keys(catFacet).length < 2) catFacet = null;
         }
         if (j.desc) $('#cat-desc').innerHTML = '<h2>' + esc(c.n) + '</h2><p>' + esc(j.desc) + '</p>';
-        Listing({ root: root, items: j.items, catFacet: catFacet });
+        // J4: the default view (table or cards) is decided from the data here; in the shop the admin sets it per category
+        Listing({ root: root, items: j.items, catFacet: catFacet, key: 'c' + id, mixed: !!(c.k && c.k.length) });
       });
     }).catch(function () {
       root.innerHTML = '<div class="empty"><h2>' + t('Neizdevās ielādēt preces') + '</h2><p>' + t('Pārbaudiet savienojumu un mēģiniet vēlreiz.') + '</p><a class="btn" href="">' + t('Pārlādēt') + '</a></div>';
@@ -767,7 +950,7 @@
       loadTree().then(function (T) {
         var cf = {};
         j.items.forEach(function (p) { if (T.cats[p.c]) cf[p.c] = T.cats[p.c].n; });
-        Listing({ root: $('#listing'), items: j.items, catFacet: Object.keys(cf).length > 1 ? cf : null });
+        Listing({ root: $('#listing'), items: j.items, catFacet: Object.keys(cf).length > 1 ? cf : null, key: 'akcijas', mixed: true });
       });
     });
   }
@@ -816,7 +999,7 @@
         var s = T.cats[id];
         return '<a class="subcat" href="' + catURL(id) + '"><span class="subcat__img">' + (s.img ? '<img src="' + esc(img(s.img)) + '" alt="" loading="lazy">' : '') + '</span><span class="subcat__name">' + esc(s.n) + '<small>' + cc[id] + ' ' + t('atrastas') + '</small></span></a>';
       }).join('');
-      Listing({ root: root, items: res, catFacet: Object.keys(cf).length > 1 ? cf : null });
+      Listing({ root: root, items: res, catFacet: Object.keys(cf).length > 1 ? cf : null, key: 'search', mixed: true });
     });
   }
 
@@ -855,7 +1038,9 @@
       while (x) { chain.unshift(x); x = x.p ? T.cats[x.p] : null; }
       $('#crumbs').innerHTML = '<a href="index.html">' + t('Sākums') + '</a>' + chain.map(function (cc) { return icon('chev-r') + '<a href="' + catURL(cc.id) + '">' + esc(cn(cc.n)) + '</a>'; }).join('');
       var images = (det && det.images && det.images.length) ? det.images : (p.img ? [p.img] : []);
-      var variants = (det && det.variants) || [];
+      var variants = ((det && det.variants) || []).slice();
+      // models whose names start with a number (sizes «01 (55x78)») are listed in natural order so the cheapest, preselected one is at the top
+      if (variants.length > 1 && variants.every(function (v) { return /^\d/.test(vlabel(v)); })) variants.sort(function (a, b) { return natCmp(vlabel(a), vlabel(b)); });
       var desc = (det && det.desc) || [];
       var sale = pct(p) >= 1, flags = p.f || [];
       var side = variants.some(function (v) { return /kreis|labā|labās/i.test(v.code + ' ' + v.model); });
@@ -882,7 +1067,8 @@
       if (sale) bh += '<span class="badge badge--sale">-' + pct(p) + '%</span>';
       flags.forEach(function (f) { if (FLAG[f]) bh += '<span class="badge ' + FLAG[f][0] + '">' + t(FLAG[f][1]) + '</span>'; });
       if (bh) h += '<div class="pp__badges">' + bh + '</div>';
-      h += '<div class="buybox" id="buybox"><div id="pprice">' + priceHTML(p, true) + '</div>';
+      var pu = unitInfo(p);
+      h += '<div class="buybox" id="buybox"><div id="pprice">' + priceHTML(p, true) + '</div>' + (pu ? '<p class="unitline unitline--pp">' + t('Cena par') + ' ' + esc(unitAcc(pu.un)) + ' · <b>' + money(pu.ppm) + '/m²</b> · ' + m2(pu.ar) + ' ' + esc(unitIn(pu.un)) + '</p>' : '');
       if (sale) h += '<span class="save">' + icon('percent') + t('Ietaupiet') + ' ' + money(p.o - p.pr) + '</span>';
       if (variants.length) {
         // F9: the shop lists the models at the bottom of its product page; here they sit right under the price as a
@@ -890,16 +1076,16 @@
         var ci = 0, cbest = Infinity;
         variants.forEach(function (v, i) { if (v.price && v.price < cbest) { cbest = v.price; ci = i; } });
         var multi = variants.length > 1;
-        h += '<div class="models" id="izvele"><div class="models__h">' + (side ? t('Izvēlieties izmēru un virzienu') : t('Izvēlieties modeli')) +
-          (multi ? ' <span class="models__n">' + variants.length + ' ' + plural(variants.length, t('modelis'), t('modeļi')) + '</span>' : '') + '</div>' +
-          '<table class="models__t"><thead><tr><th>' + t('Modelis') + '</th>' + (vdiff ? '<th>' + t('Cena') + '</th>' : '') + '</tr></thead><tbody>' +
+        h += '<div class="models" id="izvele"><div class="models__h">' + icon('list') + (side ? t('Izvēlieties izmēru un virzienu') : t('Izvēlieties modeli')) +
+          (multi ? ' <span class="models__n">' + variants.length + ' ' + plural(variants.length, t('modelis'), t('modeļi'), 'modeļu') + '</span>' : '') + '</div>' +
+          '<div class="models__scroll' + (variants.length > 8 ? ' is-long' : '') + '"><table class="models__t"><thead><tr><th>' + t('Modelis') + '</th>' + (vdiff ? '<th>' + t('Cena') + '</th>' : '') + '</tr></thead><tbody>' +
           variants.map(function (v, i) {
             var lab = vlabel(v);
             return '<tr class="models__r' + (i === ci ? ' is-on' : '') + (v.price ? '' : ' is-off') + '" data-var="' + i + '">' +
               '<td><label class="models__pick"><input type="radio" name="varmodel" value="' + i + '"' + (i === ci ? ' checked' : '') + (v.price ? '' : ' disabled') + '><span>' + esc(lab) + '</span></label></td>' +
               (vdiff ? '<td class="models__p">' + (v.price ? money(v.price) : '') + '</td>' : '') +
               '</tr>';
-          }).join('') + '</tbody></table>' +
+          }).join('') + '</tbody></table></div>' +
           (side ? '<p class="field__hint">' + t('Pasūtot jānorāda vēršanas virziens — kreisās vai labās durvis.') + '</p>' : '') + '</div>';
       }
       if (p.pr == null) {
@@ -907,19 +1093,23 @@
         h += '<p class="buybox__ask">' + icon('phone') + '<span>' + t('Šai precei cena nav norādīta. Zvaniet, un mēs nosauksim cenu un pieejamību.') + ' <a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a></span></p>';
       } else {
         h += '<div class="buyrow"><div class="qty"><button type="button" data-q="-1" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input id="qty" type="number" min="1" max="999" value="1" aria-label="' + t('Daudzums') + '"><button type="button" data-q="1" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
-          '<button class="btn" type="button" id="buy">' + icon('cart') + t('Ielikt grozā') + '</button></div>';
+          '<button class="btn" type="button" id="buy">' + icon('cart') + t('Ielikt grozā') + '</button></div>' + (pu ? '<p class="m2 m2--pp" id="pm2">1 ' + esc(unitLab(pu.un)) + ' = ' + m2(pu.ar) + '</p>' : '');
       }
       h += '<a class="btn btn--wa btn--block buybox__wa" id="pwa" target="_blank" rel="noopener" href="' + waLink(t('Labdien! Vēlos pasūtīt') + ': ' + p.n + ' (ID ' + id + ')') + '"><svg class="wa-ico" aria-hidden="true"><use href="#i-wa"/></svg>' + t('Pasūtīt WhatsApp') + '</a>';
       var nts = (det && det.nt) || (base && base.nt) || [];
       nts.forEach(function (x) { if (!/Atlaide pēc/.test(x[0])) h += '<p class="buybox__ask' + (x[1] === 'g' ? ' is-g' : '') + '">' + icon(x[1] === 'g' ? 'truck' : 'info') + '<span>' + esc(t(x[0])) + '</span></p>'; });
       if (flags.indexOf('ask') >= 0) h += '<p class="buybox__ask">' + icon('percent') + '<span>' + t('Šai precei iespējama atlaide.') + ' <a target="_blank" rel="noopener" href="' + waLink(t('Labdien! Vai precei') + ' ' + p.n + ' (ID ' + id + ') ' + t('iespējama atlaide?')) + '">' + t('Jautāt cenu') + '</a></span></p>';
-      h += '<div class="perks">' +
-        '<div class="perk">' + icon('truck') + '<div><b>' + t('Piegāde visā Latvijā') + '</b><span>' + (flags.indexOf('free') >= 0 ? t('Šai precei piegāde bez maksas. ') : flags.indexOf('ship') >= 0 ? t('Tikai ar maksas piegādi uz objektu vai adresi. ') : '') + t('Kurjers piegādā 2–4 darba dienās pēc apmaksas.') + '</span></div></div>' +
-        (flags.indexOf('ship') >= 0 ? '' : '<div class="perk">' + icon('store') + '<div><b>' + t('Saņemšana noliktavā') + '</b><span>' + t('Par piegādi nav jāmaksā. Pēc apmaksas nododam noliktavai 2 darba stundu laikā.') + '</span></div></div>') +
-        '<div class="perk">' + icon('bank') + '<div><b>' + t('Maksājat pēc rēķina') + '</b><span>' + t('Apmaksa uzreiz nav jāveic: ja prece ir noliktavā, rezervējam to uz 3 darba dienām un nosūtām avansa rēķinu.') + '</span></div></div>' +
-        (p.pr >= 150 ? '<div class="perk">' + icon('calendar') + '<div><b>' + t('ESTO līzings līdz 60 mēnešiem') + '</b><span>' + t('Privātpersonām. Izvēlieties to, noformējot pasūtījumu.') + '</span></div></div>' : '') +
+      h += '</div>';   // buybox ends here: the info block goes BELOW the models and the buy button (Gita 06.11)
+      var perks = '<div class="perks" id="perks">' +
+        '<div class="perk">' + icon('truck') + '<div><b>' + t('Piegāde') + '</b><span>' + (flags.indexOf('free') >= 0 ? t('Šai precei piegāde ir bez maksas. ') : flags.indexOf('ship') >= 0 ? t('Tikai ar maksas piegādi uz objektu vai adresi. ') : '') + t('Ja prece ir pieejama, kurjers to piegādā apmēram 2–4 darba dienu laikā pēc apmaksas. Piegādes maksu aprēķinām pēc adreses un norādām rēķinā.') + '</span></div></div>' +
+        (flags.indexOf('ship') >= 0 ? '' : '<div class="perk">' + icon('store') + '<div><b>' + t('Saņemšana') + '</b><span>' + t('Var saņemt arī noliktavā, tad par piegādi nav jāmaksā. Katrai precei var būt sava noliktava; par gatavību paziņosim pa tālruni vai e-pastu.') + '</span></div></div>') +
+        '<div class="perk">' + icon('bank') + '<div><b>' + t('Apmaksa') + '</b><span>' + t('Apmaksa uzreiz nav jāveic: nosūtām avansa rēķinu e-pastā. Ja prece ir pieejama, rezervējam to uz 3 darba dienām. Cenas ar PVN 21%.') + '</span></div></div>' +
+        '<div class="perk">' + icon('return') + '<div><b>' + t('Atgriešana') + '</b><span>' + t('Privātpersonām — tiesības 14 dienu laikā atteikties no pirkuma, ja prece nav lietota vai bojāta.') + ' <a href="info.html#atgriesana">' + t('Sīkāk') + '</a></span></div></div>' +
+        '<div class="perk">' + icon('shield') + '<div><b>' + t('Garantija') + '</b><span>' + t('Likumā noteiktā vai ražotāja garantija; termiņš dažādām precēm atšķiras.') + '</span></div></div>' +
+        '<div class="perk">' + icon('calendar') + '<div><b>' + t('ESTO nomaksa') + '</b><span>' + t('Privātpersonām — līdz 60 mēnešiem; izvēlieties, noformējot pasūtījumu.') + '</span>' +
+          '<a class="btn btn--ghost btn--sm perk__btn" href="https://esto.lv/lv/maksa-velak/" target="_blank" rel="noopener">' + t('Uzzināt par ESTO nomaksu') + '</a></div></div>' +
         '<div class="perk">' + icon('phone') + '<div><b>' + t('Jautājumi par preci?') + '</b><span><a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a> · ' + t('P–C 9:30–17:30, Pk 9:30–17:00') + '</span></div></div>' +
-        '</div></div>';
+        '</div>';
       // accessories / kit parts («Piederumi» tab of the shop)
       // F4: only the product's own add-ons. The shop also lists «related» products there, which are alternatives,
       // not accessories (a 42,50 € ground anchor «with» five 129–217 € showers): an add-on never costs more than
@@ -941,7 +1131,7 @@
           (acc.length > 1 && p.pr != null ? '<div class="kit__sum"><span>' + t('Piederumi') + ': ' + acc.length + ' ' + t('pozīcijas') + '</span><span>' + money(ksum) + '</span></div>' +
             '<button class="btn btn--ghost btn--block" type="button" id="accall" style="margin-top:10px">' + icon('cart') + t('Ielikt grozā preci un piederumus') + ' (' + money(ksum + p.pr) + ')</button>' : '') + '</div>';
       }
-      h += '</div></div>';
+      h += perks + '</div></div>';
       // details
       var specRows = p.prm.filter(function (kv) { return kv[1]; }).map(function (kv) { return '<tr><th>' + esc(kv[0]) + '</th><td>' + esc(kv[1]) + '</td></tr>'; }).join('');
       h += '<div class="pp__more">';
@@ -949,8 +1139,8 @@
       if (specRows) h += '<section class="pp__sec acc' + (desc.length ? '' : ' is-open') + '"><button class="acc__h" type="button">' + t('Tehniskie parametri') + icon('chev-d') + '</button><div class="acc__b"><table class="spec"><tbody><tr><th>ID</th><td>' + id + '</td></tr>' + (p.code ? '<tr><th>' + t('Kods') + '</th><td>' + esc(p.code) + '</td></tr>' : '') + specRows + '</tbody></table></div></section>';
       h += '<section class="pp__sec acc"><button class="acc__h" type="button">' + t('Piegāde, apmaksa, atgriešana') + icon('chev-d') + '</button><div class="acc__b prose"><ul>' +
         '<li>' + t('Cenas norādītas eiro ar PVN 21%. Uzņēmumiem — PVN 0% precēm, uz kurām attiecas reversais PVN.') + '</li>' +
-        '<li>' + t('Ja prece ir noliktavā, rezervējam to uz 3 darba dienām un nosūtām rēķinu. Neapmaksāti rēķini pēc 3 darba dienām tiek anulēti.') + '</li>' +
-        '<li>' + t('Preces uz pasūtījumu pasūtām vai sākam ražot pēc apmaksas.') + '</li>' +
+        '<li>' + t('Ja prece ir pieejama, rezervējam to uz 3 darba dienām un nosūtām rēķinu. Neapmaksāti rēķini pēc 3 darba dienām tiek anulēti.') + '</li>' +
+        '<li>' + t('Daudzas preces ir uz pasūtījumu: pieejamību un termiņu precizējam pēc pasūtījuma saņemšanas; ražošanu vai pasūtīšanu sākam pēc apmaksas.') + '</li>' +
         '<li>' + t('Privātpersonām — tiesības 14 dienu laikā atteikties no pirkuma.') + ' <a class="link" href="info.html#atgriesana">' + t('Sīkāk') + '</a></li></ul></div></section>';
       h += '</div>';
       root.innerHTML = h;
@@ -1051,7 +1241,8 @@
       });
       // qty
       $$('[data-q]').forEach(function (b) { b.addEventListener('click', function () { qty.value = Math.max(1, Math.min(999, (+qty.value || 1) + +b.getAttribute('data-q'))); }); });
-      if (qty) qty.addEventListener('change', function () { qty.value = Math.max(1, Math.min(999, Math.round(+qty.value) || 1)); });
+      function ppM2() { var u = unitInfo(p), el = $('#pm2'); if (!u || !el) return; var q = Math.max(1, Math.min(999, Math.round(+qty.value) || 1)); el.textContent = q + ' ' + (q === 1 ? unitLab(u.un) : unitLabPl(u.un)) + ' = ' + m2(u.ar * q); }
+      if (qty) { qty.addEventListener('change', function () { qty.value = Math.max(1, Math.min(999, Math.round(+qty.value) || 1)); ppM2(); }); qty.addEventListener('input', ppM2); $$('[data-q]').forEach(function (b) { b.addEventListener('click', ppM2); }); }
       if (!$('#buy')) return;   // price on request: no cart row on this page
       $('#buy').addEventListener('click', function () {
         if (variants.length && vi < 0) vi = 0;   // never a dead end: the cheapest model is the default
@@ -1080,7 +1271,7 @@
         P[it.id] = P[it.id] || it;
         h += '<div class="cl__row"><a class="cl__img" href="' + prodURL(it) + '">' + (it.img ? '<img src="' + esc(img(it.img)) + '" alt="">' : '') + '</a><div>' +
           '<a class="cl__name" href="' + prodURL(it) + '">' + esc(it.n) + '</a>' + (it.v ? '<p class="cl__var">' + esc(it.v) + '</p>' : '') +
-          '<p class="cl__unit">' + money(it.pr) + ' / ' + t('gab.') + (it.o && it.o > it.pr ? ' · <s>' + money(it.o) + '</s>' : '') + '</p></div>' +
+          '<p class="cl__unit">' + money(it.pr) + ' / ' + (it.u ? esc(unitLab(it.u.un)) : t('gab.')) + (it.o && it.o > it.pr ? ' · <s>' + money(it.o) + '</s>' : '') + (it.u ? ' · <b>' + money(it.u.ppm) + '/m²</b> · ' + it.q + ' ' + esc(it.q === 1 ? unitLab(it.u.un) : unitLabPl(it.u.un)) + ' = ' + m2(it.u.ar * it.q) : '') + '</p></div>' +
           '<div class="cl__ctrl"><div class="qty qty--sm"><button type="button" data-cq="-1" data-i="' + i + '" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input type="number" min="1" max="999" value="' + it.q + '" data-cqi="' + i + '" aria-label="' + t('Daudzums') + '"><button type="button" data-cq="1" data-i="' + i + '" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
           '<span class="cl__sum">' + money(it.pr * it.q) + '</span><button class="cl__rm" type="button" data-rm="' + i + '">' + icon('trash') + t('Dzēst') + '</button></div></div>';
       });
@@ -1092,8 +1283,8 @@
         '<p class="sumrow__note">' + t('Piegādes cenu aprēķināsim pēc adreses un norādīsim rēķinā.') + '</p>';
       h += '<a class="btn btn--block" href="noformet.html">' + t('Noformēt pasūtījumu') + icon('arrow-r') + '</a>' +
         '<a class="btn btn--ghost btn--block" style="margin-top:8px" href="katalogs.html">' + t('Turpināt iepirkties') + '</a>' +
-        '<div class="summary__note"><p>' + icon('bank') + '<span>' + t('Apmaksa uzreiz nav jāveic. Nosūtīsim avansa rēķinu; preces noliktavā rezervējam uz 3 darba dienām.') + '</span></p>' +
-        '<p>' + icon('truck') + '<span>' + t('Piegāde visā Latvijā 2–4 darba dienās pēc apmaksas vai saņemšana noliktavā.') + '</span></p>' +
+        '<div class="summary__note"><p>' + icon('bank') + '<span>' + t('Apmaksa uzreiz nav jāveic. Nosūtīsim avansa rēķinu; pieejamās preces rezervējam uz 3 darba dienām.') + '</span></p>' +
+        '<p>' + icon('truck') + '<span>' + t('Piegāde visā Latvijā (ja prece ir pieejama, apmēram 2–4 darba dienu laikā pēc apmaksas) vai saņemšana noliktavā.') + '</span></p>' +
         '<p>' + icon('clock') + '<span>' + t('Pasūtījumus pieņemam 24/7, apstrādājam P–C 9:30–17:30, Pk 9:30–17:00.') + '</span></p></div></aside></div>';
       root.innerHTML = h;
     }
@@ -1123,6 +1314,12 @@
     if (!a.length) { root.innerHTML = $('#cart-empty-tpl').innerHTML; return; }
     var type = 'priv', ship = 'del', pay = 'bank';
     var hasShip = a.some(function (it) { return (it.f || []).indexOf('ship') >= 0; });   // F5: delivery-only items
+    var nWh = 1;
+    loadTree().then(function (T) {   // warehouses: the shop keeps one per supplier; here the product's top-level category stands in for it
+      var ws = {};
+      a.forEach(function (it) { var x = T.cats[it.c], top = it.c; while (x && x.p) { top = x.p; x = T.cats[x.p]; } ws[top] = 1; });
+      nWh = Object.keys(ws).length; apply();
+    }).catch(function () {});
     var sum = Cart.total();
     $('#co-items').innerHTML = a.map(function (it) { return '<li>' + (it.img ? '<img src="' + esc(img(it.img)) + '" alt="">' : '') + '<span>' + esc(it.n) + (it.v ? ' · ' + esc(it.v) : '') + ' × ' + it.q + '</span><b>' + money(it.pr * it.q) + '</b></li>'; }).join('');
     $('#co-sum').textContent = money(sum); $('#co-sum2').textContent = money(sum);
@@ -1145,6 +1342,9 @@
       esto.hidden = type === 'comp';
       if (type === 'comp' && pay === 'esto') { pay = 'bank'; $('#pay-bank input').checked = true; }
       $('#co-ship').textContent = ship === 'del' ? t('cenu aprēķināsim pēc adreses, norādīsim rēķinā') : t('bez maksas');
+      var w1 = $('#wh-note'), w2 = $('#wh-note2');
+      if (w1) w1.hidden = nWh < 2;
+      if (w2) w2.hidden = !(nWh >= 2 && ship === 'del');
     }
     $$('[data-type]').forEach(function (b) { b.addEventListener('click', function () { type = b.getAttribute('data-type'); apply(); }); });
     $$('input[name="ship"]').forEach(function (r) { r.addEventListener('change', function () { ship = r.value; apply(); }); });
@@ -1168,7 +1368,7 @@
       var lines = [];
       lines.push(t('Pasūtījums') + ' — BUVVide.lv');
       lines.push('');
-      Cart.get().forEach(function (it) { lines.push('• ' + it.n + ' (ID ' + it.id + ')' + (it.v ? ', ' + it.v : '') + ' — ' + it.q + ' ' + t('gab.') + ' × ' + money(it.pr) + ' = ' + money(it.pr * it.q)); });
+      Cart.get().forEach(function (it) { lines.push('• ' + it.n + ' (ID ' + it.id + ')' + (it.v ? ', ' + it.v : '') + ' — ' + it.q + ' ' + (it.u ? unitLabPl(it.u.un) : t('gab.')) + ' × ' + money(it.pr) + (it.u ? ' (' + m2(it.u.ar * it.q) + ')' : '') + ' = ' + money(it.pr * it.q)); });
       lines.push('');
       lines.push(t('Preču summa (ar PVN)') + ': ' + money(Cart.total()));
       lines.push(t('Pircējs') + ': ' + F('fname') + ' ' + F('lname') + ', ' + F('phone') + ', ' + F('email'));
