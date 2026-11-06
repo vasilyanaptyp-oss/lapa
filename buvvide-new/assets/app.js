@@ -1004,8 +1004,8 @@
         return '<a class="subcat' + (sid === id ? ' is-on' : '') + '" href="' + catURL(sid) + '"><span class="subcat__img">' + (s.img ? '<img src="' + esc(img(s.img)) + '" alt="" loading="lazy">' : '') + '</span>' +
           '<span class="subcat__name">' + esc(cn(s.n)) + (s.cnt ? '<small>' + s.cnt + ' ' + plural(s.cnt, t('prece'), t('preces')) + '</small>' : '') + '</span></a>';
       }).join('');
-      return Promise.all([getJSON('data/c/' + id + '.json'), getJSON('data/cdesc.json').catch(function () { return {}; }), getJSON('data/tdesc.json').catch(function () { return {}; })]).then(function (r3) {
-        var j = r3[0], CD = r3[1][id] || null, TD = r3[2][id] || {};
+      return Promise.all([getJSON('data/c/' + id + '.json'), getJSON('data/cd/' + id + '.json').catch(function () { return {}; })]).then(function (r3) {
+        var j = r3[0], CD = r3[1] || {}, TD = CD.t || {};   // data/cd/<id>.json = {d: category text, t: {type: text}} from the shop
         var ci = $('#cat-intro'), cdh = CD && cleanDesc(CD.d);   // Gita: the category text on top, where people see it
         if (ci && cdh) { ci.innerHTML = '<div class="cintro__b rich is-clamp" data-clamp>' + cdh + '</div><button class="clampbtn" type="button" data-clampbtn aria-expanded="false" hidden>' + t('Lasīt vairāk') + '</button>'; ci.hidden = false; clampInit(ci); }
         reg(j.items);
@@ -1162,13 +1162,14 @@
         // compact table (model, size, price, add) with the cheapest one preselected.
         var ci = 0, cbest = Infinity;
         variants.forEach(function (v, i) { if (v.price && v.price < cbest) { cbest = v.price; ci = i; } });
-        var multi = variants.length > 1;
+        var multi = variants.length > 1, vimgs = variants.some(function (v) { return v.img; });   // Gita 06.11: model pictures
         h += '<div class="models" id="izvele"><div class="models__h">' + icon('list') + (side ? t('Izvēlieties izmēru un virzienu') : t('Izvēlieties modeli')) +
           (multi ? ' <span class="models__n">' + variants.length + ' ' + plural(variants.length, t('modelis'), t('modeļi'), 'modeļu') + '</span>' : '') + '</div>' +
-          '<div class="models__scroll' + (variants.length > 8 ? ' is-long' : '') + '"><table class="models__t"><thead><tr><th>' + t('Modelis') + '</th>' + (vdiff ? '<th>' + t('Cena') + '</th>' : '') + '</tr></thead><tbody>' +
+          '<div class="models__scroll' + (variants.length > 8 ? ' is-long' : '') + '"><table class="models__t' + (vimgs ? ' has-img' : '') + '"><thead><tr>' + (vimgs ? '<th class="models__imh"><span class="vh">' + t('Attēls') + '</span></th>' : '') + '<th>' + t('Modelis') + '</th>' + (vdiff ? '<th>' + t('Cena') + '</th>' : '') + '</tr></thead><tbody>' +
           variants.map(function (v, i) {
             var lab = vlabel(v);
             return '<tr class="models__r' + (i === ci ? ' is-on' : '') + (v.price ? '' : ' is-off') + '" data-var="' + i + '">' +
+              (vimgs ? '<td class="models__im">' + (v.img ? '<button type="button" class="models__thumb" data-vimg="' + i + '" aria-label="' + t('Palielināt attēlu') + ': ' + esc(lab) + '"><img src="' + esc(img(v.th || v.img)) + '" alt="" loading="lazy" width="44" height="44"></button>' : '') + '</td>' : '') +
               '<td><label class="models__pick"><input type="radio" name="varmodel" value="' + i + '"' + (i === ci ? ' checked' : '') + (v.price ? '' : ' disabled') + '><span>' + esc(lab) + '</span></label></td>' +
               (vdiff ? '<td class="models__p">' + (v.price ? money(v.price) : '') + '</td>' : '') +
               '</tr>';
@@ -1290,7 +1291,14 @@
       // lightbox
       var lb = $('#lightbox'), li = 0;
       function lbShow(i) { li = (i + n) % n; $('img', lb).src = img(images[li]); $('.lightbox__n', lb).textContent = n > 1 ? (li + 1) + ' / ' + n : ''; }
-      $$('[data-lb]').forEach(function (b) { b.addEventListener('click', function () { lbShow(+b.getAttribute('data-lb')); lb.classList.add('is-open'); d.body.style.overflow = 'hidden'; }); });
+      $$('[data-lb]').forEach(function (b) { b.addEventListener('click', function () { $('.lightbox__prev', lb).hidden = $('.lightbox__next', lb).hidden = n < 2; lbShow(+b.getAttribute('data-lb')); lb.classList.add('is-open'); d.body.style.overflow = 'hidden'; }); });
+      $$('[data-vimg]').forEach(function (b) {   // Gita 06.11: a model's picture opens big, without choosing the model
+        b.addEventListener('click', function (ev) {
+          ev.stopPropagation(); var v = variants[+b.getAttribute('data-vimg')]; if (!v || !v.img) return;
+          $('img', lb).src = img(v.img); $('.lightbox__n', lb).textContent = vlabel(v);
+          $('.lightbox__prev', lb).hidden = $('.lightbox__next', lb).hidden = true; lb.classList.add('is-open'); d.body.style.overflow = 'hidden';
+        });
+      });
       function lbClose() { lb.classList.remove('is-open'); d.body.style.overflow = ''; }
       $('.lightbox__x', lb).onclick = lbClose;
       $('.lightbox__prev', lb).onclick = function () { lbShow(li - 1); };
@@ -1304,10 +1312,15 @@
       // accordions
       $$('.acc__h').forEach(function (b) { b.setAttribute('aria-expanded', b.parentNode.classList.contains('is-open')); b.addEventListener('click', function () { var s = b.parentNode; s.classList.toggle('is-open'); b.setAttribute('aria-expanded', s.classList.contains('is-open')); }); });
       // variants: one buying pattern — a radio row selects the model, the single «Ielikt grozā» adds it
+      var img0 = images[0];
       function pickVar(i) {
         var v = variants[i];
         if (!v) return;
         vi = i;
+        if (images.length) {   // Gita 06.11: the chosen model's picture becomes the main photo (back to the product photo for a model without one)
+          var u0 = v.img || img0, s0 = $('#galmain .gal__slide img');
+          if (s0 && u0 && images[0] !== u0) { images[0] = u0; s0.src = img(u0); var gm0 = $('#galmain'); if (gm0 && gm0.scrollLeft) gm0.scrollTo({ left: 0, behavior: 'smooth' }); var th0 = $('.gal__thumbs [data-go="0"] img'); if (th0) th0.src = img(u0); }
+        }
         $$('.models__r').forEach(function (tr) { tr.classList.toggle('is-on', +tr.getAttribute('data-var') === i); });
         var rd = $('input[name="varmodel"][value="' + i + '"]'); if (rd) rd.checked = true;
         if (v.price) {
