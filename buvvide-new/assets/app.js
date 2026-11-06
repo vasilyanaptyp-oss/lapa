@@ -564,6 +564,43 @@
     return { cols: cols, quick: quick.map(function (x) { return x.k; }), unit: unit, table: table };
   }
 
+  /* 06.11 Gita: shop descriptions (category / product type) — inert parse, no scripts or handlers, images from the shop */
+  function cleanDesc(h) {
+    if (!h) return '';
+    var tpl = d.createElement('template'); tpl.innerHTML = String(h);
+    $$('script,style,iframe,object,embed,form,input,button,link,meta', tpl.content).forEach(function (x) { x.parentNode.removeChild(x); });
+    $$('*', tpl.content).forEach(function (x) {
+      Array.prototype.slice.call(x.attributes).forEach(function (at) {
+        var n = at.name.toLowerCase();
+        if (n.indexOf('on') === 0 || n === 'style' || n === 'class' || n === 'id' || n === 'width' || n === 'height' || n === 'align' || n === 'border') x.removeAttribute(at.name);
+      });
+      var u = x.getAttribute('src') || x.getAttribute('href'), an = x.hasAttribute('src') ? 'src' : 'href';
+      if (u != null) {
+        u = u.trim();
+        if (/^(javascript|data|vbscript):/i.test(u)) x.removeAttribute(an);
+        else if (!/^(https?:|mailto:|tel:|#)/i.test(u)) x.setAttribute(an, 'https://www.buvvide.lv/' + u.replace(/^\.?\//, ''));
+        if (an === 'href' && /^https?:/i.test(x.getAttribute('href') || '')) { x.setAttribute('target', '_blank'); x.setAttribute('rel', 'noopener'); }
+      }
+      if (x.tagName === 'IMG') { x.setAttribute('loading', 'lazy'); x.setAttribute('alt', x.getAttribute('alt') || ''); }
+    });
+    var box = d.createElement('div'); box.appendChild(tpl.content);
+    var out = box.innerHTML.replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>').replace(/(<br\s*\/?>\s*)+$/i, '').trim();
+    return box.textContent.trim() || /<img/i.test(out) ? out : '';
+  }
+  /* «Lasīt vairāk»: a long text shows its first lines; the button appears only when something is hidden */
+  function clampInit(box) {
+    $$('[data-clamp]', box).forEach(function (b) {
+      var btn = b.nextElementSibling;
+      function chk() { if (b.classList.contains('is-open')) return; var over = b.scrollHeight > b.clientHeight + 6; if (btn) btn.hidden = !over; b.classList.toggle('is-fade', over); }
+      chk(); $$('img', b).forEach(function (im) { if (!im.complete) im.addEventListener('load', chk); });
+    });
+  }
+  d.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-clampbtn]'); if (!b) return;
+    var c = b.previousElementSibling, on = c.classList.toggle('is-open');
+    c.classList.toggle('is-fade', !on); b.textContent = t(on ? 'Paslēpt' : 'Lasīt vairāk'); b.setAttribute('aria-expanded', on ? 'true' : 'false');
+  });
+
   function Listing(opts) {
     var A = analyze(opts.items, !!opts.mixed);
     var key = opts.key || 'x';
@@ -601,7 +638,7 @@
       if (opts.catFacet) { var cfm = {}; Object.keys(opts.catFacet).forEach(function (k2) { cfm[k2] = cn(opts.catFacet[k2]); }); S.facets.push({ k: '__cat', label: t('Kategorija'), map: cfm }); }
       var types = {};
       S.items.forEach(function (p) { var v = pval(p, '__type'); if (v) types[v] = 1; });
-      if (Object.keys(types).length > 1) S.facets.push({ k: '__type', label: t('Preces tips') });
+      if (Object.keys(types).length > 1) { if (opts.typeNav) S.hasTypes = true; else S.facets.push({ k: '__type', label: t('Preces tips') }); }   // category: types are the navigation (Gita 06.11)
       S.items.forEach(function (p) { (p.prm || []).forEach(function (kv) { if (kv[0] !== 'Preces tips' && kv[0] !== 'Pārdošanas vienība' && !isUnitVal(kv[1])) keys[kv[0]] = (keys[kv[0]] || 0) + 1; }); });
       Object.keys(keys).filter(function (k) { return keys[k] >= Math.max(2, n * 0.25); })
         .map(function (k) {
@@ -788,6 +825,7 @@
       $$('[data-quick]').forEach(function (e) { e.innerHTML = quickHTML(); e.hidden = !A.quick.length; });
       if (!keepFacets) $$('[data-facets]').forEach(function (e) { var st = e.scrollTop; e.innerHTML = facetHTML(); e.scrollTop = st; });
       else $$('[data-facets]').forEach(function (e) { refreshCounts(e); });
+      typesRender();
       $$('[data-view]', root).forEach(function (b) { var on = b.getAttribute('data-view') === S.view; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
       try { sessionStorage.setItem(pageKey, JSON.stringify({ show: S.show })); } catch (e) {}
     }
@@ -803,6 +841,38 @@
           l.classList.toggle('is-zero', !c && !inp.checked);
         });
       });
+    }
+    /* 06.11 Gita: «Preču tipi» like prof.lv — list of the category's types; the chosen one shows its title + description */
+    function ptypesHTML() {
+      var counts = countsFor('__type'), all = {}, sel = (S.sel.__type || [])[0] || '';
+      S.items.forEach(function (p) { var v = pval(p, '__type'); if (v) all[v] = 1; });
+      var tot = S.items.filter(function (p) { return match(p, '__type'); }).length, base = 'kategorija.html?c=' + (qp('c') || '');
+      var h = '<p class="ptypes__h">' + t('Preču tipi') + '</p><ul class="ptypes__l"><li><a class="ptype' + (!sel ? ' is-on' : '') + '" href="' + base + '" data-ptype=""' + (!sel ? ' aria-current="true"' : '') + '><span>' + t('Visi') + '</span><small>' + tot + '</small></a></li>';
+      Object.keys(all).sort(natCmp).forEach(function (v) {
+        var on = sel === v, c = counts[v] || 0;
+        h += '<li><a class="ptype' + (on ? ' is-on' : '') + (!c && !on ? ' is-zero' : '') + '" href="' + base + '&f=' + encodeURIComponent('__type:' + encodeURIComponent(v)) + '" data-ptype="' + esc(v) + '"' + (on ? ' aria-current="true"' : '') + '><span>' + esc(v) + '</span><small>' + c + '</small></a></li>';
+      });
+      return h + '</ul>';
+    }
+    function tdescHTML() {
+      var a = S.sel.__type || []; if (a.length !== 1) return '';
+      var html = cleanDesc((opts.tdesc || {})[a[0]] || '');
+      return '<h2 class="tdesc__h">' + esc(a[0]) + '</h2>' + (html ? '<div class="tdesc__b rich is-clamp" data-clamp>' + html + '</div><button class="clampbtn" type="button" data-clampbtn aria-expanded="false" hidden>' + t('Lasīt vairāk') + '</button>' : '');
+    }
+    function typesRender() {
+      if (!opts.typeNav) return;
+      var pt = $('[data-ptypes]', root), td = $('[data-tdesc]', root), ci = $('#cat-intro');
+      if (pt) {
+        pt.hidden = !S.hasTypes;
+        if (S.hasTypes) {
+          var l0 = $('.ptypes__l', pt), sx = l0 ? l0.scrollLeft : 0;
+          pt.innerHTML = ptypesHTML();
+          var l1 = $('.ptypes__l', pt), on = $('.ptype.is-on', pt);
+          if (l1) { l1.scrollLeft = sx; if (on && w.innerWidth < 1024 && (on.offsetLeft < l1.scrollLeft || on.offsetLeft + on.offsetWidth > l1.scrollLeft + l1.clientWidth)) l1.scrollLeft = on.offsetLeft - 16; }
+        }
+      }
+      if (td) { var th = tdescHTML(); td.hidden = !th; if (th !== td._h) { td._h = th; td.innerHTML = th; clampInit(td); } }
+      if (ci && ci.innerHTML) ci.hidden = !!(S.sel.__type || []).length;   // a chosen type replaces the category text
     }
     function changed(keepFacets) { S.show = S.view === 'table' ? 50 : 24; syncURL(); render(keepFacets); }
 
@@ -868,6 +938,16 @@
         var g2 = x.closest('.fgroup'); g2.classList.add('is-all');
         $$('[data-extra]', g2).forEach(function (l) { l.hidden = false; }); x.remove(); return;
       }
+      if ((x = e.target.closest('[data-ptype]'))) {   // product type = single choice; ctrl/middle click still opens a new tab
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
+        e.preventDefault();
+        var tv = x.getAttribute('data-ptype');
+        if (tv) S.sel.__type = [tv]; else delete S.sel.__type;
+        changed(false);
+        var lt = root.getBoundingClientRect().top + w.scrollY - (w.innerWidth < 1024 ? 70 : 120);
+        if (w.scrollY > lt) w.scrollTo({ top: lt, behavior: 'smooth' });
+        return;
+      }
       if ((x = e.target.closest('[data-qk]'))) {   // quick chip = toggle the same value in the sidebar selection
         var qk = x.getAttribute('data-qk'), qv = x.getAttribute('data-qv'), qa = S.sel[qk] || (S.sel[qk] = []), qi = qa.indexOf(qv);
         if (qi >= 0) qa.splice(qi, 1); else qa.push(qv);
@@ -924,7 +1004,10 @@
         return '<a class="subcat' + (sid === id ? ' is-on' : '') + '" href="' + catURL(sid) + '"><span class="subcat__img">' + (s.img ? '<img src="' + esc(img(s.img)) + '" alt="" loading="lazy">' : '') + '</span>' +
           '<span class="subcat__name">' + esc(cn(s.n)) + (s.cnt ? '<small>' + s.cnt + ' ' + plural(s.cnt, t('prece'), t('preces')) + '</small>' : '') + '</span></a>';
       }).join('');
-      return getJSON('data/c/' + id + '.json').then(function (j) {
+      return Promise.all([getJSON('data/c/' + id + '.json'), getJSON('data/cdesc.json').catch(function () { return {}; }), getJSON('data/tdesc.json').catch(function () { return {}; })]).then(function (r3) {
+        var j = r3[0], CD = r3[1][id] || null, TD = r3[2][id] || {};
+        var ci = $('#cat-intro'), cdh = CD && cleanDesc(CD.d);   // Gita: the category text on top, where people see it
+        if (ci && cdh) { ci.innerHTML = '<div class="cintro__b rich is-clamp" data-clamp>' + cdh + '</div><button class="clampbtn" type="button" data-clampbtn aria-expanded="false" hidden>' + t('Lasīt vairāk') + '</button>'; ci.hidden = false; clampInit(ci); }
         reg(j.items);
         var tot = j.total || j.items.length;
         if (!j.items.length) { $('#cat-n').textContent = t('Preces šajā kategorijā vēl tiek pievienotas'); }
@@ -940,7 +1023,7 @@
         }
         if (j.desc) $('#cat-desc').innerHTML = '<h2>' + esc(c.n) + '</h2><p>' + esc(j.desc) + '</p>';
         // J4: the default view (table or cards) is decided from the data here; in the shop the admin sets it per category
-        Listing({ root: root, items: j.items, catFacet: catFacet, key: 'c' + id, mixed: !!(c.k && c.k.length) });
+        Listing({ root: root, items: j.items, catFacet: catFacet, key: 'c' + id, mixed: !!(c.k && c.k.length), typeNav: true, tdesc: TD });
       });
     }).catch(function () {
       root.innerHTML = '<div class="empty"><h2>' + t('Neizdevās ielādēt preces') + '</h2><p>' + t('Pārbaudiet savienojumu un mēģiniet vēlreiz.') + '</p><a class="btn" href="">' + t('Pārlādēt') + '</a></div>';

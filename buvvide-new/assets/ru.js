@@ -1,5 +1,9 @@
 /* RU interfeisa teksti (preču un kategoriju nosaukumi paliek latviski) */
 window.BV_RU = {
+"Preču tipi": "Типы товаров",
+"Visi": "Все",
+"Lasīt vairāk": "Читать дальше",
+"Paslēpt": "Свернуть",
 "Minimālā pasūtījuma (preču) summa": "Минимальная сумма заказа (товары)",
 "Pievienojiet vēl preces par": "Добавьте ещё товаров на",
 "Minimālā summa sasniegta": "Минимальная сумма достигнута",
