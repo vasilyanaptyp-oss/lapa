@@ -47,12 +47,13 @@ a{color:var(--acc)}
 .prev{width:100%;height:520px;border:1px solid var(--line);border-radius:12px;background:#fff}
 @media (max-width:700px){.dv{grid-template-columns:1fr}.prev{height:420px}}
 .ok{color:var(--acc);font-weight:600;font-size:14px;align-self:center}
+.qfp{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.qfp:empty{display:none}.qfp label{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:14px;cursor:pointer}.qfp label small{color:var(--ink2);font-size:12px}.qfp label.on{border-color:var(--acc);background:#eef7f2}
 </style>
 </head>
 <body>
 <div class="top"><div class="in"><img src="assets/logo.svg" alt="BUVVide.lv"><b>Veikala iestatījumi</b><a href="index.html">Atvērt veikalu →</a></div></div>
 <main class="wrap">
-  <p class="note">Šī lapa rāda, kā admins pats mainīs dizainu jaunajā veikalā: krāsas, sākumlapas blokus un katras kategorijas noklusējuma skatu. Izmaiņas uzreiz redzamas veikalā (šajā pārlūkā).</p>
+  <p class="note">Šī lapa rāda, kā admins pats mainīs dizainu jaunajā veikalā: krāsas, sākumlapas blokus un katras kategorijas noklusējuma skatu un ātros filtrus. Izmaiņas uzreiz redzamas veikalā (šajā pārlūkā).</p>
 
   <section class="card">
     <h2>Krāsas</h2>
@@ -75,6 +76,14 @@ a{color:var(--acc)}
       <select id="dvView"><option value="table">Tabula</option><option value="grid">Kartītes</option></select>
       <button class="btn" id="dvSave" type="button">Saglabāt</button></div>
     <div class="dvlist" id="dvList"></div>
+  </section>
+
+  <section class="card" id="qf">
+    <h2>Ātrie filtri kategorijā</h2>
+    <p class="d">Pogas virs preču saraksta, ar kurām pircējs vienā klikšķī atlasa vajadzīgo: ārdurvīm — kārbas platums un pielietojums, saplāksnim — biezums. Izvēlieties kategoriju un 1–2 parametrus. Ja nav iestatīts, veikals parametrus izvēlas pats.</p>
+    <div class="dv"><input type="text" id="qfCat" list="dvCats" placeholder="Kategorija, piem. Ārdurvis"><button class="btn g" id="qfLoad" type="button">Rādīt parametrus</button><button class="btn" id="qfSave" type="button">Saglabāt</button></div>
+    <div class="qfp" id="qfParams"></div>
+    <div class="dvlist" id="qfList"></div>
   </section>
 
   <section class="card">
@@ -136,6 +145,28 @@ a{color:var(--acc)}
   document.getElementById('dvSave').onclick=function(){var id=cats[document.getElementById('dvCat').value];if(!id){alert('Izvēlieties kategoriju no saraksta');return;}
     var m=get('bv_defview')||{};m['c'+id]=document.getElementById('dvView').value;set('bv_defview',m);try{localStorage.removeItem('bv_view_c'+id);}catch(e){}drawDv();};
   document.getElementById('dvList').addEventListener('click',function(e){if(e.target.dataset.del){var m=get('bv_defview')||{};delete m[e.target.dataset.del];set('bv_defview',m);drawDv();}});
+})();
+</script>
+<script>
+(function(){   // R8 (agent B): quick filters per category, bv_quick = {c<id>: [parameter, …]}; the shop's own pick is the default
+  var QCAT={c7:['Kārbas platums','Ieteicamais pielietojums'],c310:['Biezums']};
+  function get(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
+  function set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  var names={},cur=null,$=function(id){return document.getElementById(id);};
+  fetch('data/tree.json').then(function(r){return r.json();}).then(function(T){Object.keys(T.cats||{}).forEach(function(id){names[id]=T.cats[id].n;});draw();});
+  function idOf(v){var m=/\((\d+)\)\s*$/.exec(v||'');if(m)return m[1];v=String(v||'').trim().toLowerCase();for(var id in names)if(names[id].toLowerCase()===v)return id;return null;}
+  function draw(){var m=get('bv_quick')||{},h='';Object.keys(m).forEach(function(k){var id=k.slice(1);h+='<div><span><a href="kategorija.html?c='+id+'" target="_blank">'+esc(names[id]||k)+'</a> — '+esc(m[k].join(', '))+'</span><button type="button" data-qdel="'+esc(k)+'">Noņemt</button></div>';});
+    $('qfList').innerHTML=h||'<div><span>Nav mainīts: ārdurvīm — kārbas platums un pielietojums, saplāksnim — biezums, pārējām kategorijām veikals izvēlas pats.</span></div>';}
+  $('qfLoad').onclick=function(){var id=idOf($('qfCat').value);if(!id){alert('Izvēlieties kategoriju no saraksta');return;}
+    fetch('data/c/'+id+'.json').then(function(r){return r.json();}).then(function(j){var st={};(j.items||[]).forEach(function(p){(p.prm||[]).forEach(function(kv){if(!kv[1]||kv[0]==='Preces tips'||kv[0]==='Pārdošanas vienība')return;(st[kv[0]]=st[kv[0]]||{})[kv[1]]=1;});});
+      var ks=Object.keys(st).filter(function(k){return Object.keys(st[k]).length>=2;}),have=(get('bv_quick')||{})['c'+id]||QCAT['c'+id]||[];cur=id;
+      $('qfParams').innerHTML=ks.length?ks.map(function(k){var on=have.indexOf(k)>=0;return '<label class="'+(on?'on':'')+'"><input type="checkbox" value="'+esc(k)+'"'+(on?' checked':'')+'> '+esc(k)+' <small>'+Object.keys(st[k]).length+' vērt.</small></label>';}).join(''):'<span class="d">Šai kategorijai nav parametru, pēc kuriem atlasīt.</span>';});};
+  $('qfParams').addEventListener('change',function(e){var c=[].filter.call(document.querySelectorAll('#qfParams input'),function(i){return i.checked;});if(c.length>2){e.target.checked=false;alert('Ne vairāk kā 2 parametri');}
+    [].forEach.call(document.querySelectorAll('#qfParams label'),function(l){l.classList.toggle('on',l.querySelector('input').checked);});});
+  $('qfSave').onclick=function(){if(!cur){$('qfLoad').click();return;}var v=[].filter.call(document.querySelectorAll('#qfParams input'),function(i){return i.checked;}).map(function(i){return i.value;});
+    var m=get('bv_quick')||{};if(v.length)m['c'+cur]=v;else delete m['c'+cur];set('bv_quick',m);draw();};
+  $('qfList').addEventListener('click',function(e){var k=e.target.getAttribute('data-qdel');if(k){var m=get('bv_quick')||{};delete m[k];set('bv_quick',m);draw();}});
 })();
 </script>
 </body>
