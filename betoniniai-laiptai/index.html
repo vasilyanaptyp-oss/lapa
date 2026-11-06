@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Betoniniai laiptai Kaune nuo 1998 m. | Laiptų betonavimas</title>
+<meta name="description" content="Betonuojame tiesius, lenktus ir sraigtinius vidaus ir lauko laiptus nuo 1998 metų. Kaunas, Žemynos g. 36. Tel. +370 684 02273.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#161614;--ink2:#3a3934;--paper:#e9e5de;--paper2:#dcd6cc;--line:rgba(22,22,20,.14);--oak:#b4793f;--oak2:#8f5a28;--white:#faf8f4}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Archivo,system-ui,sans-serif;color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;line-height:1.5}
+img{display:block;max-width:100%}
+a{color:inherit}
+.wrap{width:min(1180px,100% - 32px);margin:0 auto}
+/* header */
+.top{position:sticky;top:0;z-index:20;background:rgba(233,229,222,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand i{width:26px;height:26px;flex:0 0 26px;background:
+  linear-gradient(var(--ink),var(--ink)) 0 100%/100% 34% no-repeat,
+  linear-gradient(var(--ink),var(--ink)) 34% 100%/66% 67% no-repeat,
+  linear-gradient(var(--ink),var(--ink)) 67% 100%/33% 100% no-repeat}
+.brand b{font-weight:800;font-stretch:112%;letter-spacing:-.01em;font-size:15px;line-height:1.05;text-transform:uppercase}
+.brand b span{display:block;font-weight:500;font-stretch:100%;font-size:11px;letter-spacing:.08em;color:var(--ink2);text-transform:none}
+.nav{display:flex;gap:26px;font-size:14px;font-weight:600}
+.nav a{text-decoration:none;opacity:.75}.nav a:hover{opacity:1}
+.tel{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:999px;background:var(--ink);color:var(--white);text-decoration:none;font-weight:700;font-size:14px;white-space:nowrap}
+.tel svg{width:16px;height:16px}
+@media (max-width:860px){.nav{display:none}}
+@media (max-width:420px){.tel .t{display:none}.tel{width:42px;padding:0;justify-content:center}}
+/* hero */
+.hero{position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:end;padding:56px 0 64px}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--oak2)}
+.kicker:before{content:"";width:28px;height:2px;background:var(--oak)}
+h1{font-size:clamp(44px,7.4vw,104px);font-weight:900;font-stretch:118%;line-height:.88;letter-spacing:-.035em;text-transform:uppercase;margin:18px 0 22px}
+h1 em{font-style:normal;color:var(--oak2)}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--ink2);max-width:30em}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 24px;border-radius:999px;font-weight:800;font-size:16px;text-decoration:none;transition:transform .2s,background .2s}
+.btn:active{transform:scale(.98)}
+.btn.main{background:var(--oak);color:#1a0f04}.btn.main:hover{background:#c38a4f}
+.btn.ghost{border:1.5px solid var(--ink);color:var(--ink)}.btn.ghost:hover{background:var(--ink);color:var(--white)}
+.btn svg{width:18px;height:18px}
+.hero-photo{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:679/757;box-shadow:0 30px 60px -30px rgba(0,0,0,.45)}
+.hero-photo img{width:100%;height:100%;object-fit:cover}
+.hero-photo figcaption{position:absolute;left:14px;bottom:14px;background:rgba(22,22,20,.82);color:var(--white);font-size:13px;font-weight:600;padding:8px 12px;border-radius:10px}
+.since{position:absolute;right:-6px;top:22px;writing-mode:vertical-rl;font-weight:900;font-stretch:125%;font-size:15px;letter-spacing:.3em;color:var(--white);background:var(--ink);padding:14px 8px;border-radius:12px 0 0 12px}
+@media (max-width:860px){
+  .hero .wrap{grid-template-columns:1fr;gap:20px;padding:22px 0 40px}
+  .hero-photo{order:-1;aspect-ratio:16/9;border-radius:16px}
+  .hero-photo img{object-position:50% 70%}
+  .since{display:none}
+  .hero .cta{display:none}
+  h1{font-size:clamp(38px,11vw,48px)}
+  h1{margin:12px 0 14px}
+  .cta{margin-top:20px}.btn{height:52px;flex:1 1 auto;justify-content:center}
+}
+/* facts strip */
+.facts{background:var(--ink);color:var(--white)}
+.facts .wrap{display:grid;grid-template-columns:repeat(3,1fr)}
+.fact{padding:26px 22px 24px;border-left:1px solid rgba(255,255,255,.12)}
+.fact:first-child{border-left:0;padding-left:0}
+.fact b{display:block;font-weight:900;font-stretch:118%;font-size:clamp(26px,3.4vw,40px);letter-spacing:-.02em;line-height:1}
+.fact span{display:block;margin-top:8px;font-size:14px;color:rgba(250,248,244,.7)}
+@media (max-width:700px){.facts .wrap{grid-template-columns:1fr}.fact{border-left:0;border-top:1px solid rgba(255,255,255,.12);padding:18px 0}.fact:first-child{border-top:0}}
+/* section heads */
+section{padding:88px 0}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:36px}
+h2{font-size:clamp(32px,4.6vw,60px);font-weight:900;font-stretch:115%;line-height:.95;letter-spacing:-.03em;text-transform:uppercase}
+.sh p{max-width:28em;color:var(--ink2)}
+@media (max-width:760px){section{padding:60px 0}.sh{flex-direction:column;align-items:flex-start;gap:12px;margin-bottom:26px}}
+/* forms: stepped cards */
+.forms{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
+.form{background:var(--white);border-radius:18px;overflow:hidden;border:1px solid var(--line)}
+.form:nth-child(2){margin-top:44px}.form:nth-child(3){margin-top:88px}
+.form img{width:100%;aspect-ratio:4/5;object-fit:cover}
+.form div{padding:18px 18px 20px}
+.form h3{font-size:22px;font-weight:800;font-stretch:110%;text-transform:uppercase;letter-spacing:-.01em}
+.form p{margin-top:6px;color:var(--ink2);font-size:15px}
+.form .n{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--oak2)}
+@media (max-width:860px){.forms{grid-template-columns:1fr;gap:14px}.form:nth-child(n){margin-top:0}.form{display:grid;grid-template-columns:130px 1fr}.form img{height:100%;aspect-ratio:auto}}
+/* before / after */
+.ba{background:var(--paper2)}
+.ba-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.ba-item{position:relative;border-radius:18px;overflow:hidden}
+.ba-item img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.ba-item span{position:absolute;left:12px;top:12px;background:var(--white);font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:7px 10px;border-radius:8px}
+.ba-item.raw span{background:var(--ink);color:var(--white)}
+.ba-note{margin-top:22px;max-width:40em;color:var(--ink2)}
+@media (max-width:760px){.ba-grid{grid-template-columns:1fr 1fr;gap:10px}.ba-item:last-child{display:none}.ba-item img{aspect-ratio:3/4}}
+/* gallery */
+.gal{columns:4 240px;column-gap:14px}
+.gal button{display:block;width:100%;margin:0 0 14px;border:0;padding:0;background:none;cursor:zoom-in;border-radius:14px;overflow:hidden;break-inside:avoid}
+.gal img{width:100%;height:auto;transition:transform .5s}
+.gal button:hover img{transform:scale(1.03)}
+@media (max-width:560px){.gal{columns:2 140px;column-gap:10px}.gal button{margin-bottom:10px;border-radius:10px}}
+.lb{position:fixed;inset:0;z-index:50;background:rgba(10,10,9,.94);display:none;align-items:center;justify-content:center;padding:56px 14px}
+.lb.on{display:flex}
+.lb img{max-width:100%;max-height:100%;border-radius:8px}
+.lb button{position:absolute;border:0;background:rgba(255,255,255,.12);color:#fff;width:48px;height:48px;border-radius:50%;font-size:22px;cursor:pointer}
+.lb .x{top:12px;right:12px}.lb .p{left:12px;top:50%;transform:translateY(-50%)}.lb .nx{right:12px;top:50%;transform:translateY(-50%)}
+/* why + price */
+.why{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:start}
+.reasons{display:grid;gap:12px}
+.reason{display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:start;padding:20px;background:var(--white);border:1px solid var(--line);border-radius:16px}
+.reason b{font-weight:900;font-stretch:125%;font-size:30px;line-height:1;color:var(--oak2)}
+.reason h3{font-size:19px;font-weight:800}
+.reason p{color:var(--ink2);font-size:15px;margin-top:4px}
+.price{background:var(--ink);color:var(--white);border-radius:22px;padding:32px 28px;position:sticky;top:84px}
+.price h3{font-size:clamp(26px,3vw,36px);font-weight:900;font-stretch:115%;text-transform:uppercase;line-height:.98;letter-spacing:-.02em}
+.price p{color:rgba(250,248,244,.78);margin-top:14px}
+.price ul{list-style:none;margin-top:18px;display:grid;gap:10px}
+.price li{display:flex;gap:10px;font-size:15px}
+.price li:before{content:"";flex:0 0 14px;height:14px;margin-top:4px;background:var(--oak);clip-path:polygon(0 100%,0 66%,33% 66%,33% 33%,66% 33%,66% 0,100% 0,100% 100%)}
+.price .btn{margin-top:24px;width:100%;justify-content:center}
+@media (max-width:860px){.why{grid-template-columns:1fr}.price{position:static}}
+/* partners */
+.partners{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;margin-top:28px;font-size:14px;color:var(--ink2)}
+.partners img{height:30px;width:auto;filter:grayscale(1);opacity:.75}
+/* contact */
+.contact{background:var(--ink);color:var(--white)}
+.contact .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:end}
+.contact h2 em{font-style:normal;color:var(--oak)}
+.contact .big{display:block;margin-top:22px;font-weight:900;font-stretch:118%;font-size:clamp(30px,5vw,58px);letter-spacing:-.02em;text-decoration:none;line-height:1}
+.contact .big:hover{color:var(--oak)}
+.req{font-size:15px;color:rgba(250,248,244,.72);display:grid;gap:6px}
+.req b{color:var(--white)}
+.req a{color:var(--oak);text-decoration:none}
+@media (max-width:860px){.contact .wrap{grid-template-columns:1fr;gap:28px}}
+footer{background:#0e0e0d;color:rgba(250,248,244,.5);font-size:13px;padding:22px 0}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+/* sticky call on phones */
+.mcall{display:none}
+@media (max-width:760px){
+  .mcall{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:30;gap:10px}
+  .mcall a{flex:1;height:52px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;text-decoration:none;box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
+  .mcall .c{background:var(--oak);color:#1a0f04}.mcall .m{background:var(--ink);color:var(--white);flex:0 0 52px}
+  .mcall svg{width:18px;height:18px}
+  footer{padding-bottom:84px}
+}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#"><i aria-hidden="true"></i><b>Betoniniai laiptai<span>Kaunas · nuo 1998</span></b></a>
+    <nav class="nav"><a href="#formos">Laiptai</a><a href="#darbai">Mūsų darbai</a><a href="#kaina">Kaina</a><a href="#kontaktai">Kontaktai</a></nav>
+    <a class="tel" href="tel:+37068402273"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg><span class="t">+370 684 02273</span></a>
+  </div>
+</header>
+
+<main>
+<section class="hero" style="padding:0">
+  <div class="wrap">
+    <div>
+      <div class="kicker">Laiptų betonavimas</div>
+      <h1>Betoniniai laiptai <em>nuo 1998</em></h1>
+      <p class="lead">Betonuojame ir montuojame vidaus ir lauko laiptus: tiesius, lenktus, sraigtinius. Patariame dėl konstrukcijos ir apdailos, darbams suteikiame garantiją.</p>
+      <div class="cta">
+        <a class="btn main" href="tel:+37068402273"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>Skambinti</a>
+        <a class="btn ghost" href="#darbai">Mūsų darbai</a>
+      </div>
+    </div>
+    <figure class="hero-photo">
+      <img src="img/hero.jpg" alt="Lenkti betoniniai laiptai po betonavimo, vaizdas iš apačios" width="679" height="757" fetchpriority="high">
+      <figcaption>Lenkti laiptai, mūsų darbas</figcaption>
+      <div class="since" aria-hidden="true">1998</div>
+    </figure>
+  </div>
+</section>
+
+<div class="facts">
+  <div class="wrap">
+    <div class="fact"><b>Nuo 1998</b><span>betonuojame ir liejame laiptus</span></div>
+    <div class="fact"><b>3 formos</b><span>tiesūs, lenkti ir sraigtiniai laiptai</span></div>
+    <div class="fact"><b>Garantija</b><span>visiems atliktiems darbams</span></div>
+  </div>
+</div>
+
+<section id="formos">
+  <div class="wrap">
+    <div class="sh rv"><h2>Kokius laiptus<br>betonuojame</h2><p>Vidaus ir lauko laiptai bet kokio sudėtingumo. Užtikriname tvirtumą ir ilgaamžiškumą.</p></div>
+    <div class="forms">
+      <article class="form rv"><img src="img/tiesus.jpg" alt="Tiesūs betoniniai laiptai" loading="lazy"><div><span class="n">01</span><h3>Tiesūs</h3><p>Paprasčiausias ir pigiausias variantas, tinka ir vidui, ir lauke.</p></div></article>
+      <article class="form rv"><img src="img/lenkti.jpg" alt="Lenkti betoniniai laiptai name" loading="lazy"><div><span class="n">02</span><h3>Lenkti</h3><p>Laiptai su posūkiu, kai laiptinė siaura arba norisi minkštesnės linijos.</p></div></article>
+      <article class="form rv"><img src="img/sraigtiniai.jpg" alt="Sraigtiniai betoniniai laiptai, vaizdas iš viršaus" loading="lazy"><div><span class="n">03</span><h3>Sraigtiniai</h3><p>Kai vietos mažai: laiptai sukasi aplink savo ašį.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="ba">
+  <div class="wrap">
+    <div class="sh rv"><h2>Nuo betono<br>iki apdailos</h2><p>Pirmiausia išliejame tvirtą konstrukciją. Paskui laiptus galima apdailinti medžiu, plytelėmis ar kitomis medžiagomis.</p></div>
+    <div class="ba-grid">
+      <div class="ba-item raw rv"><img src="img/raw.jpg" alt="Laiptai po betonavimo" loading="lazy"><span>Po betonavimo</span></div>
+      <div class="ba-item rv"><img src="img/fin.jpg" alt="Betoniniai laiptai su medinėmis pakopomis" loading="lazy"><span>Su apdaila</span></div>
+      <div class="ba-item rv"><img src="img/fin2.jpg" alt="Laiptai su apdaila ir turėklais" loading="lazy"><span>Su apdaila</span></div>
+    </div>
+    <p class="ba-note rv">Konsultuojame dėl konstrukcijų ir apdailos sprendimų, kad laiptai būtų patogūs ir tiktų prie interjero.</p>
+  </div>
+</section>
+
+<section id="darbai">
+  <div class="wrap">
+    <div class="sh rv"><h2>Mūsų darbai</h2><p>Nuotraukos iš objektų: liejimas, klojiniai ir baigti laiptai.</p></div>
+    <div class="gal" id="gal">
+      <button data-i="0"><img src="img/g1.jpg" alt="Lenkti laiptai prie plytų sienos" loading="lazy" width="480" height="853"></button>
+      <button data-i="1"><img src="img/g2.jpg" alt="Betoniniai laiptai name" loading="lazy" width="639" height="480"></button>
+      <button data-i="2"><img src="img/g3.jpg" alt="Sraigtinių laiptų klojiniai" loading="lazy" width="853" height="480"></button>
+      <button data-i="3"><img src="img/g4.jpg" alt="Laiptai su medinėmis pakopomis" loading="lazy" width="576" height="768"></button>
+      <button data-i="4"><img src="img/g5.jpg" alt="Sraigtiniai laiptai iš apačios" loading="lazy" width="472" height="527"></button>
+      <button data-i="5"><img src="img/g6.jpg" alt="Lenkti laiptai rūsyje" loading="lazy" width="350" height="622"></button>
+      <button data-i="6"><img src="img/g7.jpg" alt="Medinės pakopos ant betono" loading="lazy" width="480" height="853"></button>
+      <button data-i="7"><img src="img/g8.jpg" alt="Betoniniai laiptai su posūkiu" loading="lazy" width="350" height="585"></button>
+      <button data-i="8"><img src="img/g9.jpg" alt="Sraigtiniai laiptai" loading="lazy" width="853" height="480"></button>
+      <button data-i="9"><img src="img/g10.jpg" alt="Laiptų armatūra prieš betonavimą" loading="lazy" width="933" height="700"></button>
+      <button data-i="10"><img src="img/g11.jpg" alt="Betoniniai laiptai su posūkiu" loading="lazy" width="480" height="853"></button>
+      <button data-i="11"><img src="img/g12.jpg" alt="Laiptai su apdaila" loading="lazy" width="432" height="768"></button>
+    </div>
+  </div>
+</section>
+
+<section id="kaina" style="padding-top:0">
+  <div class="wrap why">
+    <div>
+      <div class="sh rv" style="margin-bottom:26px"><h2>Kodėl mes</h2></div>
+      <div class="reasons">
+        <div class="reason rv"><b>01</b><div><h3>Greitis</h3><p>Greitai atliekame savo darbus.</p></div></div>
+        <div class="reason rv"><b>02</b><div><h3>Kokybė ir garantija</h3><p>Laiptus betonuojame nuo 1998 metų. Visiems darbams suteikiame garantiją.</p></div></div>
+        <div class="reason rv"><b>03</b><div><h3>Kaina be tarpininkų</h3><p>Siūlome betoninius laiptus gera kaina ir be tarpininkų.</p></div></div>
+      </div>
+      <div class="partners rv"><span>Partneriai:</span><img src="img/p_knauf.png" alt="Knauf" loading="lazy"><img src="img/p_flugger.png" alt="Flügger" loading="lazy"><img src="img/p_akm.png" alt="" loading="lazy"><img src="img/p_serf.png" alt="" loading="lazy"></div>
+    </div>
+    <aside class="price rv">
+      <h3>Kiek kainuoja laiptai?</h3>
+      <p>Kaina priklauso nuo laiptų sudėtingumo. Pigiausias variantas: tiesūs laiptai.</p>
+      <ul>
+        <li>Pasakykite laiptų formą: tiesūs, lenkti ar sraigtiniai</li>
+        <li>Vidaus ar lauko laiptai</li>
+        <li>Aukštis tarp aukštų ir laiptinės matmenys, jei žinote</li>
+      </ul>
+      <a class="btn main" href="tel:+37068402273">Paklausti kainos</a>
+    </aside>
+  </div>
+</section>
+</main>
+
+<section class="contact" id="kontaktai">
+  <div class="wrap">
+    <div>
+      <h2>Paskambinkite,<br><em>aptarsime laiptus</em></h2>
+      <a class="big" href="tel:+37068402273">+370 684 02273</a>
+    </div>
+    <div class="req">
+      <b>Alaus garažas, UAB</b>
+      <span>Įmonės kodas: 303127408</span>
+      <span>PVM kodas: LT100008738816</span>
+      <span>Žemynos g. 36, LT-47102 Kaunas</span>
+      <span>El. paštas: <a href="mailto:sarunas_w@yahoo.com">sarunas_w@yahoo.com</a></span>
+    </div>
+  </div>
+</section>
+<footer><div class="wrap"><span>© Betoniniai laiptai, Kaunas</span><span>Laiptų betonavimas nuo 1998 m.</span></div></footer>
+
+<div class="mcall"><a class="c" href="tel:+37068402273"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>Skambinti</a><a class="m" href="mailto:sarunas_w@yahoo.com" aria-label="Rašyti el. paštu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a></div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Nuotrauka"><button class="x" aria-label="Uždaryti">✕</button><button class="p" aria-label="Ankstesnė">‹</button><img alt=""><button class="nx" aria-label="Kita">›</button></div>
+<script>
+(function(){
+  var btns=[].slice.call(document.querySelectorAll('#gal button')),lb=document.getElementById('lb'),im=lb.querySelector('img'),cur=0;
+  function show(i){cur=(i+btns.length)%btns.length;var s=btns[cur].querySelector('img');im.src=s.src;im.alt=s.alt;lb.classList.add('on');}
+  btns.forEach(function(b,i){b.addEventListener('click',function(){show(i);});});
+  lb.querySelector('.x').onclick=function(){lb.classList.remove('on');};
+  lb.querySelector('.p').onclick=function(e){e.stopPropagation();show(cur-1);};
+  lb.querySelector('.nx').onclick=function(e){e.stopPropagation();show(cur+1);};
+  lb.addEventListener('click',function(e){if(e.target===lb)lb.classList.remove('on');});
+  document.addEventListener('keydown',function(e){if(!lb.classList.contains('on'))return;if(e.key==='Escape')lb.classList.remove('on');if(e.key==='ArrowLeft')show(cur-1);if(e.key==='ArrowRight')show(cur+1);});
+  var io='IntersectionObserver' in window?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px'}):null;
+  [].forEach.call(document.querySelectorAll('.rv'),function(el){io?io.observe(el):el.classList.add('in');});
+})();
+</script>
+</body>
+</html>
