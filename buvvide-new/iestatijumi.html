@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="lv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veikala iestatījumi — BUVVide.lv</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d2125;--ink2:#4a5259;--line:#e2e5e7;--bg:#f4f5f3;--acc:#008B4D}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Geologica,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45}
+a{color:var(--acc)}
+.top{background:#0e3f2c;color:#fff}
+.top .in{max-width:1180px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top img{height:34px}
+.top b{font-size:16px}
+.top a{color:#fff;margin-left:auto;font-size:14px}
+.wrap{max-width:1180px;margin:0 auto;padding:22px 16px 60px;display:grid;gap:18px}
+.note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;color:var(--ink2);font-size:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.card h2{font-size:18px;margin-bottom:4px}
+.card p.d{color:var(--ink2);font-size:13.5px;margin-bottom:14px}
+.colors{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.colors label{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px}
+.colors input[type=color]{width:44px;height:36px;border:0;background:none;cursor:pointer}
+.colors span{font-size:14px}
+.colors small{display:block;color:var(--ink2);font-size:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{height:42px;padding:0 18px;border-radius:9px;border:0;background:var(--acc);color:#fff;font:600 14px Geologica,sans-serif;cursor:pointer}
+.btn.g{background:#fff;color:var(--ink);border:1.5px solid #cfd5d8}
+.blocks{list-style:none;display:grid;gap:6px}
+.blocks li{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.blocks li.off{opacity:.5}
+.blocks .n{font-weight:700;color:var(--ink2);text-align:center}
+.blocks .t small{display:block;color:var(--ink2);font-size:12px}
+.blocks .ctl{display:flex;gap:6px;align-items:center}
+.blocks button{width:34px;height:34px;border-radius:8px;border:1px solid #cfd5d8;background:#fff;cursor:pointer;font-size:16px}
+.blocks label{font-size:13px;display:flex;gap:6px;align-items:center;margin-left:6px}
+.dv{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center}
+.dv input[type=text]{height:42px;border:1.5px solid #cfd5d8;border-radius:9px;padding:0 12px;font:inherit;width:100%}
+.dv select{height:42px;border:1.5px solid #cfd5d8;border-radius:9px;padding:0 10px;font:inherit}
+.dvlist{margin-top:12px;display:grid;gap:6px}
+.dvlist div{display:flex;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-size:14px}
+.dvlist button{border:0;background:none;color:#a11;cursor:pointer;font:inherit}
+.prev{width:100%;height:520px;border:1px solid var(--line);border-radius:12px;background:#fff}
+@media (max-width:700px){.dv{grid-template-columns:1fr}.prev{height:420px}}
+.ok{color:var(--acc);font-weight:600;font-size:14px;align-self:center}
+</style>
+</head>
+<body>
+<div class="top"><div class="in"><img src="assets/logo.svg" alt="BUVVide.lv"><b>Veikala iestatījumi</b><a href="index.html">Atvērt veikalu →</a></div></div>
+<main class="wrap">
+  <p class="note">Šī lapa rāda, kā admins pats mainīs dizainu jaunajā veikalā: krāsas, sākumlapas blokus un katras kategorijas noklusējuma skatu. Izmaiņas uzreiz redzamas veikalā (šajā pārlūkā).</p>
+
+  <section class="card">
+    <h2>Krāsas</h2>
+    <p class="d">Viena krāsa mainās visā veikalā: galvene, pogas, kājene.</p>
+    <div class="colors" id="colors"></div>
+    <div class="row"><button class="btn" id="cSave" type="button">Saglabāt krāsas</button><button class="btn g" id="cReset" type="button">Atjaunot noklusējumu</button><span class="ok" id="cOk"></span></div>
+  </section>
+
+  <section class="card">
+    <h2>Sākumlapas bloki</h2>
+    <p class="d">Bloku secība un redzamība sākumlapā. Ar bultiņām pārvieto, ar ķeksi paslēpj.</p>
+    <ol class="blocks" id="blocks"><li>Ielādē…</li></ol>
+    <div class="row"><button class="btn" id="bSave" type="button">Saglabāt blokus</button><button class="btn g" id="bReset" type="button">Atjaunot sākotnējo</button><span class="ok" id="bOk"></span></div>
+  </section>
+
+  <section class="card">
+    <h2>Kategorijas noklusējuma skats</h2>
+    <p class="d">Kurā skatā kategorija atveras pirmo reizi: tabula (kur preces atšķiras pēc parametriem) vai kartītes. Klients pats var pārslēgt.</p>
+    <div class="dv"><input type="text" id="dvCat" list="dvCats" placeholder="Kategorija, piem. Saplāksnis"><datalist id="dvCats"></datalist>
+      <select id="dvView"><option value="table">Tabula</option><option value="grid">Kartītes</option></select>
+      <button class="btn" id="dvSave" type="button">Saglabāt</button></div>
+    <div class="dvlist" id="dvList"></div>
+  </section>
+
+  <section class="card">
+    <h2>Priekšskatījums</h2>
+    <p class="d">Sākumlapa ar saglabātajiem iestatījumiem.</p>
+    <iframe class="prev" id="prev" src="index.html" title="Sākumlapas priekšskatījums" loading="lazy"></iframe>
+  </section>
+</main>
+<script>
+(function(){
+  function get(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
+  function set(k,v){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function ok(id,txt){var e=document.getElementById(id);e.textContent=txt;setTimeout(function(){e.textContent='';},2500);}
+  function reloadPrev(){var f=document.getElementById('prev');f.src='index.html?t='+Date.now();}
+  // ---- colours (J2)
+  var VARS=[['--c-header-d','Galvene datorā','vienā tonī'],['--c-header','Galvene telefonā','augšējā daļa'],['--c-header-2','Augšējā josla','tālrunis, valoda'],
+    ['--c-accent','Galvenā krāsa','pogas, cenas, aktīvie'],['--c-footer','Kājene','lapas apakša'],['--c-sale','Akcijas krāsa','atlaides, -%']];
+  var css=getComputedStyle(document.documentElement), th=get('bv_theme')||{};
+  function def(v){var probe=document.createElement('div');document.body.appendChild(probe);return null;}
+  fetch('assets/style.css').then(function(r){return r.text();}).then(function(src){
+    var root=(src.match(/:root\s*\{([\s\S]*?)\n\}/)||['',''])[1], defs={};
+    VARS.forEach(function(v){var m=root.match(new RegExp(v[0].replace(/-/g,'\\-')+'\\s*:\\s*(#[0-9a-fA-F]{3,8})'));defs[v[0]]=m?m[1]:'#000000';});
+    var h='';VARS.forEach(function(v){var cur=th[v[0]]||defs[v[0]];h+='<label><input type="color" data-v="'+v[0]+'" value="'+cur+'"><span>'+v[1]+'<small>'+v[2]+'</small></span></label>';});
+    document.getElementById('colors').innerHTML=h;
+    document.getElementById('cReset').onclick=function(){set('bv_theme',null);[].forEach.call(document.querySelectorAll('[data-v]'),function(i){i.value=defs[i.getAttribute('data-v')];});ok('cOk','Noklusējums atjaunots');reloadPrev();};
+  });
+  document.getElementById('cSave').onclick=function(){var o={};[].forEach.call(document.querySelectorAll('[data-v]'),function(i){o[i.getAttribute('data-v')]=i.value;});set('bv_theme',o);ok('cOk','Saglabāts');reloadPrev();};
+  // ---- home blocks (J6)
+  var NAMES={hero:'Galvenais bloks',cats:'Kategoriju flīzes',rail:'Preču rinda',info:'Informācijas panelis',banner:'Baneris',brands:'Ražotāji',text:'Teksts'};
+  var blocks=[];
+  fetch('index.html').then(function(r){return r.text();}).then(function(src){
+    var m=src.match(/<script type="application\/json" id="home-blocks">([\s\S]*?)<\/script>/);var list=m?JSON.parse(m[1].replace(/<\\\//g,'</')):[];
+    var saved=get('bv_blocks');
+    blocks=list.map(function(b,i){return {i:i,title:b.title||NAMES[b.type]||b.type,type:b.type,h:0};});
+    if(saved){var byI={};blocks.forEach(function(b){byI[b.i]=b;});var ord=[];saved.forEach(function(s){if(byI[s.i]){byI[s.i].h=s.h?1:0;ord.push(byI[s.i]);delete byI[s.i];}});Object.keys(byI).forEach(function(k){ord.push(byI[k]);});blocks=ord;}
+    draw();
+  });
+  function draw(){
+    document.getElementById('blocks').innerHTML=blocks.map(function(b,k){
+      return '<li class="'+(b.h?'off':'')+'"><span class="n">'+(k+1)+'</span><span class="t">'+b.title+'<small>'+(NAMES[b.type]||b.type)+'</small></span><span class="ctl"><button type="button" data-up="'+k+'" aria-label="Uz augšu">↑</button><button type="button" data-dn="'+k+'" aria-label="Uz leju">↓</button><label><input type="checkbox" data-hide="'+k+'"'+(b.h?'':' checked')+'> Rādīt</label></span></li>';
+    }).join('');
+  }
+  document.getElementById('blocks').addEventListener('click',function(e){var t=e.target;
+    if(t.dataset.up){var k=+t.dataset.up;if(k>0){var x=blocks[k];blocks[k]=blocks[k-1];blocks[k-1]=x;draw();}}
+    if(t.dataset.dn){var k2=+t.dataset.dn;if(k2<blocks.length-1){var y=blocks[k2];blocks[k2]=blocks[k2+1];blocks[k2+1]=y;draw();}}});
+  document.getElementById('blocks').addEventListener('change',function(e){var t=e.target;if(t.dataset.hide!==undefined){blocks[+t.dataset.hide].h=t.checked?0:1;draw();}});
+  document.getElementById('bSave').onclick=function(){set('bv_blocks',blocks.map(function(b){return {i:b.i,h:b.h};}));ok('bOk','Saglabāts');reloadPrev();};
+  document.getElementById('bReset').onclick=function(){set('bv_blocks',null);location.reload();};
+  // ---- default view per category (J4)
+  var cats={};
+  fetch('data/tree.json').then(function(r){return r.json();}).then(function(T){
+    var C=T.cats||{};Object.keys(C).forEach(function(id){var c=C[id];if(c&&c.n){cats[c.n+' ('+id+')']=id;}});
+    document.getElementById('dvCats').innerHTML=Object.keys(cats).sort().map(function(n){return '<option value="'+n.replace(/"/g,'&quot;')+'">';}).join('');
+    drawDv();
+  });
+  function drawDv(){var m=get('bv_defview')||{},h='';Object.keys(m).forEach(function(k){var id=k.replace(/^c/,''),name=Object.keys(cats).filter(function(n){return cats[n]===id;})[0]||k;
+      h+='<div><span><a href="kategorija.html?c='+id+'" target="_blank">'+name+'</a> — '+(m[k]==='table'?'Tabula':'Kartītes')+'</span><button type="button" data-del="'+k+'">Noņemt</button></div>';});
+    document.getElementById('dvList').innerHTML=h||'<div><span>Nav iestatīts: kategorijas atveras automātiski izvēlētā skatā.</span></div>';}
+  document.getElementById('dvSave').onclick=function(){var id=cats[document.getElementById('dvCat').value];if(!id){alert('Izvēlieties kategoriju no saraksta');return;}
+    var m=get('bv_defview')||{};m['c'+id]=document.getElementById('dvView').value;set('bv_defview',m);try{localStorage.removeItem('bv_view_c'+id);}catch(e){}drawDv();};
+  document.getElementById('dvList').addEventListener('click',function(e){if(e.target.dataset.del){var m=get('bv_defview')||{};delete m[e.target.dataset.del];set('bv_defview',m);drawDv();}});
+})();
+</script>
+</body>
+</html>

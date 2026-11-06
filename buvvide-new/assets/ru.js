@@ -1,5 +1,12 @@
 /* RU interfeisa teksti (preču un kategoriju nosaukumi paliek latviski) */
 window.BV_RU = {
+"Minimālā pasūtījuma (preču) summa": "Минимальная сумма заказа (товары)",
+"Pievienojiet vēl preces par": "Добавьте ещё товаров на",
+"Minimālā summa sasniegta": "Минимальная сумма достигнута",
+"Apmaksa pēc rēķina": "Оплата по счёту",
+"pasūtot uzreiz nav jāmaksā": "при заказе платить сразу не нужно",
+"izvēlieties modeli": "выберите модель",
+"Lūdzu, izvēlieties modeli, tad ielieciet grozā.": "Пожалуйста, выберите модель и затем добавьте в корзину.",
 "Jautājumi par preci vai piegādi?": "Вопросы о товаре или доставке?",
 "Zvanīt": "Позвонить",
 "Rakstīt e-pastu": "Написать e-mail",

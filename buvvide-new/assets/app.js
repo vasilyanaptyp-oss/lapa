@@ -2,6 +2,8 @@
 (function () {
   'use strict';
   var d = document, w = window;
+  // R16/J2: colours set in «Veikala iestatījumi» (admin preview) override the CSS variables
+  try { var _th = JSON.parse(localStorage.getItem('bv_theme') || 'null'); if (_th) for (var _k in _th) if (/^--c-[a-z0-9-]+$/.test(_k)) d.documentElement.style.setProperty(_k, _th[_k]); } catch (e) {}
   var IMG = 'https://www.buvvide.lv/userfiles/Image/';
   var SHOP = { tel: '+37129123476', telH: '29 123 476', tel2: '+37127422801', tel2H: '27 422 801', wa: '37120865048', waH: '+371 20 865 048',
     mail: 'birojs@buvvide.lv' };
@@ -566,7 +568,7 @@
     var A = analyze(opts.items, !!opts.mixed);
     var key = opts.key || 'x';
     var S = { items: opts.items, sort: qp('sort') || 'rec', sel: {}, pmin: null, pmax: null, show: 24, facets: [],
-      view: store('bv_view_' + key) || (A.table ? 'table' : 'grid') };
+      view: store('bv_view_' + key) || (store('bv_defview') || {})[key] || (A.table ? 'table' : 'grid') };   // R16/J4: admin default per category
     if (S.view === 'list') S.view = 'grid';
     S.show = S.view === 'table' ? 50 : 24;
     var root = opts.root;
@@ -915,6 +917,8 @@
       $('#cat-h1').textContent = cn(c.n);
       // subcategories (children, or siblings for a leaf)
       var subs = c.k && c.k.length ? c.k : (c.p && T.cats[c.p] ? T.cats[c.p].k : []);
+      var sib = !(c.k && c.k.length);   // R6: a leaf shows its siblings as one compact row of names, so products start on the first screen
+      $('#subcats').classList.toggle('subcats--sib', sib);
       $('#subcats').innerHTML = (subs || []).map(function (sid) {
         var s = T.cats[sid]; if (!s) return '';
         return '<a class="subcat' + (sid === id ? ' is-on' : '') + '" href="' + catURL(sid) + '"><span class="subcat__img">' + (s.img ? '<img src="' + esc(img(s.img)) + '" alt="" loading="lazy">' : '') + '</span>' +
@@ -1161,8 +1165,8 @@
       if (p.pr == null) { sb.hidden = true; }   // no cart button on this page, so no sticky bar
       else if ('IntersectionObserver' in w) {
         var io = new IntersectionObserver(function (en) {
-          var vis = en[0].isIntersecting;
-          sb.classList.toggle('is-on', !vis); d.body.classList.toggle('has-sticky', !vis);
+          var e0 = en[0], past = !e0.isIntersecting && e0.boundingClientRect.top < 0;   // R1: only once the buy box is above the screen
+          sb.classList.toggle('is-on', past); d.body.classList.toggle('has-sticky', past);
         });
         io.observe($('#buy'));
       }
@@ -1182,12 +1186,12 @@
 
     function bind(p, images, variants) {
       var vi = -1, qty = $('#qty');
-      if (variants.length) {   // F9: cheapest model preselected, its price is the one in the buy box
-        var cbest = Infinity; variants.forEach(function (v, i) { if (v.price && v.price < cbest) { cbest = v.price; vi = i; } });
-        if (vi < 0) vi = 0;
-        var v0 = variants[vi];
-        if (v0.price) $('#pprice').innerHTML = priceHTML({ pr: v0.price, o: p.o && v0.price === p.pr ? p.o : null }, true);
-        var os0 = $('#optsel'); if (os0) os0.textContent = vlabel(v0);
+      if (variants.length) {   // R3 (Gita): the customer must choose the model, nothing is preselected
+        var cbest = Infinity; variants.forEach(function (v) { if (v.price && v.price < cbest) cbest = v.price; });
+        if (cbest < Infinity) $('#pprice').innerHTML = '<span class="pfrom">' + t('no') + '</span> ' + priceHTML({ pr: cbest, o: null }, true);
+        var os0 = $('#optsel'); if (os0) os0.textContent = t('izvēlieties modeli');
+        $$('input[name="varmodel"]').forEach(function (rd) { rd.checked = false; });
+        $$('.models__r').forEach(function (tr) { tr.classList.remove('is-on'); });
       }
       // gallery
       var main = $('#galmain'), n = images.length;
@@ -1226,7 +1230,11 @@
         if (v.price) {
           var vp = { pr: v.price, o: p.o && v.price === p.pr ? p.o : null };
           $('#pprice').innerHTML = priceHTML(vp, true);
+          var sbp = $('#stickybuy .stickybuy__p');   // R2: the sticky bar shows the chosen model's price
+          if (sbp) { $$('.price, .pfrom', sbp).forEach(function (x) { x.parentNode.removeChild(x); }); sbp.insertAdjacentHTML('beforeend', priceHTML(vp, false)); }
         }
+        var mz0 = $('#izvele'); if (mz0) { mz0.classList.remove('is-need'); var nm = $('.models__need', mz0); if (nm) nm.parentNode.removeChild(nm); }
+        var os1 = $('#optsel'); if (os1) os1.textContent = vlabel(v);
         $('#pwa').href = waLink(t('Labdien! Vēlos pasūtīt') + ': ' + p.n + ' (ID ' + p.id + '), ' + vlabel(v));
       }
       $$('.models__r').forEach(function (tr) {
@@ -1245,7 +1253,15 @@
       if (qty) { qty.addEventListener('change', function () { qty.value = Math.max(1, Math.min(999, Math.round(+qty.value) || 1)); ppM2(); }); qty.addEventListener('input', ppM2); $$('[data-q]').forEach(function (b) { b.addEventListener('click', ppM2); }); }
       if (!$('#buy')) return;   // price on request: no cart row on this page
       $('#buy').addEventListener('click', function () {
-        if (variants.length && vi < 0) vi = 0;   // never a dead end: the cheapest model is the default
+        if (variants.length && vi < 0) {   // R3: ask for the model instead of adding a default one
+          var mz = $('#izvele');
+          if (mz) {
+            mz.classList.add('is-need');
+            if (!$('.models__need', mz)) mz.insertAdjacentHTML('afterbegin', '<p class="models__need" role="alert">' + t('Lūdzu, izvēlieties modeli, tad ielieciet grozā.') + '</p>');
+            mz.scrollIntoView({ block: 'center', behavior: 'smooth' });
+          }
+          return;
+        }
         var q = Math.max(1, Math.min(999, Math.round(+qty.value) || 1)), v = vi >= 0 ? variants[vi] : null;
         var lab = v ? vlabel(v) : '';
         Cart.add(p, q, lab, v && v.price ? v.price : null);
@@ -1280,7 +1296,13 @@
         (save > 0 ? '<div class="sumrow sumrow--save"><span>' + t('Atlaide') + '</span><span>−' + money(save) + '</span></div>' : '') +
         '<div class="sumrow"><span>' + t('Piegāde') + '</span><span>' + t('cenu aprēķināsim rēķinā') + '</span></div>' +
         '<div class="sumrow sumrow--total"><span>' + t('Preču summa (ar PVN)') + '</span><span>' + money(sum) + '</span></div>' +
-        '<p class="sumrow__note">' + t('Piegādes cenu aprēķināsim pēc adreses un norādīsim rēķinā.') + '</p>';
+        '<p class="sumrow__note">' + t('Piegādes cenu aprēķināsim pēc adreses un norādīsim rēķinā.') + '</p>' +
+        (function () {   // R4: same rule as the live shop: standard minimum order (goods) 47 €
+          var MIN = 47, pct = Math.max(0, Math.min(100, Math.round(sum * 100 / MIN)));
+          return '<div class="minord' + (sum < MIN ? ' is-low' : '') + '"><div class="minord__t">' + t('Minimālā pasūtījuma (preču) summa') + ' <b>47 €</b></div>' +
+            '<div class="minord__bar" role="img" aria-label="' + pct + '%"><i style="width:' + pct + '%"></i></div>' +
+            '<div class="minord__s">' + (sum < MIN ? t('Pievienojiet vēl preces par') + ' <b>' + money(MIN - sum) + '</b>' : t('Minimālā summa sasniegta')) + '</div></div>';
+        })();
       h += '<a class="btn btn--block" href="noformet.html">' + t('Noformēt pasūtījumu') + icon('arrow-r') + '</a>' +
         '<a class="btn btn--ghost btn--block" style="margin-top:8px" href="katalogs.html">' + t('Turpināt iepirkties') + '</a>' +
         '<div class="summary__note"><p>' + icon('bank') + '<span>' + t('Apmaksa uzreiz nav jāveic. Nosūtīsim avansa rēķinu; pieejamās preces rezervējam uz 3 darba dienām.') + '</span></p>' +
@@ -1432,6 +1454,10 @@
   cnStatic();
   Cart.badge();
   w.addEventListener('storage', function (e) { if (e.key === 'bv_cart') Cart.badge(); });
+  if (PAGE === 'home') (function () {   // R16/J6: home blocks in the order / visibility set in «Veikala iestatījumi»
+    var cfg = store('bv_blocks'), main = $('#main'); if (!cfg || !main) return;
+    cfg.forEach(function (b) { var el = main.querySelector('[data-block-i="' + b.i + '"]'); if (el) { el.hidden = !!b.h; main.appendChild(el); } });
+  })();
   if (PAGE === 'category') catPage();
   else if (PAGE === 'akcijas') akcPage();
   else if (PAGE === 'search') searchPage();

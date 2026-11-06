@@ -954,3 +954,37 @@ img.img-fail { object-fit: contain; padding: 18%; opacity: .55; mix-blend-mode: 
   .ftr__chev { display: none; }
   .ftr__acc li a { padding: 5px 0; }
 }
+
+/* ---- 06.11 red team R1-R3: the model must be chosen ---- */
+.pfrom { font-size: 14px; font-weight: 600; color: #3d444b; margin-right: 2px; }
+.models.is-need { outline: 2px solid #c62828; outline-offset: 2px; border-radius: 12px; }
+.models__need { margin: 0 0 10px; padding: 8px 12px; border-radius: 8px; background: #fdecea; color: #a11; font-weight: 700; font-size: 14px; }
+
+/* ---- 06.11 red team R6/R14 ---- */
+.subcats--sib { flex-wrap: nowrap !important; overflow-x: auto !important; gap: 6px !important; padding-bottom: 12px !important; }
+.subcats--sib .subcat { flex: 0 0 auto; display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 999px; width: auto; }
+.subcats--sib .subcat__img { display: none; }
+.subcats--sib .subcat__name { display: inline-flex; align-items: baseline; gap: 6px; font-size: 14px; white-space: nowrap; }
+.subcats--sib .subcat__name small { margin: 0; }
+.ptable td.pc { white-space: normal; min-width: 56px; max-width: 150px; }
+.ptable td.nm a { display: block; max-width: 300px; }
+.ptable td.ad .btn { white-space: nowrap; }
+.ptable td.ad .btn span { white-space: nowrap; }
+.ptable thead th { white-space: normal; line-height: 1.25; vertical-align: bottom; }
+.ptable thead th.num { min-width: 64px; }
+.ptable td.pcell { white-space: nowrap; }
+
+/* ---- 06.11 red team R4: minimum order 47 € ---- */
+.minord { margin: 12px 0 14px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 13.5px; }
+.minord__bar { height: 6px; border-radius: 3px; background: #e6e9eb; margin: 8px 0 6px; overflow: hidden; }
+.minord__bar i { display: block; height: 100%; background: var(--c-accent); border-radius: 3px; }
+.minord.is-low { border-color: #f0c36d; background: #fffaf0; }
+.minord.is-low .minord__bar i { background: #e0a100; }
+.minord__s { color: #3d444b; }
+/* ---- 06.11 red team R5: the whole catalog fits without scrolling (2 compact columns on the left) ---- */
+@media (min-width: 900px) {
+  .mega__in { grid-template-columns: 460px 1fr; }
+  .mega__l { display: grid; grid-template-columns: 1fr 1fr; align-content: start; column-gap: 4px; padding: 10px 8px; }
+  .mega__l a { padding: 6px 10px; font-size: 13.5px; line-height: 1.25; border-radius: 6px; }
+  .mega__l img { display: none; }
+}
