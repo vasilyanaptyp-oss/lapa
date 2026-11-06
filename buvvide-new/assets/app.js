@@ -123,8 +123,13 @@
   function snippet(s, n) { s = String(s || '').replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n - 1).replace(/[\s,;.]+$/, '') + '…' : s; }
   function icon(n, cls) { return '<svg class="ico ' + (cls || '') + '" aria-hidden="true"><use href="#i-' + n + '"/></svg>'; }
   function fold(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9Ѐ-ӿ]+/g, ' ').trim(); }
-  function natCmp(a, b) { return String(a).localeCompare(String(b), 'lv', { numeric: true, sensitivity: 'base' }); }
-  var _cache = {}, DATA_V = '20261106d';   // bump when site/data changes: force-cache would keep old product files
+  function natCmp(a, b) {   // R7: leading numbers as numbers (6 < 6.5 < 9), then text
+    var x = String(a), y = String(b), mx = /^\s*(\d+(?:[.,]\d+)?)/.exec(x), my = /^\s*(\d+(?:[.,]\d+)?)/.exec(y);
+    if (mx && my) { var dn = parseFloat(mx[1].replace(',', '.')) - parseFloat(my[1].replace(',', '.')); if (dn) return dn; }
+    return x.localeCompare(y, 'lv', { numeric: true, sensitivity: 'base' });
+  }
+  function trDom(r) { if (LANG !== 'ru') return; $$('[data-t]', r).forEach(function (e) { var k = e.getAttribute('data-t') || e.textContent.trim(); if (RU[k]) e.textContent = RU[k]; }); }   // R10
+  var _cache = {}, DATA_V = '20261106e';   // bump when site/data changes: force-cache would keep old product files
   function getJSON(u) {
     if (!_cache[u]) _cache[u] = fetch(u + (u.indexOf('?') < 0 ? '?' : '&') + 'dv=' + DATA_V, { cache: 'force-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
     return _cache[u];
@@ -172,7 +177,7 @@
       '<a class="btn btn--yellow" href="grozs.html">' + t('Uz grozu') + '</a>';
     el.classList.add('is-on');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { el.classList.remove('is-on'); }, 4200);
+    toastTimer = setTimeout(function () { el.classList.remove('is-on'); }, 2600);   // R32
   }
   function msg(text) {
     var el = $('#toast');
@@ -738,7 +743,7 @@
         if (many) h += '<button class="fmore" type="button" data-fmore>' + t('Rādīt visus') + ' (' + vals.length + ')</button>';
         h += '</div></div>';
       });
-      h += '<div class="fgroup" data-fk="__price"><button class="fgroup__h" type="button" aria-expanded="true">' + t('Cena') + ', €' + icon('chev-d') + '</button><div class="fgroup__b">' +
+      if (hi > lo) h += '<div class="fgroup" data-fk="__price"><button class="fgroup__h" type="button" aria-expanded="true">' + t('Cena') + ', €' + icon('chev-d') + '</button><div class="fgroup__b">' +
         '<div class="frange"><input type="number" inputmode="decimal" min="0" placeholder="' + lo + '" value="' + (S.pmin != null ? S.pmin : '') + '" data-pmin aria-label="' + t('Cena no') + '"><span>–</span>' +
         '<input type="number" inputmode="decimal" min="0" placeholder="' + hi + '" value="' + (S.pmax != null ? S.pmax : '') + '" data-pmax aria-label="' + t('Cena līdz') + '"></div></div></div>';
       return h;
@@ -794,7 +799,7 @@
       h += '<td class="num pcell">' + pr + '</td>' +
         '<td class="cell-prices">' + pr + '<span class="pm">' + (ppm ? ppm + (u ? ' · ' + m2(u.ar) + ' ' + esc(unitIn(u.un)) : '') : '') + (meta ? (ppm ? ' · ' : '') + meta : '') + '</span></td>';
       if (p.pr == null) h += '<td class="qtd"></td><td class="ad"><a class="btn btn--ghost btn--sm" href="' + prodURL(p) + '">' + t('Skatīt') + '</a></td>';
-      else h += '<td class="qtd">' + qtyHTML(p, ' qty--sm') + '</td><td class="ad"><button class="btn btn--sm add" type="button" data-add="' + p.id + '">' + icon(p.hv ? 'chev-r' : 'cart') + '<span>' + t(p.hv ? 'Izvēlēties' : 'Grozā') + '</span></button></td>';
+      else h += '<td class="qtd">' + (p.hv ? '' : qtyHTML(p, ' qty--sm')) + '</td><td class="ad"><button class="btn btn--sm add" type="button" data-add="' + p.id + '">' + icon(p.hv ? 'chev-r' : 'cart') + '<span>' + t(p.hv ? 'Izvēlēties' : 'Grozā') + '</span></button></td>';
       return h + '</tr>';
     }
     function render(keepFacets) {
@@ -818,11 +823,13 @@
           '<button class="btn btn--ghost" type="button" data-showmore>' + t('Rādīt vēl') + ' ' + Math.min(step, n - S.show) + '</button>';
       } else more.innerHTML = n > 24 ? '<span class="more__n">' + t('Rādītas visas') + ' ' + n + ' ' + plural(n, t('prece'), t('preces')) + '</span>' : '';
       $$('[data-count]', root).forEach(function (e) { e.textContent = n + ' ' + plural(n, t('prece'), t('preces')); });
+      var cn0 = $('#cat-n');   // R35: the line under H1 follows the filters
+      if (cn0 && opts.typeNav) { if (cn0._t == null) cn0._t = cn0.textContent; cn0.textContent = selCount() && n !== S.items.length ? n + ' ' + t('no') + ' ' + S.items.length + ' ' + t('precēm') : cn0._t; }
       $$('[data-showbtn]').forEach(function (e) { e.textContent = t('Rādīt') + ' ' + n + ' ' + plural(n, t('preci'), t('preces')); });
       var sc = selCount();
       $$('[data-fcnt]').forEach(function (e) { e.textContent = sc ? sc : ''; });
       $('[data-chips]', root).innerHTML = chipsHTML();
-      $$('[data-quick]').forEach(function (e) { e.innerHTML = quickHTML(); e.hidden = !A.quick.length; });
+      $$('[data-quick]').forEach(function (e) { var sl = $$('.quick__row', e).map(function (r) { return r.scrollLeft; }); e.innerHTML = quickHTML(); e.hidden = !A.quick.length; $$('.quick__row', e).forEach(function (r, i) { r.scrollLeft = sl[i] || 0; }); });   // R9: the pressed chip stays in view
       if (!keepFacets) $$('[data-facets]').forEach(function (e) { var st = e.scrollTop; e.innerHTML = facetHTML(); e.scrollTop = st; });
       else $$('[data-facets]').forEach(function (e) { refreshCounts(e); });
       typesRender();
@@ -923,8 +930,12 @@
         $$('.fopt', g).forEach(function (l) { l.hidden = q ? fold($('span', l).textContent).indexOf(q) < 0 : l.hasAttribute('data-extra') && !g.classList.contains('is-all'); });
       } else if (s.hasAttribute('data-qid')) updM2(s);
     });
+    d.addEventListener('change', function (e) {   // R28: 1…999 whole pieces
+      var s = e.target; if (!s.hasAttribute || !s.hasAttribute('data-qid')) return;
+      s.value = Math.max(1, Math.min(999, Math.round(+s.value) || 1)); updM2(s);
+    });
     function updM2(inp) {
-      var p = P[inp.getAttribute('data-qid')], u = p && unitInfo(p), q = Math.max(1, Math.round(+inp.value) || 1);
+      var p = P[inp.getAttribute('data-qid')], u = p && unitInfo(p), q = Math.max(1, Math.min(999, Math.round(+inp.value) || 1));
       $$('[data-m2="' + inp.getAttribute('data-qid') + '"]').forEach(function (el) { el.textContent = u ? '= ' + m2(u.ar * q) : ''; });
     }
     d.addEventListener('click', function (e) {
@@ -1372,7 +1383,7 @@
     function draw() {
       var a = Cart.get();
       if (!a.length) {
-        root.innerHTML = $('#cart-empty-tpl').innerHTML;
+        root.innerHTML = $('#cart-empty-tpl').innerHTML; trDom(root);
         $('#cart-h-n').textContent = '';
         return;
       }
@@ -1429,7 +1440,7 @@
   /* ═════════ CHECKOUT ═════════ */
   function checkoutPage() {
     var a = Cart.get(), root = $('#checkout');
-    if (!a.length) { root.innerHTML = $('#cart-empty-tpl').innerHTML; return; }
+    if (!a.length) { root.innerHTML = $('#cart-empty-tpl').innerHTML; trDom(root); return; }
     var type = 'priv', ship = 'del', pay = 'bank';
     var hasShip = a.some(function (it) { return (it.f || []).indexOf('ship') >= 0; });   // F5: delivery-only items
     var nWh = 1;
@@ -1492,7 +1503,7 @@
       lines.push(t('Pircējs') + ': ' + F('fname') + ' ' + F('lname') + ', ' + F('phone') + ', ' + F('email'));
       if (type === 'comp') lines.push(t('Uzņēmums') + ': ' + F('cname') + ', ' + t('reģ. nr.') + ' ' + F('creg') + (F('cvat') ? ', ' + t('PVN nr.') + ' ' + F('cvat') : '') + ', ' + F('caddr'));
       lines.push(t('Saņemšana') + ': ' + (ship === 'del' ? t('piegāde uz adresi') + ' — ' + F('addr') + ', ' + F('city') + ', ' + F('zip') : t('saņemšana noliktavā')));
-      lines.push(t('Apmaksa') + ': ' + (pay === 'esto' ? t('ESTO līzings') : t('bankas pārskaitījums pēc rēķina')));
+      lines.push(t('Apmaksa') + ': ' + (pay === 'esto' ? t('ESTO nomaksa') : t('bankas pārskaitījums pēc rēķina')));
       if (F('note')) lines.push(t('Komentārs') + ': ' + F('note'));
       var text = lines.join('\n');
       var subj = t('Pasūtījums') + ' — ' + F('fname') + ' ' + F('lname');
