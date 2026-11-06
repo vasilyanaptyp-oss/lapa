@@ -1,5 +1,9 @@
 /* RU interfeisa teksti (preču un kategoriju nosaukumi paliek latviski) */
 window.BV_RU = {
+"Jautājumi par preci vai piegādi?": "Вопросы о товаре или доставке?",
+"Zvanīt": "Позвонить",
+"Rakstīt e-pastu": "Написать e-mail",
+"Otrs tālrunis": "Второй телефон",
 "Modelis": "Модель",
 "modelis": "модель",
 "modeļi": "модели",
