@@ -124,9 +124,9 @@
   function icon(n, cls) { return '<svg class="ico ' + (cls || '') + '" aria-hidden="true"><use href="#i-' + n + '"/></svg>'; }
   function fold(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9Ѐ-ӿ]+/g, ' ').trim(); }
   function natCmp(a, b) { return String(a).localeCompare(String(b), 'lv', { numeric: true, sensitivity: 'base' }); }
-  var _cache = {};
+  var _cache = {}, DATA_V = '20261106d';   // bump when site/data changes: force-cache would keep old product files
   function getJSON(u) {
-    if (!_cache[u]) _cache[u] = fetch(u, { cache: 'force-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+    if (!_cache[u]) _cache[u] = fetch(u + (u.indexOf('?') < 0 ? '?' : '&') + 'dv=' + DATA_V, { cache: 'force-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
     return _cache[u];
   }
   function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
