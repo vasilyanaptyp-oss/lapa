@@ -204,7 +204,7 @@ a{color:var(--acc)}
       '<a href="kategorija.html?c='+id+'" target="_blank" title="'+esc(c.n)+'">'+esc(c.n)+'</a><small>'+(c.cnt||0)+'</small></div>'+
       '<select data-view="'+id+'" class="'+(v?'is-set':'')+'" aria-label="Skats: '+esc(c.n)+'"><option value="">Automātiski</option><option value="table"'+(v==='table'?' selected':'')+'>Tabula</option><option value="grid"'+(v==='grid'?' selected':'')+'>Kartītes</option></select>'+
       '<button class="tr__qf'+(q.set?' is-set':'')+'" type="button" data-qf="'+id+'" title="'+esc(q.t)+'">'+esc(q.t)+'</button></div>'+
-      '<div class="tr__p" data-p="'+id+'" hidden></div>'+kids.map(function(x){par[x]=id;return row(x,d+1);}).join('');}
+      '<div class="tr__p" data-p="'+id+'" hidden></div>'+kids.map(function(x){x=String(x);par[x]=String(id);return row(x,d+1);}).join('');}
   fetch('data/tree.json').then(function(r){return r.json();}).then(function(T){C=T.cats||{};
     var top=(T.top||[]).filter(function(x){return C[x];});if(!top.length)top=Object.keys(C).filter(function(x){return !C[x].p;});
     box.insertAdjacentHTML('beforeend',top.map(function(x){return row(String(x),0);}).join(''));});
