@@ -967,6 +967,7 @@ img.img-fail { object-fit: contain; padding: 18%; opacity: .55; mix-blend-mode: 
 .subcats--sib .subcat__img { display: none; }
 .subcats--sib .subcat__name { display: inline-flex; align-items: baseline; gap: 6px; font-size: 14px; white-space: nowrap; }
 .subcats--sib .subcat__name small { margin: 0; }
+@media (min-width: 1024px) { .subcats--sib { flex-wrap: wrap !important; overflow: visible !important; } }   /* 08.11 Gita: on desktop the sibling row was cut at the right edge -> wrap, all names visible */
 .ptable td.pc { white-space: normal; min-width: 56px; max-width: 150px; }
 .ptable td.nm a { display: block; max-width: 300px; }
 .ptable td.ad .btn { white-space: nowrap; }

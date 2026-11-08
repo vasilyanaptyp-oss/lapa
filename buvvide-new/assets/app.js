@@ -1274,6 +1274,7 @@
         return '<a class="subcat' + (sid === id ? ' is-on' : '') + '" href="' + catURL(sid) + '"><span class="subcat__img">' + (s.img ? timg(s.img) : '') + '</span>' +
           '<span class="subcat__name">' + esc(cn(s.n)) + (s.cnt ? '<small>' + s.cnt + ' ' + plural(s.cnt, t('prece'), t('preces')) + '</small>' : '') + '</span></a>';
       }).join('');
+      (function () { var sc = $('#subcats'), on = sc && $('.subcat.is-on', sc); if (sib && on && sc.scrollWidth > sc.clientWidth) sc.scrollLeft = Math.max(0, on.offsetLeft - sc.offsetLeft - 16); })();   // 08.11 Gita: phones keep the scroll row, the current chip is brought into view
       return Promise.all([getJSON('data/c/' + id + '.json'), getJSON('data/cd/' + id + '.json').catch(function () { return {}; })]).then(function (r3) {
         var j = r3[0], CD = r3[1] || {}, TD = CD.t || {}, TN = {};
         if (LANG === 'ru') { TD = Object.assign({}, TD, CD.tr || {}); TN = CD.tn || {}; }   // RU texts / type names from the shop's RU side   // data/cd/<id>.json = {d: category text, t: {type: text}} from the shop
