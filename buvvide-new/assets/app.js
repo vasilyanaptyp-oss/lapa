@@ -968,7 +968,7 @@
         if (f.k === '__offer') vals.sort(function (a, b) { return OFFERS.map(function (o) { return o[0]; }).indexOf(a) - OFFERS.map(function (o) { return o[0]; }).indexOf(b); });
         else if (f.k === '__cat' || f.k === '__type') vals.sort(function (a, b) { return (counts[b] || 0) - (counts[a] || 0) || natCmp(valLabel(f, a), valLabel(f, b)); });
         else vals.sort(natCmp);
-        var sel = S.sel[f.k] || [], isOpen = open[f.k] != null ? open[f.k] : true;   // Gita 06.11: every filter group visible by default
+        var sel = S.sel[f.k] || [], isOpen = open[f.k] != null ? open[f.k] : sel.length > 0;   // Gita 31.10 + 08.11 «Parametrus labāk sakļaut»: groups load collapsed (headings visible), a group with a choice opens
         // R26: a long list shows 6 values (the chosen ones first) + «Rādīt visus», so every group heading stays in sight
         var many = vals.length > 8 && !S.fall[f.k], limit = 6;
         if (many && sel.length) vals = vals.filter(function (v) { return sel.indexOf(v) >= 0; }).concat(vals.filter(function (v) { return sel.indexOf(v) < 0; }));
@@ -982,7 +982,8 @@
         if (many) h += '<button class="fmore" type="button" data-fmore>' + t('Rādīt visus') + ' (' + vals.length + ')</button>';
         h += '</div></div>';
       });
-      if (prices.length && Math.max.apply(null, prices) - Math.min.apply(null, prices) >= 0.01) h += '<div class="fgroup" data-fk="__price"><button class="fgroup__h" type="button" aria-expanded="true">' + t('Cena') + ', €' + icon('chev-d') + '</button><div class="fgroup__b">' +
+      var pOpen = open.__price != null ? open.__price : (S.pmin != null || S.pmax != null);
+      if (prices.length && Math.max.apply(null, prices) - Math.min.apply(null, prices) >= 0.01) h += '<div class="fgroup' + (pOpen ? '' : ' is-closed') + '" data-fk="__price"><button class="fgroup__h" type="button" aria-expanded="' + (pOpen ? 'true' : 'false') + '">' + t('Cena') + ', €' + icon('chev-d') + '</button><div class="fgroup__b">' +
         '<div class="frange"><input type="number" inputmode="decimal" min="0" placeholder="' + lo + '" value="' + (S.pmin != null ? S.pmin : '') + '" data-pmin aria-label="' + t('Cena no') + '"><span>–</span>' +
         '<input type="number" inputmode="decimal" min="0" placeholder="' + hi + '" value="' + (S.pmax != null ? S.pmax : '') + '" data-pmax aria-label="' + t('Cena līdz') + '"></div></div></div>';
       return h;
