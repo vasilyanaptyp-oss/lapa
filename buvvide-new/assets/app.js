@@ -177,7 +177,7 @@
   function reg(list) { (list || []).forEach(function (p) { if (p && p.id) P[p.id] = p; }); return list; }
   // С-11 (rt9 F): one look for the category pictures: the item on a light background, a product photo of that category
   var CATIMG = {"829": "img/16174ae0f1f04d_500.webp", "505": "img/da4089d2f1885a_500.webp", "31": "img/f078489591022e_500.webp", "188": "img/338828c48cd9d7_500.webp", "100": "img/b95e2265a1ae6f_500.webp", "1020": "img/21cb916e426e89_500.webp", "131": "img/ce61f3e2bd19ad_500.webp", "23": "img/3276d084c1c02f_500.webp", "43": "img/fbc0cbc55a4188_500.webp", "461": "img/cd4a3d80eed47d_500.webp", "208": "img/29f4ada19a12de_500.webp"};
-  function loadTree() { return TREE ? Promise.resolve(TREE) : getJSON('data/tree.json').then(function (j) { Object.keys(CATIMG).forEach(function (k) { if (j.cats[k]) j.cats[k].img = CATIMG[k]; }); TREE = j; return j; }); }
+  function loadTree() { return TREE ? Promise.resolve(TREE) : getJSON('data/tree.json').then(function (j) { Object.keys(CATIMG).forEach(function (k) { if (j.cats[k] && String(j.cats[k].img).indexOf('img/caticon_') !== 0) j.cats[k].img = CATIMG[k]; });   /* 08.11 Gita: her own cIcon pictures win for the top categories */ TREE = j; return j; }); }
 
   /* ── cart ── */
   var Cart = {
