@@ -858,6 +858,7 @@
       for (var i = 0; i < (p.prm || []).length; i++) if (p.prm[i][0] === k) return p.prm[i][1];
       return '';
     }
+    function pcats(p) { return (p.cs || [p.c]).map(String); }   // 08.11: a product in Metrotile AND Piederumi counts in both
     function offerVals(p) {
       var a = [];
       if (pct(p) >= 1) a.push('sale');
@@ -896,6 +897,7 @@
       for (var k in S.sel) {
         if (k === skip || !S.sel[k].length) continue;
         if (k === '__offer') { var ov = offerVals(p); if (!S.sel[k].some(function (x) { return ov.indexOf(x) >= 0; })) return false; continue; }
+        if (k === '__cat') { var pc = pcats(p); if (!S.sel[k].some(function (x) { return pc.indexOf(x) >= 0; })) return false; continue; }
         if (S.sel[k].indexOf(pval(p, k)) < 0) return false;
       }
       return true;
@@ -937,12 +939,18 @@
       var counts = {};
       S.items.forEach(function (p) {
         if (!match(p, k)) return;
-        if (k === '__offer') offerVals(p).forEach(function (v) { counts[v] = (counts[v] || 0) + 1; });
+        if (k === '__offer' || k === '__cat') (k === '__cat' ? pcats(p) : offerVals(p)).forEach(function (v) { counts[v] = (counts[v] || 0) + 1; });
         else { var v = pval(p, k); if (v) counts[v] = (counts[v] || 0) + 1; }
       });
       return counts;
     }
 
+    function typeScope() {   // types of the ticked categories (null = no category ticked)
+      var cs = S.sel.__cat || [], m = {};
+      if (!cs.length) return null;
+      S.items.forEach(function (p) { if (pcats(p).some(function (c) { return cs.indexOf(c) >= 0; })) { var v = pval(p, '__type'); if (v) m[v] = 1; } });
+      return m;
+    }
     var open = store('bv_fopen') || {};
     function facetHTML() {
       var h = '';
@@ -952,10 +960,11 @@
         var counts = countsFor(f.k);
         var all = {};
         S.items.forEach(function (p) {
-          if (f.k === '__offer') offerVals(p).forEach(function (v) { all[v] = 1; });
+          if (f.k === '__offer' || f.k === '__cat') (f.k === '__cat' ? pcats(p) : offerVals(p)).forEach(function (v) { all[v] = 1; });
           else { var v = pval(p, f.k); if (v) all[v] = 1; }
         });
-        var vals = Object.keys(all);
+        var vals = Object.keys(all), tsc = f.k === '__type' && typeScope();
+        if (tsc) vals = vals.filter(function (v) { return tsc[v] || (S.sel.__type || []).indexOf(v) >= 0; });   // 08.11 Gita: Kategorija ticked -> only its types, like inside the category
         if (f.k === '__offer') vals.sort(function (a, b) { return OFFERS.map(function (o) { return o[0]; }).indexOf(a) - OFFERS.map(function (o) { return o[0]; }).indexOf(b); });
         else if (f.k === '__cat' || f.k === '__type') vals.sort(function (a, b) { return (counts[b] || 0) - (counts[a] || 0) || natCmp(valLabel(f, a), valLabel(f, b)); });
         else vals.sort(natCmp);
@@ -1102,7 +1111,7 @@
       S.items.forEach(function (p) { var v = pval(p, '__type'); if (v) all[v] = 1; });
       var tot = S.items.filter(function (p) { return match(p, '__type'); }).length, base = 'kategorija.html?c=' + (qp('c') || '');
       var h = '<p class="ptypes__h">' + t('Preču tipi') + '</p><ul class="ptypes__l"><li><a class="ptype' + (!sel ? ' is-on' : '') + '" href="' + base + '" data-ptype=""' + (!sel ? ' aria-current="true"' : '') + '><span>' + t('Visi') + '</span><small>' + tot + '</small></a></li>';
-      var tkeys = Object.keys(all).sort(natCmp), tmany = tkeys.length > 6;   // Q3: long lists fold to 6 so the filters stay on the first screen
+      var tsc = typeScope(), tkeys = Object.keys(all).filter(function (v) { return !tsc || tsc[v] || v === sel; }).sort(natCmp), tmany = tkeys.length > 6;   // Q3: long lists fold to 6 so the filters stay on the first screen
       tkeys.forEach(function (v, ti) {
         var on = sel === v, c = counts[v] || 0;
         h += '<li' + (tmany && !S.ptAll && ti >= 4 && !on ? ' class="ptypes__x"' : '') + '><a class="ptype' + (on ? ' is-on' : '') + (!c && !on ? ' is-zero' : '') + '" href="' + base + '&f=' + encodeURIComponent('__type:' + encodeURIComponent(v)) + '" data-ptype="' + esc(v) + '"' + (on ? ' aria-current="true"' : '') + '><span>' + esc((opts.tnames || {})[v] || v) + '</span><small>' + c + '</small></a></li>';
@@ -1167,7 +1176,7 @@
         if (inp.checked && i < 0) a.push(v); else if (!inp.checked && i >= 0) a.splice(i, 1);
         var hdr = $('.fgroup__h', g);
         if (hdr) hdr.firstChild.textContent = (S.facets.filter(function (f) { return f.k === k; })[0] || { label: '' }).label + (a.length ? ' (' + a.length + ')' : '');
-        changed(true);
+        changed(k !== '__cat');   // a category tick rebuilds the groups (its types only)
       } else if (inp.hasAttribute('data-pmin') || inp.hasAttribute('data-pmax')) {
         var v2 = inp.value === '' ? null : Math.max(0, +inp.value);
         if (inp.hasAttribute('data-pmin')) S.pmin = v2; else S.pmax = v2;
@@ -1290,7 +1299,7 @@
         var catFacet = null;
         if (c.k && c.k.length) {
           catFacet = {};
-          j.items.forEach(function (p) { if (T.cats[p.c]) catFacet[p.c] = T.cats[p.c].n; });
+          j.items.forEach(function (p) { (p.cs || [p.c]).forEach(function (c) { if (T.cats[c]) catFacet[c] = T.cats[c].n; }); });
           if (Object.keys(catFacet).length < 2) catFacet = null;
         }
         if (j.desc) $('#cat-desc').innerHTML = '<h2>' + esc(c.n) + '</h2><p>' + esc(j.desc) + '</p>';
