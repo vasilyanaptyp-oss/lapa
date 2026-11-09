@@ -247,11 +247,66 @@
     return h ? '<div class="badges">' + h + '</div>' : '';
   }
   function priceHTML(p, vat) {
-    var sale = pct(p) >= 1;
-    if (p.pr == null) return '<div class="price"><b>' + t('Cena: zvaniet') + '</b></div>';   // shop sells it without a price, same wording as buvvide.lv
-    return '<div class="price' + (sale ? ' price--sale' : '') + '"><b>' + money(p.pr) + '</b>' + (sale ? '<s>' + money(p.o) + '</s>' : '') +
+    var sale = pct(p) >= 1, en = p.id ? enSlot(p.id) : '';
+    if (p.pr == null) return '<div class="price"><b>' + t('Cena: zvaniet') + '</b>' + en + '</div>';   // shop sells it without a price, same wording as buvvide.lv
+    return '<div class="price' + (sale ? ' price--sale' : '') + '"><b>' + money(p.pr) + '</b>' + (sale ? '<s>' + money(p.o) + '</s>' : '') + en +
       (vat ? '<span class="price__vat">' + t('ar PVN 21%') + '</span>' : '') + '</div>';
   }
+  /* ── EPREL energy label (09.11, Gita): the class arrow right next to the price + «Datu lapa», in every view ──
+     Colour = position of the class inside its range, the same map as the shop's lib/Energo.php (7 colours of the EU label:
+     dg dark green … r red). The arrow opens the label (energyLabelLink), «Datu lapa» the product information sheet. */
+  var EN = null, ENDEF = 'APP_G', ENMAP = {
+    APPP_D: { 'A+++': 'dg', 'A++': 'mg', 'A+': 'lg', 'A': 'y', 'B': 'lo', 'C': 'do', 'D': 'r' },
+    APP_G: { 'A++': 'dg', 'A+': 'mg', 'A': 'lg', 'B': 'y', 'C': 'lo', 'D': 'do', 'E': 'r', 'F': 'r', 'G': 'r' },
+    A_G: { 'A': 'dg', 'B': 'mg', 'C': 'lg', 'D': 'y', 'E': 'lo', 'F': 'do', 'G': 'r' },
+    AP_G: { 'A+': 'dg', 'A': 'mg', 'B': 'lg', 'C': 'y', 'D': 'lo', 'E': 'do', 'F': 'r', 'G': 'r' }
+  }, ENSCALE = { APPP_D: 'A+++ – D', APP_G: 'A++ – G', A_G: 'A – G', AP_G: 'A+ – G' };
+  function enSlot(id, mini) { return '<span class="en"' + (mini ? ' data-mini' : '') + ' data-en="' + (+id) + '"></span>'; }
+  function enHTML(id, mini) {
+    var e = EN && EN[String(id)];
+    if (!e) return '';
+    var cls = e[0], rng = ENMAP[e[1]] ? e[1] : ENDEF, lab = /^https?:\/\//.test(e[2]) ? e[2] : '', sheet = /^https?:\/\//.test(e[3]) ? e[3] : '', h = '';
+    if (cls) {
+      var col = ENMAP[rng][cls] || 'r', tip = t('Energoefektivitātes klase') + ' ' + cls + ' (' + t('skala') + ' ' + ENSCALE[rng] + ')';
+      h += lab && !mini
+        ? '<a class="en__a en__a--' + col + '" href="' + esc(lab) + '" target="_blank" rel="noopener" title="' + esc(tip + '. ' + t('Atvērt energomarķējumu')) + '" aria-label="' + esc(tip + '. ' + t('Atvērt energomarķējumu')) + '"><b>' + esc(cls) + '</b></a>'
+        : '<span class="en__a en__a--' + col + '" title="' + esc(tip) + '" role="img" aria-label="' + esc(tip) + '"><b>' + esc(cls) + '</b></span>';
+    } else if (lab && !mini) h += '<a class="en__s" href="' + esc(lab) + '" target="_blank" rel="noopener">' + t('Energomarķējums') + '</a>';
+    if (sheet && !mini) h += '<a class="en__s" href="' + esc(sheet) + '" target="_blank" rel="noopener" title="' + esc(t('Produkta informācijas lapa')) + '">' + t('Datu lapa') + '</a>';
+    return h;
+  }
+  function enFill() {
+    if (!EN) return;
+    // prices rendered without a slot: cards built into the static pages, the product page's model / «no» price
+    $$('.price').forEach(function (pr) {
+      if (pr.hasAttribute('data-en0') || pr.querySelector('.en')) return;
+      pr.setAttribute('data-en0', '1');
+      var id = 0, box;
+      if (PAGE === 'product' && pr.closest('#pprice, .stickybuy__p')) id = +qp('id');
+      else if ((box = pr.closest('.card'))) {
+        var a = box.querySelector('[data-add]'), l = box.querySelector('a[href*="prece.html?id="]');
+        id = a ? +a.getAttribute('data-add') : l ? +((/[?&]id=(\d+)/.exec(l.getAttribute('href')) || [])[1] || 0) : 0;
+      }
+      if (!id || !EN[String(id)]) return;
+      var s = d.createElement('span'), vat = pr.querySelector('.price__vat');
+      s.className = 'en'; s.setAttribute('data-en', id);
+      if (vat) pr.insertBefore(s, vat); else pr.appendChild(s);
+    });
+    $$('.en[data-en]').forEach(function (s) {
+      var h = enHTML(s.getAttribute('data-en'), s.hasAttribute('data-mini'));
+      s.removeAttribute('data-en');
+      if (h) { s.innerHTML = h; s.classList.add('is-on'); } else if (s.parentNode) s.parentNode.removeChild(s);
+    });
+  }
+  (function () {
+    var busy = false;
+    function later() { if (busy) return; busy = true; (w.requestAnimationFrame || setTimeout)(function () { busy = false; enFill(); }); }
+    getJSON('data/energy.json').then(function (j) {
+      EN = j || {};
+      enFill();
+      if (w.MutationObserver) new MutationObserver(later).observe(d.body, { childList: true, subtree: true });
+    }).catch(function () {});
+  })();
   // С-05 (rt9 F): the card line shows «name value» only. A value without its name is left out, «ir/jā» becomes the feature
   // («ar stiklu», «kārba komplektā»), «nav/nē» is not a selling point, a unit used as the name goes after the number («30 kW»)
   var YESF = {"stikls": "ar stiklu", "atzveltne": "ar atzveltni", "blīvējums": "ar blīvējumu", "termoizolācija": "ar termoizolāciju", "apgaismojums": "ar apgaismojumu", "taimeris": "ar taimeri", "uv aizsardzība": "ar UV aizsardzību", "ūdens tverne": "ar ūdens tverni", "mitruma sensors": "ar mitruma sensoru", "riteņi": "ar riteņiem", "maisiņu turētājs": "ar maisiņu turētāju", "reverss": "ar reversu", "ūdens aizsardzība": "ar ūdens aizsardzību", "mikroperforācija": "ar mikroperforāciju", "kārba komplektā": "kārba komplektā", "dībeļi komplektā": "dībeļi komplektā", "marga komplektā": "marga komplektā", "iespējama wpc apdare": "iespējama WPC apdare", "pašattīrošs pārklājums": "pašattīrošs pārklājums", "siltinātas": "siltinātas", "caurumots": "caurumots", "apsildami rokturi": "apsildāmi rokturi"};
@@ -531,7 +586,7 @@
           res.forEach(function (p) {
             var mv = pmatch(p, q);
             h += '<a href="' + prodURL(p) + '"><span class="suggest__img">' + (p.img ? timg(p.img, ' width="38" height="38"') : '') + '</span>' +
-              '<span class="suggest__name">' + hl(p.n, q, hx) + (mv ? '<small class="suggest__pv">' + esc(mv) + '</small>' : '') + '</span><span class="suggest__price">' + (p.pr == null ? t('Cena: zvaniet') : money(p.pr)) + '</span></a>';
+              '<span class="suggest__name">' + hl(p.n, q, hx) + (mv ? '<small class="suggest__pv">' + esc(mv) + '</small>' : '') + '</span><span class="suggest__price">' + (p.pr == null ? t('Cena: zvaniet') : money(p.pr)) + enSlot(p.id, true) + '</span></a>';
           });
           h += '<a class="suggest__all" href="meklet.html?q=' + encodeURIComponent(q) + '">' + t('Visi rezultāti') + ' →</a>';
         }
@@ -1049,8 +1104,8 @@
         (p.nt && p.nt.length ? '<small class="' + (p.nt[0][1] === 'g' ? 'note-g' : p.nt[0][1] === 'a' ? 'note-a' : '') + '">' + esc(t(p.nt[0][0])) + '</small>' : '') + '</td>';
       (S.tc || A.cols).forEach(function (c, i) { h += '<td class="pc' + (c.num >= 0.7 ? ' num' : '') + '">' + esc(String(pcs[i] || '').replace(/,\s*$/, '')) + '</td>'; });
       if (A.unit) h += '<td class="num ar">' + (u ? m2(u.ar) : '') + '</td><td class="num pm">' + ppm + '</td>';
-      h += '<td class="num pcell">' + pr + '</td>' +
-        '<td class="cell-prices">' + pr + '<span class="pm">' + (ppm ? ppm + (u ? ' · ' + m2(u.ar) + ' ' + esc(unitIn(u.un)) : '') : '') + (meta ? (ppm ? ' · ' : '') + meta : '') + '</span></td>';
+      h += '<td class="num pcell">' + pr + enSlot(p.id) + '</td>' +
+        '<td class="cell-prices">' + pr + enSlot(p.id) + '<span class="pm">' + (ppm ? ppm + (u ? ' · ' + m2(u.ar) + ' ' + esc(unitIn(u.un)) : '') : '') + (meta ? (ppm ? ' · ' : '') + meta : '') + '</span></td>';
       if (p.pr == null) h += (S.tq === false ? '' : '<td class="qtd"></td>') + '<td class="ad"><a class="btn btn--ghost btn--sm" href="' + prodURL(p) + '">' + t('Skatīt') + '</a></td>';
       else h += (S.tq === false ? '' : '<td class="qtd">' + (p.hv ? '' : qtyHTML(p, ' qty--sm')) + '</td>') + '<td class="ad"><button class="btn btn--sm add" type="button" data-add="' + p.id + '">' + icon(p.hv ? 'chev-r' : 'cart') + '<span>' + t(p.hv ? 'Izvēlēties' : 'Grozā') + '</span></button></td>';
       return h + '</tr>';
@@ -1539,7 +1594,7 @@
           var x = s.x, im = s.cur ? p.img : x.img;
           return (s.cur ? '<span class="series__i is-on" aria-current="true">' : '<a class="series__i" href="' + prodURL({ id: x.id, c: x.c || p.c }) + '" title="' + esc(x.n) + '">') +
             '<span class="series__img">' + (im ? '<img src="' + esc(img(im)) + '" alt="" loading="lazy" width="80" height="80">' : '') + '</span><span class="series__t">' + esc(vt(s.t)) + '</span>' +
-            (sdiff && x.pr != null ? '<span class="series__p">' + money(x.pr) + '</span>' : '') + (s.cur ? '</span>' : '</a>');
+            (sdiff && x.pr != null ? '<span class="series__p">' + money(x.pr) + enSlot(x.id, true) + '</span>' : '') + (s.cur ? '</span>' : '</a>');
         }).join('') + (smore ? '<a class="series__more" href="' + catURL(p.c) + '">+' + smore + '</a>' : '') + '</div></div>';
       }
       var pu = unitInfo(p);

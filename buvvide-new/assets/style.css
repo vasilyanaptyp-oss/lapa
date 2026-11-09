@@ -1478,3 +1478,33 @@ body[data-page="home"] .topbar__facts { display: none; }
   .hero__tile-name { font-size: 12px; }
 }
 /* /rt9 D С-14 */
+
+/* ── EPREL energy label (09.11, Gita): arrow right next to the price + «Datu lapa», as on buvvide.lv ── */
+.en { display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; white-space: nowrap; align-self: center; }
+.en:empty { display: none; }
+.en__a { --en: #00a651; position: relative; display: inline-flex; align-items: center; height: 22px; min-width: 34px; padding: 0 3px 0 6px; margin-right: 11px;
+  background: var(--en); color: #fff; font-size: 14px; line-height: 1; text-decoration: none; border-radius: 2px 0 0 2px; }
+.en__a::after { content: ""; position: absolute; left: 100%; top: 0; border-style: solid; border-width: 11px 0 11px 10px; border-color: transparent transparent transparent var(--en); }
+.en__a b { font-weight: 800; font-size: inherit; letter-spacing: 0; color: #fff; text-shadow: 0 0 2px rgba(0,0,0,.45); font-variant-numeric: normal; }
+a.en__a:hover { filter: brightness(.93); }
+a.en__a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.en__a--dg { --en: #00a651; } .en__a--mg { --en: #4cb848; } .en__a--lg { --en: #bfd730; } .en__a--y { --en: #fff200; }
+.en__a--lo { --en: #fdb913; } .en__a--do { --en: #f37021; } .en__a--r { --en: #ed1c24; }
+.en__s { font-size: 13px; font-weight: 500; color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+.en__s:hover { color: var(--green); }
+.price .en { display: contents; }   /* arrow and link are items of the price row: the arrow stays next to the price, the link wraps if it must */
+.price--sale .en__a b, .price .en__a b { color: #fff; font-size: 14px; }
+.buybox .en__a { height: 30px; min-width: 46px; padding: 0 5px 0 9px; margin-right: 15px; font-size: 19px; }
+.buybox .en__a::after { border-width: 15px 0 15px 14px; }
+.buybox .price .en__a b { font-size: 19px; }
+.buybox .en__s { font-size: 14.5px; }
+.en__a--lg b, .en__a--y b, .en__a--lo b { text-shadow: 0 0 1px rgba(0,0,0,.95), 0 0 2px rgba(0,0,0,.7), 0 1px 2px rgba(0,0,0,.45); }
+.cell-prices .en { margin-left: 8px; }
+.ptable td.pcell .en { display: contents; }   /* table: the arrow on the price line, «Datu lapa» under it */
+.ptable td.pcell .en__a { margin-left: 8px; vertical-align: middle; }
+.ptable td.pcell .en__s { display: block; margin-top: 4px; font-size: 12.5px; }
+.series__p .en, .suggest__price .en { margin-left: 6px; }
+.series__p .en__a, .suggest__price .en__a { height: 18px; min-width: 28px; font-size: 12px; margin-right: 9px; padding: 0 2px 0 5px; }
+.series__p .en__a::after, .suggest__price .en__a::after { border-width: 9px 0 9px 8px; }
+.series__p .en__a b, .suggest__price .en__a b { font-size: 12px; }
+@media (max-width: 480px) { .card .en { gap: 6px; } .card .en__s { font-size: 12px; } }
