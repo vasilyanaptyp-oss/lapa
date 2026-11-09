@@ -472,7 +472,7 @@ body.has-sticky { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
 .stickybuy .btn { flex: none; }
 .lightbox { position: fixed; inset: 0; z-index: 120; background: rgba(18,18,18,.94); display: none; align-items: center; justify-content: center; }
 .lightbox.is-open { display: flex; }
-.lightbox img { max-width: 94vw; max-height: 84vh; object-fit: contain; background: #fff; border-radius: var(--r); }
+.lightbox img { width: min(94vw, 1200px); height: 84vh; max-width: none; object-fit: contain; background: #fff; border-radius: var(--r); }   /* 09.11 Gita: enlarged picture always fills the window */
 .lightbox .iconbtn { position: absolute; color: #fff; }
 .lightbox .iconbtn:hover { background: rgba(255,255,255,.1); }
 .lightbox__x { top: 12px; right: 12px; }
