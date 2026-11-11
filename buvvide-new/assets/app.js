@@ -380,10 +380,20 @@
     w.addEventListener('scroll', function () {
       var y = w.scrollY;
       if (w.innerWidth >= 1024) return;
-      if (y > 160 && y > last + 4 && !d.body.classList.contains('menu-open')) hdr.classList.add('is-up');
-      else if (y < last - 4 || y < 120) hdr.classList.remove('is-up');
+      // 11.11 Gita: on the phone the header is one row (search behind the magnifier), so it no longer hides on scroll
       last = y; hdrVis();
     }, { passive: true });
+    var sb = $('.hdr__searchbtn', hdr), sr = $('#hsr');
+    if (sb && sr) {
+      var setS = function (on, focus) {
+        hdr.classList.toggle('is-search', on); sb.setAttribute('aria-expanded', on ? 'true' : 'false');
+        if (on && focus) { var i = $('input', sr); if (i) i.focus(); }
+        hdrVis();
+      };
+      sb.addEventListener('click', function () { setS(!hdr.classList.contains('is-search'), true); });
+      d.addEventListener('keydown', function (e) { if (e.key === 'Escape' && hdr.classList.contains('is-search') && !/meklet\.html/.test(location.pathname)) { setS(false); sb.focus(); } });
+      if (hdr.classList.contains('is-search')) sb.setAttribute('aria-expanded', 'true');
+    }
     // R21: the sticky list toolbar (phone) sits right under the part of the header that is showing
     var hv0 = '';
     function hdrVis() {

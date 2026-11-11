@@ -288,3 +288,17 @@ h1, h2, h3 { letter-spacing: -.02em; }
   .card, .card__media img, .trust__item, .hero--shop .hero__deal, .hs__tile, .pt__img img { transition: none; }
   .bn__track { scroll-behavior: auto; }
 }
+
+/* 11.11 Gita: telefonā galvene vienā rindā (izvēlne, logo, lupa, grozs); meklēšanas lauks atveras ar lupu.
+   Meklēšanas lapā lauks ir atvērts uzreiz. Datorā viss kā bija: meklēšana stāv galvenē. */
+.hdr__searchbtn { display: none; border: 0; background: none; font: inherit; cursor: pointer; }
+.hdr__searchbtn .ico--x { display: none; }
+@media (max-width: 1023px) {
+  .hdr__searchbtn { display: inline-flex; }
+  .hdr.is-search .hdr__searchbtn { background: rgba(255,255,255,.14); }
+  .hdr.is-search .hdr__searchbtn .ico--s { display: none; }
+  .hdr.is-search .hdr__searchbtn .ico--x { display: block; }
+  .hdr__searchrow { display: none; }
+  .hdr.is-search .hdr__searchrow { display: block; }
+  .hdr.is-up, .hdr.is-up .hdr__row, .hdr.is-up .hdr__searchrow { transform: none; opacity: 1; pointer-events: auto; }
+}
