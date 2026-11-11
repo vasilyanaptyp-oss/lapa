@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Veikala iestatījumi — BUVVide.lv</title>
+<title>Veikala iestatījumi | BUVVide.lv</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="assets/fonts/geologica.css">
 <style>
 :root{--ink:#1d2125;--ink2:#4a5259;--line:#e2e5e7;--bg:#f4f5f3;--acc:#008B4D}
@@ -85,7 +85,7 @@ a{color:var(--acc)}
 
   <section class="card" id="tree">
     <h2>Kategoriju iestatījumi pa kataloga koku</h2>
-    <p class="d">Viss kataloga koks vienā vietā, kā «Kataloga Properties» adminā. Katrai kategorijai: skats, kurā tā atveras pirmo reizi (tabula vai kartītes), un ātrie filtri virs preču saraksta (1–2 parametri). «Automātiski» nozīmē, ka veikals izvēlas pats. Izmaiņas saglabājas uzreiz.</p>
+    <p class="d">Viss kataloga koks vienā vietā, kā «Kataloga Properties» adminā. Katrai kategorijai: skats, kurā tā atveras pirmo reizi (tabula vai kartītes), un ātrie filtri virs preču saraksta (1-2 parametri). «Automātiski» nozīmē, ka veikals izvēlas pats. Izmaiņas saglabājas uzreiz.</p>
     <div class="trtools"><input type="search" id="trQ" placeholder="Meklēt kategoriju, piem. ārdurvis" aria-label="Meklēt kategoriju"><button class="btn g" id="trOpen" type="button">Atvērt visu</button><button class="btn g" id="trClose" type="button">Aizvērt visu</button></div>
     <div class="tr" id="trBox"><div class="tr__r tr__hd"><span>Kategorija</span><span>Skats</span><span>Ātrie filtri</span></div></div>
   </section>
@@ -101,7 +101,7 @@ a{color:var(--acc)}
 
   <section class="card" id="qf" hidden>
     <h2>Ātrie filtri kategorijā</h2>
-    <p class="d">Pogas virs preču saraksta, ar kurām pircējs vienā klikšķī atlasa vajadzīgo: ārdurvīm — kārbas platums un pielietojums, saplāksnim — biezums. Izvēlieties kategoriju un 1–2 parametrus. Ja nav iestatīts, veikals parametrus izvēlas pats.</p>
+    <p class="d">Pogas virs preču saraksta, ar kurām pircējs vienā klikšķī atlasa vajadzīgo: ārdurvīm: kārbas platums un pielietojums, saplāksnim: biezums. Izvēlieties kategoriju un 1-2 parametrus. Ja nav iestatīts, veikals parametrus izvēlas pats.</p>
     <div class="dv"><input type="text" id="qfCat" list="dvCats" placeholder="Kategorija, piem. Ārdurvis"><button class="btn g" id="qfLoad" type="button">Rādīt parametrus</button><button class="btn" id="qfSave" type="button">Saglabāt</button></div>
     <div class="qfp" id="qfParams"></div>
     <div class="dvlist" id="qfList"></div>
@@ -161,7 +161,7 @@ a{color:var(--acc)}
     drawDv();
   });
   function drawDv(){var m=get('bv_defview')||{},h='';Object.keys(m).forEach(function(k){var id=k.replace(/^c/,''),name=Object.keys(cats).filter(function(n){return cats[n]===id;})[0]||k;
-      h+='<div><span><a href="kategorija.html?c='+id+'" target="_blank">'+name+'</a> — '+(m[k]==='table'?'Tabula':'Kartītes')+'</span><button type="button" data-del="'+k+'">Noņemt</button></div>';});
+      h+='<div><span><a href="kategorija.html?c='+id+'" target="_blank">'+name+'</a>: '+(m[k]==='table'?'Tabula':'Kartītes')+'</span><button type="button" data-del="'+k+'">Noņemt</button></div>';});
     document.getElementById('dvList').innerHTML=h||'<div><span>Nav iestatīts: kategorijas atveras automātiski izvēlētā skatā.</span></div>';}
   document.getElementById('dvSave').onclick=function(){var id=cats[document.getElementById('dvCat').value];if(!id){alert('Izvēlieties kategoriju no saraksta');return;}
     var m=get('bv_defview')||{};m['c'+id]=document.getElementById('dvView').value;set('bv_defview',m);try{localStorage.removeItem('bv_view_c'+id);}catch(e){}drawDv();};
@@ -177,8 +177,8 @@ a{color:var(--acc)}
   var names={},cur=null,$=function(id){return document.getElementById(id);};
   fetch('data/tree.json').then(function(r){return r.json();}).then(function(T){Object.keys(T.cats||{}).forEach(function(id){names[id]=T.cats[id].n;});draw();});
   function idOf(v){var m=/\((\d+)\)\s*$/.exec(v||'');if(m)return m[1];v=String(v||'').trim().toLowerCase();for(var id in names)if(names[id].toLowerCase()===v)return id;return null;}
-  function draw(){var m=get('bv_quick')||{},h='';Object.keys(m).forEach(function(k){var id=k.slice(1);h+='<div><span><a href="kategorija.html?c='+id+'" target="_blank">'+esc(names[id]||k)+'</a> — '+esc(m[k].join(', '))+'</span><button type="button" data-qdel="'+esc(k)+'">Noņemt</button></div>';});
-    $('qfList').innerHTML=h||'<div><span>Nav mainīts: ārdurvīm — kārbas platums un pielietojums, saplāksnim — biezums, pārējām kategorijām veikals izvēlas pats.</span></div>';}
+  function draw(){var m=get('bv_quick')||{},h='';Object.keys(m).forEach(function(k){var id=k.slice(1);h+='<div><span><a href="kategorija.html?c='+id+'" target="_blank">'+esc(names[id]||k)+'</a>: '+esc(m[k].join(', '))+'</span><button type="button" data-qdel="'+esc(k)+'">Noņemt</button></div>';});
+    $('qfList').innerHTML=h||'<div><span>Nav mainīts: ārdurvīm: kārbas platums un pielietojums, saplāksnim: biezums, pārējām kategorijām veikals izvēlas pats.</span></div>';}
   $('qfLoad').onclick=function(){var id=idOf($('qfCat').value);if(!id){alert('Izvēlieties kategoriju no saraksta');return;}
     fetch('data/c/'+id+'.json').then(function(r){return r.json();}).then(function(j){var st={};(j.items||[]).forEach(function(p){(p.prm||[]).forEach(function(kv){if(!kv[1]||kv[0]==='Preces tips'||kv[0]==='Pārdošanas vienība')return;(st[kv[0]]=st[kv[0]]||{})[kv[1]]=1;});});
       var ks=Object.keys(st).filter(function(k){return Object.keys(st[k]).length>=2;}),have=(get('bv_quick')||{})['c'+id]||QCAT['c'+id]||[];cur=id;

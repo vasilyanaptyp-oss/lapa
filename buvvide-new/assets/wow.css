@@ -1,0 +1,290 @@
+/* BUVVide — apdares slānis 10.11.2026 (ielādējas pēc style.css un neko tajā nemaina).
+   Uzbūve kā populāros interneta veikalos: baneru karuselis, akciju flīzes, priekšrocību josla,
+   kategorijas kvadrātos, tīras preču kartītes. Krāsas un logo paliek Gitas: zaļais, oranžais, dzeltenais «vide». */
+:root {
+  --r: 14px; --r-s: 10px;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --sh: 0 1px 2px rgba(16, 24, 20, .04), 0 14px 32px -14px rgba(16, 24, 20, .18);
+  --sh-2: 0 2px 6px rgba(16, 24, 20, .06), 0 28px 56px -26px rgba(16, 24, 20, .32);
+}
+h1, h2, h3 { letter-spacing: -.02em; }
+::selection { background: var(--c-accent); color: #fff; }
+.btn { border-radius: 12px; transition: transform .5s var(--ease), background-color .2s, border-color .2s, color .2s; }
+.btn:active { transform: scale(.98); }
+.btn--dark { background: var(--c-ink); color: #fff; }
+.btn--dark:hover { background: #000; }
+
+/* jaunais logo (Gita 11.11): viena rinda, datorā ar «.lv», telefonā īsais */
+.logo picture { display: block; }
+.hdr .logo__img { height: 40px; }
+.ftr .logo__img { height: 46px; }
+
+/* ════════ sākumlapas augša ════════ */
+.hero--shop { padding: 12px 0 4px; border: 0; background: transparent; overflow: visible; }
+.hs { display: grid; gap: 10px; }
+
+/* baneru karuselis */
+.bn { position: relative; min-width: 0; border-radius: 20px; overflow: hidden; background: var(--c-accent-ink); }
+.bn__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.bn__track::-webkit-scrollbar { display: none; }
+.bn__s { position: relative; isolation: isolate; flex: 0 0 100%; min-width: 0; scroll-snap-align: start; scroll-snap-stop: always;
+  display: grid; align-content: space-between; gap: 18px; min-height: 420px; padding: 24px 20px 52px; overflow: hidden; }
+.bn__s--green { background: linear-gradient(125deg, #006b3b 0%, #008B4D 58%, #0b9a59 100%); color: #fff; }
+.bn__s--yellow { background: var(--c-yellow); color: var(--c-ink); }
+.bn__s--dark { background: #151b18; color: #fff; }
+.bn__c { min-width: 0; }
+.bn .hero__kicker { color: var(--c-yellow); }
+.hero--shop .bn__t { max-width: 17ch; margin-top: 10px; font-size: clamp(26px, 7.4vw, 34px); font-weight: 800; line-height: 1.06; letter-spacing: -.03em; text-wrap: balance; color: inherit; }
+.bn__s--yellow .bn__t, .bn__s--dark .bn__t { margin-top: 0; }
+.bn__p { max-width: 44ch; margin-top: 10px; font-size: 15px; line-height: 1.45; opacity: .9; }
+.bn__cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.bn__cta .btn { min-height: 50px; padding: 0 22px; font-size: 16px; }
+.bn__v { position: relative; min-width: 0; }
+/* preces uz baltām flīzēm */
+.pt { position: relative; display: block; min-width: 0; }
+.pt__img { position: relative; display: block; aspect-ratio: 1; border-radius: 18px; background: #fff; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .45); overflow: hidden; }
+.pt__img img { position: absolute; left: 10%; top: 10%; width: 80%; height: 80%; object-fit: contain; transition: transform .9s var(--ease); }
+.bn__v--show { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; gap: 10px; padding: 6px 4px 0; }
+.bn__v--show .pt:nth-of-type(2) { transform: translateY(-10px); }
+.bn__bubble { position: absolute; left: 4%; top: -16%; width: 92%; height: 132%; z-index: -1; fill: var(--c-yellow); opacity: .96; }
+.bn__v--deals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.pt--deal { color: var(--c-ink); }
+.pt--deal .pt__img { box-shadow: 0 14px 30px -18px rgba(0, 0, 0, .4); }
+.pt--deal .badge { position: absolute; left: 8px; top: 8px; z-index: 1; }
+.pt__p { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; margin-top: 8px; }
+.pt__p b { font-size: 16px; font-weight: 800; letter-spacing: -.02em; color: var(--sale); font-variant-numeric: tabular-nums; }
+.pt__p s { font-size: 12px; color: var(--c-ink-2); font-variant-numeric: tabular-nums; }
+.bn__checks { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; font-size: 14.5px; line-height: 1.4; }
+.bn__checks li { display: flex; gap: 10px; align-items: flex-start; }
+.bn__checks .ico { flex: none; width: 20px; height: 20px; margin-top: 1px; color: var(--c-yellow); }
+.bn__dots { position: absolute; left: 20px; bottom: 18px; z-index: 2; display: flex; gap: 2px; }
+.bn__dots button { position: relative; width: 28px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; }
+.bn__dots button::before { content: ""; position: absolute; left: 4px; right: 4px; top: 10px; height: 4px; border-radius: 4px; background: currentColor; opacity: .34; transition: opacity .3s; }
+.bn__dots button[aria-current="true"]::before { opacity: 1; }
+.bn__dots { color: #fff; }
+.bn.is-light .bn__dots { color: var(--c-ink); }
+.bn__nav { display: none; }
+
+/* blakus flīzes */
+.hs__side { display: grid; gap: 10px; min-width: 0; }
+.hero--shop .hero__deal { display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; gap: 14px; padding: 10px; border: 1px solid var(--line); border-radius: 20px; background: #fff; color: var(--ink); overflow: hidden; transition: transform .6s var(--ease), box-shadow .5s var(--ease), border-color .2s; }
+.hero--shop .hero__deal-img { position: relative; display: grid; place-items: center; min-height: 0; aspect-ratio: 1; border-radius: 12px; background: var(--bg-2); }
+.hero--shop .hero__deal-img img { max-width: 86%; max-height: 86%; object-fit: contain; mix-blend-mode: multiply; transition: transform .9s var(--ease); }
+.hero--shop .hero__deal-img .badges { left: 6px; top: 6px; }
+.hero--shop .hero__deal-b { min-width: 0; padding: 2px 6px 2px 0; }
+.hero--shop .hero__deal-k { font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--sale); }
+.hero--shop .hero__deal-n { margin-top: 3px; font-size: 15px; font-weight: 600; line-height: 1.25; }
+.hero--shop .hero__deal .price { margin-top: 6px; }
+.hero--shop .hero__deal .price b { font-size: 24px; }
+.hs__tile { display: grid; align-content: space-between; gap: 6px; min-height: 0; padding: 18px 20px; border-radius: 20px; background: var(--c-orange); color: var(--c-ink); transition: transform .6s var(--ease), box-shadow .5s var(--ease); }
+.hs__tile-t { font-size: 21px; font-weight: 800; line-height: 1.1; letter-spacing: -.025em; }
+.hs__tile-s { font-size: 14.5px; line-height: 1.35; }
+.hs__tile-l { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 14.5px; font-weight: 700; }
+.hs__tile-l .ico { width: 18px; height: 18px; transition: transform .5s var(--ease); }
+
+/* priekšrocību josla */
+.hero--shop .hero__facts { grid-area: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 12px; margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 20px; background: #fff; font-size: 13px; }
+.hero--shop .hero__facts li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+@media (min-width: 760px) {
+  .bn__s { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); align-content: center; align-items: center; gap: 28px; min-height: 380px; padding: 36px 40px 56px; }
+  .hero--shop .bn__t { font-size: clamp(32px, 3.5vw, 46px); }
+  .bn__p { font-size: 16.5px; margin-top: 14px; }
+  .bn__cta { margin-top: 22px; }
+  .bn__cta .btn { min-height: 54px; padding: 0 26px; }
+  .bn__v--show { gap: 14px; padding: 0; }
+  .bn__v--show .pt:nth-of-type(2) { transform: translateY(-22px); }
+  .bn__v--deals { gap: 12px; }
+  .pt__p b { font-size: 19px; }
+  .pt__p s { font-size: 13px; }
+  .bn__checks { font-size: 16px; gap: 14px; }
+  .bn__dots { left: 40px; bottom: 22px; }
+  .bn__nav { position: absolute; right: 22px; bottom: 16px; z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .92); color: var(--c-ink); cursor: pointer; box-shadow: 0 6px 18px -8px rgba(0, 0, 0, .5); transition: transform .5s var(--ease), background-color .2s; }
+  .bn__nav--prev { right: 74px; }
+  .bn__nav .ico { width: 20px; height: 20px; }
+  .hs__side { grid-template-columns: 1fr 1fr; }
+  .hero--shop .hero__facts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 24px; padding: 18px 24px; font-size: 13.5px; justify-content: stretch; align-self: auto; }
+  .hero--shop .hero__facts li:last-child:nth-child(odd) { grid-column: auto; }
+}
+@media (min-width: 1024px) {
+  .hero--shop { padding: 18px 0 6px; }
+  .hs { grid-template-columns: minmax(0, 1fr) 336px; gap: 14px; }
+  .hero--shop .hs .hero__facts { grid-column: 1 / -1; }
+  .bn__s { min-height: 430px; padding: 44px 48px 60px; }
+  .hs__side { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; gap: 14px; }
+  .hero--shop .hero__deal { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 0; }
+  .hero--shop .hero__deal-img { flex: 1; aspect-ratio: auto; min-height: 150px; border-radius: 0; }
+  .hero--shop .hero__deal-img img { max-height: 170px; }
+  .hero--shop .hero__deal-img .badges { left: 12px; top: 12px; }
+  .hero--shop .hero__deal-b { padding: 14px 18px 18px; }
+  .hero--shop .hero__deal-n { font-size: 16px; }
+  .hero--shop .hero__deal .price b { font-size: 28px; }
+  .hs__tile { padding: 20px 22px; }
+}
+@media (hover: hover) {
+  .bn__nav:hover { transform: scale(1.08); background: #fff; }
+  .pt--deal:hover .pt__img img { transform: scale(1.07); }
+  .hero--shop .hero__deal:hover { transform: translateY(-3px); box-shadow: var(--sh-2); border-color: transparent; }
+  .hero--shop .hero__deal:hover .hero__deal-img img { transform: scale(1.06); }
+  .hs__tile:hover { transform: translateY(-3px); box-shadow: var(--sh-2); }
+  .hs__tile:hover .hs__tile-l .ico { transform: translateX(4px); }
+}
+
+/* ════════ kategorijas: kvadrātu režģis ════════ */
+.sec[data-block="cats"] .cats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px 8px; }
+.sec[data-block="cats"] .cat { flex-direction: column; align-items: stretch; gap: 8px; min-height: 0; padding: 0; border: 0; background: transparent; box-shadow: none; text-align: center; overflow: visible; }
+.sec[data-block="cats"] .cat__img { width: 100%; height: auto; aspect-ratio: 1; border-radius: 18px; background: #e9ece9; transition: box-shadow .25s; }
+.sec[data-block="cats"] .cat__img img { transition: transform .8s var(--ease); }
+.sec[data-block="cats"] .cat.is-photo .cat__img img { left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; mix-blend-mode: normal; }
+.sec[data-block="cats"] .cat__name { padding: 0 1px; font-size: 12.5px; font-weight: 600; line-height: 1.2; }
+.sec[data-block="cats"] .cat__n { display: none; }
+.sec[data-block="cats"] .cat--all { grid-column: auto !important; }
+.sec[data-block="cats"] .cat--all .cat__img { display: grid; place-items: center; border-radius: 18px; background: var(--c-yellow); color: var(--c-ink); }
+.sec[data-block="cats"] .cat--all .cat__img .ico { width: 30px; height: 30px; }
+.sec[data-block="cats"] .cat--all .cat__name { padding: 0 1px; font-size: 12.5px; font-weight: 700; }
+@media (min-width: 640px) { .sec[data-block="cats"] .cats { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px 12px; } }
+@media (min-width: 1024px) {
+  .sec[data-block="cats"] .cats { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 26px 18px; }
+  .sec[data-block="cats"] .cat__img { border-radius: 22px; }
+  .sec[data-block="cats"] .cat__name, .sec[data-block="cats"] .cat--all .cat__name { font-size: 15px; }
+  .sec[data-block="cats"] .cat__n { display: block; font-size: 12.5px; }
+  .sec[data-block="cats"] .cat--all .cat__img .ico { width: 44px; height: 44px; }
+}
+@media (hover: hover) {
+  .sec[data-block="cats"] .cat:hover { box-shadow: none; }
+  .sec[data-block="cats"] .cat:hover .cat__img { box-shadow: 0 0 0 2px var(--c-accent); }
+  .sec[data-block="cats"] .cat:hover .cat__img img { transform: scale(1.08); }
+  .sec[data-block="cats"] .cat:hover .cat__name { color: var(--c-accent-ink); }
+}
+
+/* ════════ skyriu galvas ════════ */
+.sec__title { font-weight: 800; letter-spacing: -.03em; }
+.sec__more { height: 40px; padding: 0 14px 0 16px; border: 1px solid var(--line-2); border-radius: 999px; background: #fff; color: var(--ink); transition: border-color .2s, color .2s; }
+.sec__more .ico { transition: transform .5s var(--ease); }
+@media (hover: hover) {
+  .sec__more:hover { border-color: var(--c-accent); color: var(--c-accent-ink); }
+  .sec__more:hover .ico { transform: translateX(3px); }
+}
+
+/* ════════ preču kartītes ════════ */
+.card { border-radius: 16px; transition: transform .6s var(--ease), box-shadow .5s var(--ease), border-color .2s; }
+.card__media { background: #f0f1ef; }
+.card__media img { transition: transform .9s var(--ease); }
+.card__title { font-weight: 600; letter-spacing: -.005em; }
+.price b { letter-spacing: -.02em; }
+.badge { padding: 4px 9px; border-radius: 999px; }
+@media (hover: hover) {
+  .card:hover { transform: translateY(-4px); box-shadow: var(--sh-2); border-color: transparent; }
+  .card:hover .card__media img { transform: scale(1.07); }
+}
+/* karuselī kartītei vajag vietu pacelties un ēnai */
+.rail { padding-top: 8px; padding-bottom: 30px; margin-bottom: -22px; }
+.railw__btn { top: 108px; transition: transform .5s var(--ease), border-color .2s, color .2s; }
+@media (hover: hover) { .railw__btn:hover { transform: scale(1.06); } }
+
+/* ════════ «Kā mēs strādājam» ════════ */
+.trust { gap: 10px; border: 0; background: transparent; }
+.trust__item { padding: 20px; border: 1px solid var(--line); border-radius: 18px; background: #fff; transition: transform .6s var(--ease), box-shadow .5s var(--ease); }
+.trust__item h3 { font-size: 17px; letter-spacing: -.015em; }
+@media (min-width: 640px) { .trust { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px) {
+  .trust { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .trust__item { flex-direction: column; gap: 16px; padding: 24px; border-right: 1px solid var(--line); }
+}
+@media (hover: hover) { .trust__item:hover { transform: translateY(-3px); box-shadow: var(--sh); } }
+
+/* josla uzņēmumiem, ražotāji */
+.b2b { border-radius: 22px; }
+.b2b h2 { letter-spacing: -.03em; }
+@media (min-width: 1024px) { .b2b { padding: 48px 52px; } }
+.brands a { border-radius: 999px; padding: 10px 18px; transition: border-color .2s, color .2s, transform .5s var(--ease); }
+@media (hover: hover) { .brands a:hover { border-color: var(--c-accent); color: var(--c-accent-ink); transform: translateY(-2px); } }
+
+/* ════════ kategorija ════════ */
+.cat-head h1, .page-h h1 { letter-spacing: -.03em; }
+.subcat { border-radius: 14px; transition: border-color .2s, box-shadow .3s, transform .5s var(--ease); }
+.qchip { transition: border-color .2s, background-color .2s, color .2s, transform .4s var(--ease); }
+.qchip:active { transform: scale(.97); }
+.ptable tbody tr { transition: background-color .2s; }
+@media (hover: hover) {
+  .subcat:hover { transform: translateY(-2px); box-shadow: var(--sh); }
+  .ptable tbody tr:hover { background: #fafbf9; }
+}
+
+/* ════════ preces lapa ════════ */
+.gal__thumbs button { border-radius: 12px; transition: border-color .2s, box-shadow .2s; }
+.gal__thumbs button.is-on { box-shadow: 0 0 0 1px var(--c-accent); }
+.buybox { border-radius: 20px; box-shadow: var(--sh); }
+.buybox .price b { letter-spacing: -.03em; }
+.buyrow .btn, .qty { border-radius: 14px; }
+.kspec, .perks { border-radius: 18px; }
+.series__i { border-radius: 12px; transition: border-color .2s, transform .5s var(--ease); }
+@media (hover: hover) { a.series__i:hover { transform: translateY(-2px); border-color: var(--c-accent); } }
+@media (min-width: 1024px) {
+  .gal__main { border: 1px solid var(--line); border-radius: 22px; background: #fff; }
+  .pp__info h1 { letter-spacing: -.03em; }
+  .buybox { padding: 24px; }
+  .buybox .price b { font-size: 40px; }
+  .buyrow .btn { min-height: 54px; font-size: 16.5px; }
+  .buyrow .qty { height: 54px; }
+}
+
+/* energoklase: liela bultiņa uz foto, pie cenas īsa rinda ar klasi un datu lapu */
+.gal__en { position: absolute; right: 14px; top: 14px; z-index: 2; line-height: 1; }
+.gal__en .en__a { height: 30px; min-width: 44px; margin: 0; padding: 0 4px 0 10px; font-size: 19px; }
+.gal__en .en__a::after { border-width: 15px 0 15px 13px; }
+.buybox .price .price__vat { order: 2; }
+.buybox .price .en { order: 3; display: flex; flex-wrap: wrap; white-space: normal; flex-basis: 100%; align-items: center; gap: 8px 10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--ink-2); }
+.buybox .price .en::before { content: attr(data-l); }
+.buybox .price .en:not([data-l])::before { content: none; }
+/* kartītēs bultiņa stāv foto apakšējā stūrī, nevis cenas rindā */
+.card { container-type: inline-size; }
+.card .price .en__a { position: absolute; left: 10px; top: calc(100cqw - 34px); z-index: 1; margin: 0; }
+/* datorā: pa kreisi liels foto, zem tā parametri un apraksts; pa labi nosaukums, cena, modeļi, pirkums, citi izmēri */
+@media (min-width: 1024px) {
+  .pp.is-r, .pp.is-r.has-ks { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); grid-template-rows: none; gap: 0 40px; align-items: start; }
+  .pp.is-r > .pp__left { grid-column: 1; grid-row: 1; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .pp.is-r > .pp__info, .pp.is-r.has-ks > .pp__info { grid-column: 2; grid-row: 1; }
+  .pp.is-r .gal { position: relative; top: auto; }
+  .pp.is-r .kspec--d { margin: 0; }
+  .pp.is-r .pp__more { display: block; }
+  .pp.is-r .pp__more .pp__sec { margin-top: 20px; padding: 0 22px; border: 1px solid var(--line); border-radius: 18px; background: #fff; }
+  .pp.is-r .pp__more .pp__sec:first-child { margin-top: 0; }
+  .pp.is-r .pp__info h1 { font-size: 34px; line-height: 1.1; letter-spacing: -.03em; }
+  .pp.is-r .series { margin-top: 20px; }
+}
+/* garš apraksts ir sakļauts ar «Lasīt vairāk»; informācijas bloks stāv tur, kur ir vieta: labajā kolonnā vai joslā zem abām */
+.desc.wow-clamp { position: relative; max-height: 460px; overflow: hidden; }
+.desc.wow-clamp::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 90px; background: linear-gradient(rgba(255, 255, 255, 0), #fff); pointer-events: none; }
+.wow-more { display: block; margin: 0 0 14px; }
+@media (min-width: 1024px) {
+  .perks.perks--row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; margin-top: 24px; padding: 8px 24px; }
+  .perks.perks--row .perk { border-bottom: 0; }
+}
+/* josla ar logo vienmēr paliek augšā (Gita 10.11). Telefonā, ritinot lejup, paslēpjas meklēšanas rinda, nevis logo rinda:
+   galvene joprojām pabīdās par 56px, bet logo rinda nobrauc tās vietā, kur bija meklēšana. Fokusā uz meklēšanu redzams viss. */
+@media (max-width: 1023px) {
+  .hdr__row, .hdr__searchrow { transition: transform .25s ease, opacity .2s ease; }
+  .hdr.is-up .hdr__row { transform: translateY(56px); }
+  .hdr.is-up .hdr__searchrow { transform: translateY(-56px); opacity: 0; pointer-events: none; }
+  .hdr.is-up:focus-within { transform: none; }
+  .hdr.is-up:focus-within .hdr__row, .hdr.is-up:focus-within .hdr__searchrow { transform: none; opacity: 1; pointer-events: auto; }
+}
+/* galvenē meklēšana aizņem visu brīvo vietu līdz ikonām */
+@media (min-width: 1024px) { .search.hdr__search { max-width: none; } }
+
+/* ════════ grozs un noformēšana ════════ */
+.summary { border-radius: 20px; box-shadow: var(--sh); }
+.co__step { border-radius: 18px; }
+.field input, .field textarea, .field select { transition: border-color .2s, box-shadow .2s; }
+.radio { transition: border-color .2s, background-color .2s; }
+
+/* ════════ parādīšanās ritinot (ieslēdz wow.js; bez skripta viss redzams) ════════ */
+.rv { opacity: 0; transform: translateY(20px); transition: opacity .7s var(--ease), transform .8s var(--ease); transition-delay: var(--rv-d, 0s); }
+.rv.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rv { opacity: 1; transform: none; transition: none; }
+  .card, .card__media img, .trust__item, .hero--shop .hero__deal, .hs__tile, .pt__img img { transition: none; }
+  .bn__track { scroll-behavior: auto; }
+}

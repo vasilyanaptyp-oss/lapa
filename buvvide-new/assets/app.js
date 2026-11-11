@@ -1,4 +1,4 @@
-/* BUVVide 2026 — veikala loģika (bez ietvariem). Grozs localStorage, dati no data/*.json. */
+/* BUVVide 2026: veikala loģika (bez ietvariem). Grozs localStorage, dati no data/*.json. */
 (function () {
   'use strict';
   var d = document, w = window;
@@ -260,7 +260,7 @@
     APP_G: { 'A++': 'dg', 'A+': 'mg', 'A': 'lg', 'B': 'y', 'C': 'lo', 'D': 'do', 'E': 'r', 'F': 'r', 'G': 'r' },
     A_G: { 'A': 'dg', 'B': 'mg', 'C': 'lg', 'D': 'y', 'E': 'lo', 'F': 'do', 'G': 'r' },
     AP_G: { 'A+': 'dg', 'A': 'mg', 'B': 'lg', 'C': 'y', 'D': 'lo', 'E': 'do', 'F': 'r', 'G': 'r' }
-  }, ENSCALE = { APPP_D: 'A+++ – D', APP_G: 'A++ – G', A_G: 'A – G', AP_G: 'A+ – G' };
+  }, ENSCALE = { APPP_D: 'A+++, D', APP_G: 'A++, G', A_G: 'A, G', AP_G: 'A+, G' };
   function enSlot(id, mini) { return '<span class="en"' + (mini ? ' data-mini' : '') + ' data-en="' + (+id) + '"></span>'; }
   function enHTML(id, mini) {
     var e = EN && EN[String(id)];
@@ -704,8 +704,8 @@
 
   /* ═════════ LISTING (category, akcijas, search) ═════════
      J4 table / cards per category (remembered), J5 unit pricing (per piece/pack AND per m²),
-     J7 filters always visible on desktop, J8 quick chips for the 1–2 key parameters. */
-  var SORTS = [['rec', 'Ieteicamās'], ['asc', 'Lētākās vispirms'], ['desc', 'Dārgākās vispirms'], ['ppm', 'Cena par m²: lētākās'], ['disc', 'Lielākā atlaide'], ['az', 'Nosaukums A–Ž']];
+     J7 filters always visible on desktop, J8 quick chips for the 1-2 key parameters. */
+  var SORTS = [['rec', 'Ieteicamās'], ['asc', 'Lētākās vispirms'], ['desc', 'Dārgākās vispirms'], ['ppm', 'Cena par m²: lētākās'], ['disc', 'Lielākā atlaide'], ['az', 'Nosaukums A-Ž']];
   var OFFERS = [['sale', 'Ar atlaidi'], ['free', 'Bezmaksas piegāde'], ['akc', 'Akcijas prece'], ['ask', 'Atlaide pēc pieprasījuma'], ['clear', 'Izpārdošana']];
   var NOCOL = { 'Preces tips': 1, 'Pārdošanas vienība': 1, 'Ražotājs': 1, 'Garantija': 1, 'Garantijas termiņš': 1 };
   // the order in which a parameter wins a table column / quick-filter slot (the most «shoppable» first)
@@ -728,7 +728,7 @@
   function fnum(s) { return parseFloat(String(s).replace(',', '.')); }
   function m2(v) { return (Math.round(v * 1000) / 1000).toFixed(v * 1000 % 10 ? 3 : 2).replace('.', ',') + ' m²'; }
   function isUnitVal(v) { return UNITRE.test(v) || AREARE.test(v); }
-  /* J5: unit pricing from the shop's own parameters — area per sold unit and the price per m² */
+  /* J5: unit pricing from the shop's own parameters: area per sold unit and the price per m² */
   function unitInfo(p) {
     if (p.u !== undefined) return p.u;
     var u = null, un = '';
@@ -810,7 +810,7 @@
     return { cols: cols, quick: quick.map(function (x) { return x.k; }), unit: unit, table: table };
   }
 
-  /* 06.11 Gita: shop descriptions (category / product type) — inert parse, no scripts or handlers, images from the shop */
+  /* 06.11 Gita: shop descriptions (category / product type): inert parse, no scripts or handlers, images from the shop */
   function cleanDesc(h) {
     if (!h) return '';
     var tpl = d.createElement('template'); tpl.innerHTML = String(h);
@@ -1039,7 +1039,7 @@
       });
       var pOpen = open.__price != null ? open.__price : (S.pmin != null || S.pmax != null);
       if (prices.length && Math.max.apply(null, prices) - Math.min.apply(null, prices) >= 0.01) h += '<div class="fgroup' + (pOpen ? '' : ' is-closed') + '" data-fk="__price"><button class="fgroup__h" type="button" aria-expanded="' + (pOpen ? 'true' : 'false') + '">' + t('Cena') + ', €' + icon('chev-d') + '</button><div class="fgroup__b">' +
-        '<div class="frange"><input type="number" inputmode="decimal" min="0" placeholder="' + lo + '" value="' + (S.pmin != null ? S.pmin : '') + '" data-pmin aria-label="' + t('Cena no') + '"><span>–</span>' +
+        '<div class="frange"><input type="number" inputmode="decimal" min="0" placeholder="' + lo + '" value="' + (S.pmin != null ? S.pmin : '') + '" data-pmin aria-label="' + t('Cena no') + '"><span>-</span>' +
         '<input type="number" inputmode="decimal" min="0" placeholder="' + hi + '" value="' + (S.pmax != null ? S.pmax : '') + '" data-pmax aria-label="' + t('Cena līdz') + '"></div></div></div>';
       return h;
     }
@@ -1049,11 +1049,11 @@
         var qk0 = A.quick.indexOf(f.k) >= 0, seen = {};   // R8: «860/960mm» and «960/860mm» make one pill, like the chip
         (S.sel[f.k] || []).forEach(function (v) { var g = qk0 ? qkey(v) : v; if (seen[g]) return; seen[g] = 1; h += '<button class="chip" type="button" data-unsel="' + esc(f.k) + '" data-v="' + esc(g) + '">' + (f.k === '__offer' || f.k === '__cat' || f.k === '__type' ? '' : esc(f.label) + ': ') + esc(qk0 && /^\d[\d.,\s]*\//.test(v) ? g : valLabel(f, v)) + icon('x') + '</button>'; });
       });
-      if (S.pmin != null || S.pmax != null) h += '<button class="chip" type="button" data-unprice>' + (S.pmin != null ? money(S.pmin) : '0') + ' – ' + (S.pmax != null ? money(S.pmax) : '…') + icon('x') + '</button>';
+      if (S.pmin != null || S.pmax != null) h += '<button class="chip" type="button" data-unprice>' + (S.pmin != null ? money(S.pmin) : '0') + ', ' + (S.pmax != null ? money(S.pmax) : '…') + icon('x') + '</button>';
       if (h) h += '<button class="chip chip--clear" type="button" data-clearall>' + t('Notīrīt visu') + '</button>';
       return h;
     }
-    /* J8: quick chips above the list for the category's 1–2 key parameters; same selection as the sidebar */
+    /* J8: quick chips above the list for the category's 1-2 key parameters; same selection as the sidebar */
     function qkey(v) {   // R8: «960/860mm» is the same frame as «860/960mm»: one chip
       var s = String(v).replace(/,\s*$/, '').trim(), m = /^(\d+(?:[.,]\d+)?(?:\s*\/\s*\d+(?:[.,]\d+)?)+)\s*([^\d\/][^\/]*)?$/.exec(s);
       return m ? m[1].split('/').map(function (x) { return x.trim(); }).sort(function (a, b) { return fnum(a) - fnum(b); }).join('/') + (m[2] || '') : s.toLowerCase();   // and «Sarkana» = «sarkana»
@@ -1078,7 +1078,7 @@
         return '<div class="quick__row" role="group" aria-label="' + esc(lab) + '"><b>' + esc(lab) + ':</b>' + h + '</div>';
       }).join('');
     }
-    /* J4: table — columns = the category's main parameters (+ unit pricing) */
+    /* J4: table: columns = the category's main parameters (+ unit pricing) */
     function colLabel(k) { return LANG === 'ru' ? pn(k) : k === 'VEIDS' ? 'Veids' : k; }
     function theadHTML() {
       function th(label, key, cls) {
@@ -1161,7 +1161,7 @@
         });
       });
     }
-    /* 06.11 Gita: «Preču tipi» like prof.lv — list of the category's types; the chosen one shows its title + description */
+    /* 06.11 Gita: «Preču tipi» like prof.lv: list of the category's types; the chosen one shows its title + description */
     function ptypesHTML() {
       var counts = countsFor('__type'), all = {}, sel = (S.sel.__type || [])[0] || '';
       S.items.forEach(function (p) { var v = pval(p, '__type'); if (v) all[v] = 1; });
@@ -1323,7 +1323,7 @@
     loadTree().then(function (T) { return pre.then(function () { return T; }); }).then(function (T) {
       var c = T.cats[id];
       if (!c) { root.innerHTML = '<div class="empty"><h2>' + t('Kategorija nav atrasta') + '</h2><p>' + t('Iespējams, saite ir novecojusi.') + '</p><a class="btn" href="katalogs.html">' + t('Uz katalogu') + '</a></div>'; return; }
-      setMeta(cn(c.n) + ' — BUVVide.lv', t('Piedāvājam') + ' ' + (c.cnt || '') + ' ' + plural(c.cnt || 0, t('preci'), t('preces')) + ' — ' + cn(c.n) + '. ' + t('Piegāde visā Latvijā, apmaksa pēc rēķina.'), 'kategorija.html?c=' + id);
+      setMeta(cn(c.n) + ' | BUVVide.lv', t('Piedāvājam') + ' ' + (c.cnt || '') + ' ' + plural(c.cnt || 0, t('preci'), t('preces')) + ': ' + cn(c.n) + '. ' + t('Piegāde visā Latvijā, apmaksa pēc rēķina.'), 'kategorija.html?c=' + id);
       // crumbs
       var chain = [], x = c;
       while (x) { chain.unshift(x); x = x.p ? T.cats[x.p] : null; }
@@ -1350,7 +1350,7 @@
         if (!j.items.length) { $('#cat-n').textContent = t('Preces šajā kategorijā vēl tiek pievienotas'); }
         else {
         $('#cat-n').textContent = tot + ' ' + plural(tot, t('prece'), t('preces'));
-        if (j.items.length < tot) $('#cat-note').textContent = t('Šeit — pirmās') + ' ' + j.items.length + ' ' + t('preces no visām apakškategorijām. Lai redzētu visas, izvēlieties apakškategoriju augstāk.');
+        if (j.items.length < tot) $('#cat-note').textContent = t('Šeit: pirmās') + ' ' + j.items.length + ' ' + t('preces no visām apakškategorijām. Lai redzētu visas, izvēlieties apakškategoriju augstāk.');
         }
         var catFacet = null;
         if (c.k && c.k.length) {
@@ -1385,9 +1385,9 @@
     var q = (qp('q') || '').trim(), root = $('#listing');
     $$('.search input').forEach(function (i) { i.value = q; });
     $('#cat-h1').textContent = q ? t('Meklēšana') + ': «' + q + '»' : t('Meklēšana');
-    d.title = (q ? q + ' — ' : '') + t('Meklēšana') + ' — BUVVide.lv';
+    d.title = (q ? q + ' | ' : '') + t('Meklēšana') + ' | BUVVide.lv';
     var browse = !q && qp('f');
-    if (browse) { $('#cat-h1').textContent = t('Visas preces'); d.title = t('Visas preces') + ' — BUVVide.lv'; }
+    if (browse) { $('#cat-h1').textContent = t('Visas preces'); d.title = t('Visas preces') + ' | BUVVide.lv'; }
     if (!q && !browse) { $('#cat-n').textContent = t('Ierakstiet preces nosaukumu, ražotāju vai ID.'); $('#search-empty').hidden = false; root.hidden = true; return; }
     Promise.all([loadSearch(), loadTree()]).then(function (r) {
       var res = (browse ? r[0] : searchRank(q, r[0]).slice(0, 600)).map(function (p) { return { id: p.id, c: p.c, n: p.n, pr: p.pr, o: p.o, img: p.img, f: p.f, hv: p.hv, s: browse ? '' : pmatch(p, q) }; });
@@ -1519,7 +1519,7 @@
       return prm;
     }
     var COUNTRY = /^(Latvija|Lietuva|Igaunija|Polija|Vācija|Ķīna|Itālija|Čehija|Somija|Zviedrija|Dānija|Norvēģija|Ukraina|Baltkrievija|Krievija|Turcija|Spānija|Francija|Austrija|Šveice|Nīderlande|Beļģija|Slovākija|Slovēnija|Ungārija|Rumānija|Bulgārija|Horvātija|Serbija|Portugāle|Grieķija|Lielbritānija|Īrija|Luksemburga|Japāna|Koreja|Taivāna|Indija|ASV|Kanāda|Izraēla|Vjetnama|Malaizija|Taizeme|Turcija)$/i;   // С-06
-    /* R25: the 4–6 parameters that decide a building-material purchase (thickness, size, class …) */
+    /* R25: the 4-6 parameters that decide a building-material purchase (thickness, size, class …) */
     function keySpecs(prm) {
       var all = (prm || []).filter(function (kv) { return kv[1]; }), pri = function (k) { var i = COLPRI.indexOf(k); return i < 0 ? 99 : i; };
       var rows = all.map(function (kv, i) { return [kv, i]; }).filter(function (a) {
@@ -1538,7 +1538,7 @@
       };
       P[id] = p;
       var c = T.cats[p.c];
-      setMeta(p.n + ' — BUVVide.lv', snippet((p.brand ? p.brand + '. ' : '') + (p.s || '') + ' ' + (p.n || '') + '. ' + t('Cena') + ': ' + (p.pr != null ? money(p.pr) + ' ' + t('ar PVN 21%') : t('Cena: zvaniet')) + '. ' + t('Piegāde visā Latvijā.'), 300), 'prece.html?id=' + id);
+      setMeta(p.n + ' | BUVVide.lv', snippet((p.brand ? p.brand + '. ' : '') + (p.s || '') + ' ' + (p.n || '') + '. ' + t('Cena') + ': ' + (p.pr != null ? money(p.pr) + ' ' + t('ar PVN 21%') : t('Cena: zvaniet')) + '. ' + t('Piegāde visā Latvijā.'), 300), 'prece.html?id=' + id);
       var chain = [], x = c;
       while (x) { chain.unshift(x); x = x.p ? T.cats[x.p] : null; }
       $('#crumbs').innerHTML = '<a href="index.html">' + t('Sākums') + '</a>' + chain.map(function (cc) { return icon('chev-r') + '<a href="' + catURL(cc.id) + '">' + esc(cn(cc.n)) + '</a>'; }).join('');
@@ -1565,7 +1565,7 @@
       }
       var h = '<div class="pp' + (ksH ? ' has-ks' : '') + '"><div class="gal">';
       h += '<div class="gal__main" id="galmain">' + (images.length ? images.map(function (u, i) {
-        return '<button type="button" class="gal__slide" data-lb="' + i + '" aria-label="' + t('Palielināt attēlu') + ' ' + (i + 1) + '"><img src="' + esc(img(u)) + '" alt="' + esc(p.n) + (i ? ' — ' + (i + 1) : '') + '"' + (i ? ' loading="lazy"' : '') + '></button>';
+        return '<button type="button" class="gal__slide" data-lb="' + i + '" aria-label="' + t('Palielināt attēlu') + ' ' + (i + 1) + '"><img src="' + esc(img(u)) + '" alt="' + esc(p.n) + (i ? ': ' + (i + 1) : '') + '"' + (i ? ' loading="lazy"' : '') + '></button>';
       }).join('') : '<div class="gal__slide"></div>') + '</div>';
       if (images.length > 1) {
         h += '<div class="gal__thumbs">' + images.map(function (u, i) { return '<button type="button" data-go="' + i + '"' + (i ? '' : ' class="is-on"') + ' aria-label="' + t('Attēls') + ' ' + (i + 1) + '">' + timg(u) + '</button>'; }).join('') + '</div>';
@@ -1617,7 +1617,7 @@
               (vdiff ? '<td class="models__p">' + (v.price ? money(v.price) : '') + '</td>' : '') +
               '</tr>';
           }).join('') + '</tbody></table></div>' +
-          (side ? '<p class="field__hint">' + t('Pasūtot jānorāda vēršanas virziens — kreisās vai labās durvis.') + '</p>' : '') + '</div>';
+          (side ? '<p class="field__hint">' + t('Pasūtot jānorāda vēršanas virziens: kreisās vai labās durvis.') + '</p>' : '') + '</div>';
       }
       if (p.pr == null) {
         // the shop shows «Cena: zvaniet» for these: no cart button, a phone line instead
@@ -1639,15 +1639,15 @@
       var perks = '<div class="perks" id="perks">' +
         '<div class="perk">' + icon('truck') + '<div><b>' + t('Piegāde') + '</b><span>' + (flags.indexOf('free') >= 0 ? t('Šai precei piegāde ir bez maksas. ') : flags.indexOf('ship') >= 0 ? t('Tikai ar maksas piegādi uz objektu vai adresi. ') : '') + t('Piegādājam visā Latvijā. Piegādes maksu aprēķinām pēc adreses un norādām rēķinā.') + '</span></div></div>' +
         (flags.indexOf('ship') >= 0 ? '' : '<div class="perk">' + icon('store') + '<div><b>' + t('Saņemšana') + '</b><span>' + t('Var saņemt arī noliktavā, tad par piegādi nav jāmaksā. Katrai precei var būt sava noliktava; par gatavību paziņosim pa tālruni vai e-pastu.') + '</span></div></div>') +
-        '<div class="perk">' + icon('bank') + '<div><b>' + t('Apmaksa') + '</b><span>' + t('Apmaksa uzreiz nav jāveic: vispirms precizējam pieejamību pie piegādātāja, tad nosūtām avansa rēķinu e-pastā.') + ' ' + t('Neapmaksāti rēķini pēc 3 darba dienām tiek anulēti.') + ' ' + t('Cenas norādītas eiro ar PVN 21%. Uzņēmumiem — PVN 0% precēm, uz kurām attiecas reversais PVN.') + '</span></div></div>' +
+        '<div class="perk">' + icon('bank') + '<div><b>' + t('Apmaksa') + '</b><span>' + t('Apmaksa uzreiz nav jāveic: vispirms precizējam pieejamību pie piegādātāja, tad nosūtām avansa rēķinu e-pastā.') + ' ' + t('Neapmaksāti rēķini pēc 3 darba dienām tiek anulēti.') + ' ' + t('Cenas norādītas eiro ar PVN 21%. Uzņēmumiem: PVN 0% precēm, uz kurām attiecas reversais PVN.') + '</span></div></div>' +
         /* rt9E:noret no return perk on the product page (Gita 06.11) */ '<div class="perk">' + icon('shield') + '<div><b>' + t('Garantija') + '</b><span>' + t('Likumā noteiktā vai ražotāja garantija; termiņš dažādām precēm atšķiras.') + '</span></div></div>' +
-        '<div class="perk">' + icon('calendar') + '<div><b>' + t('ESTO nomaksa') + '</b><span>' + t('Privātpersonām — līdz 60 mēnešiem; izvēlieties, noformējot pasūtījumu.') + '</span>' +
+        '<div class="perk">' + icon('calendar') + '<div><b>' + t('ESTO nomaksa') + '</b><span>' + t('Privātpersonām: līdz 60 mēnešiem; izvēlieties, noformējot pasūtījumu.') + '</span>' +
           '<a class="btn btn--ghost btn--sm perk__btn" href="https://esto.lv/lv/maksa-velak/" target="_blank" rel="noopener">' + t('Uzzināt par ESTO nomaksu') + '</a></div></div>' +
-        '<div class="perk">' + icon('phone') + '<div><b>' + t('Jautājumi par preci?') + '</b><span><a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a> · ' + t('P–C 9:30–17:30, Pk 9:30–17:00') + '</span></div></div>' +
+        '<div class="perk">' + icon('phone') + '<div><b>' + t('Jautājumi par preci?') + '</b><span><a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a> · ' + t('P-C 9:30-17:30, Pk 9:30-17:00') + '</span></div></div>' +
         '</div>';
       // accessories / kit parts («Piederumi» tab of the shop)
       // F4: only the product's own add-ons. The shop also lists «related» products there, which are alternatives,
-      // not accessories (a 42,50 € ground anchor «with» five 129–217 € showers): an add-on never costs more than
+      // not accessories (a 42,50 € ground anchor «with» five 129-217 € showers): an add-on never costs more than
       // the product itself. Products without real add-ons get no block at all.
       var acc = ((det && det.acc) || []).filter(function (x) {
         return x.pr && String(x.id) !== String(p.id) && String(x.c) !== String(p.c) &&
@@ -1771,7 +1771,7 @@
         $$('.kspec__x', s).forEach(function (r) { r.hidden = !on; }); a.setAttribute('aria-expanded', on ? 'true' : 'false');
         $('span', a).textContent = on ? t('Mazāk parametru') : t('Visi parametri') + ' (' + $$('tbody tr', s).length + ')'; }); });
       $$('[data-allspec-old]').forEach(function (a) { a.addEventListener('click', function (e) { var s = $('#specs'); if (!s) return; e.preventDefault(); s.classList.add('is-open'); var hb = $('.acc__h', s); if (hb) hb.setAttribute('aria-expanded', 'true'); s.scrollIntoView({ block: 'start', behavior: 'smooth' }); }); });   // R25
-      // variants: one buying pattern — a radio row selects the model, the single «Ielikt grozā» adds it
+      // variants: one buying pattern: a radio row selects the model, the single «Ielikt grozā» adds it
       var img0 = images[0];
       function pickVar(i) {
         var v = variants[i];
@@ -1811,7 +1811,7 @@
         if (!nd) { el.textContent = ul + ' = ' + m2(u.ar * q); return; }
         var nv = parseFloat(String(nd.value).replace(',', '.')), big = nv > 0 && Math.ceil(nv / u.ar - 1e-9) > 999;
         el.innerHTML = '<b>' + esc(ul) + '</b> = ' + m2(u.ar * q) + ' · ' + t('kopā') + ' <b>' + money(q * p.pr) + '</b>' +
-          (big ? '<span class="calc__max">' + t('Maks. 999 — lielākam daudzumam zvaniet') + ' <a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a></span>' : '');
+          (big ? '<span class="calc__max">' + t('Maks. 999: lielākam daudzumam zvaniet') + ' <a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a></span>' : '');
       }
       if (qty) { qty.addEventListener('change', function () { qty.value = Math.max(1, Math.min(999, Math.round(+qty.value) || 1)); ppM2(); }); qty.addEventListener('input', ppM2); $$('[data-q]').forEach(function (b) { b.addEventListener('click', ppM2); }); }
       var nd0 = $('#needm2');   // R12: «Man vajag 37 m²» → 19 packs (rounded up to whole packs)
@@ -1851,11 +1851,11 @@
     }
   }
 
-  /* R40: the live shop's «Slinkums likt preces grozā? … atsūtiet preču sarakstu» — e-mail, WhatsApp and the shop's own Telegram link */
+  /* R40: the live shop's «Slinkums likt preces grozā? … atsūtiet preču sarakstu»: e-mail, WhatsApp and the shop's own Telegram link */
   var TG_URL = 'https://t.me/+fW1178GgnVc0MThk';
   var TGI = '<svg class="tg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>';
   function slistHTML(title) {
-    return '<div class="slist"><span class="slist__ico">' + icon('list') + '</span><div class="slist__b"><b class="slist__t">' + esc(t(title)) + '</b><p>' + esc(t('Pietiek ar nosaukumu vai preces ID un daudzumu — mēs ar jums sazināsimies. Rēķinam pievienojiet rekvizītus, piegādei — adresi.')) + '</p>' +
+    return '<div class="slist"><span class="slist__ico">' + icon('list') + '</span><div class="slist__b"><b class="slist__t">' + esc(t(title)) + '</b><p>' + esc(t('Pietiek ar nosaukumu vai preces ID un daudzumu, mēs ar jums sazināsimies. Rēķinam pievienojiet rekvizītus, piegādei: adresi.')) + '</p>' +
       '<div class="slist__btns"><a class="btn btn--ghost btn--sm" href="mailto:' + SHOP.mail + '?subject=' + encodeURIComponent('Preču saraksts') + '">' + icon('mail') + '<span>' + t('E-pasts') + '</span></a>' +
       '<a class="btn btn--ghost btn--sm" href="' + waLink('Labdien! Preču saraksts:') + '" target="_blank" rel="noopener"><svg class="wa-ico" aria-hidden="true"><use href="#i-wa"/></svg><span>WhatsApp</span></a>' +
       '<a class="btn btn--ghost btn--sm" href="' + TG_URL + '" target="_blank" rel="noopener">' + TGI + '<span>Telegram</span></a></div></div></div>';
@@ -1898,8 +1898,8 @@
         : '<a class="btn btn--block" href="noformet.html">' + t('Noformēt pasūtījumu') + icon('arrow-r') + '</a>') +
         '<a class="btn btn--ghost btn--block" style="margin-top:8px" href="katalogs.html">' + t('Turpināt iepirkties') + '</a>' +
         '<div class="summary__note"><p>' + icon('bank') + '<span>' + t('Apmaksa uzreiz nav jāveic: vispirms precizējam pieejamību pie piegādātāja, tad nosūtām avansa rēķinu e-pastā.') + '</span></p>' +
-        '<p>' + icon('truck') + '<span>' + t('Piegāde visā Latvijā (ja prece ir pieejama, apmēram 2–4 darba dienu laikā pēc apmaksas) vai saņemšana no piegādātāja noliktavas.') + '</span></p>' +
-        '<p>' + icon('clock') + '<span>' + t('Pasūtījumus pieņemam 24/7, apstrādājam P–C 9:30–17:30, Pk 9:30–17:00.') + '</span></p></div></aside></div>';
+        '<p>' + icon('truck') + '<span>' + t('Piegāde visā Latvijā (ja prece ir pieejama, apmēram 2-4 darba dienu laikā pēc apmaksas) vai saņemšana no piegādātāja noliktavas.') + '</span></p>' +
+        '<p>' + icon('clock') + '<span>' + t('Pasūtījumus pieņemam 24/7, apstrādājam P-C 9:30-17:30, Pk 9:30-17:00.') + '</span></p></div></aside></div>';
       root.innerHTML = h;
     }
     root.addEventListener('click', function (e) {
@@ -1939,7 +1939,7 @@
     $('#co-sum').textContent = money(sum); $('#co-sum2').textContent = money(sum);
     $('#co-n').textContent = Cart.count();
     if (sum < 47) { var cmin = $('#co-min'), cbt = $('#coform button[type=submit]'); if (cmin) cmin.hidden = false; if (cbt) { cbt.disabled = true; cbt.classList.add('is-disabled'); } }   // rt9 D С-21
-    try { if (sessionStorage.getItem('bv_prchg')) { sessionStorage.removeItem('bv_prchg'); $('#co-items').insertAdjacentHTML('beforebegin', '<p class="co-prchg" role="status">' + esc(t('Dažu preču cena ir mainījusies — summa ir atjaunota pēc aktuālā cenrāža.')) + '</p>'); } } catch (e) {}
+    try { if (sessionStorage.getItem('bv_prchg')) { sessionStorage.removeItem('bv_prchg'); $('#co-items').insertAdjacentHTML('beforebegin', '<p class="co-prchg" role="status">' + esc(t('Dažu preču cena ir mainījusies: summa ir atjaunota pēc aktuālā cenrāža.')) + '</p>'); } } catch (e) {}
     (function () {   // rt9 D М-13: the cart keeps the price from the moment of adding; re-read it from the current price list
       var c = Cart.get();
       Promise.all(c.map(function (it) { return getJSON('data/pd/' + it.id + '.json').catch(function () { return null; }); })).then(function (ds) {
@@ -2002,19 +2002,19 @@
       var dt = new Date(), pad2 = function (n) { return (n < 10 ? '0' : '') + n; };
       var day = pad2(dt.getDate()) + '.' + pad2(dt.getMonth() + 1) + '.' + dt.getFullYear();   // rt9 D В-01: no browser-made «order number», the shop numbers the order on its invoice
       var lines = [];
-      lines.push(t('Pasūtījums') + ' — BUVVide.lv, ' + day);
+      lines.push(t('Pasūtījums') + ' | BUVVide.lv, ' + day);
       lines.push('');
-      Cart.get().forEach(function (it) { lines.push('• ' + it.n + ' (ID ' + it.id + ')' + (it.v ? ', ' + it.v : '') + ' — ' + it.q + ' ' + (it.u ? unitLabPl(it.u.un) : t('gab.')) + ' × ' + money(it.pr) + (it.u ? ' (' + m2(it.u.ar * it.q) + ')' : '') + ' = ' + money(it.pr * it.q)); });
+      Cart.get().forEach(function (it) { lines.push('• ' + it.n + ' (ID ' + it.id + ')' + (it.v ? ', ' + it.v : '') + ': ' + it.q + ' ' + (it.u ? unitLabPl(it.u.un) : t('gab.')) + ' × ' + money(it.pr) + (it.u ? ' (' + m2(it.u.ar * it.q) + ')' : '') + ' = ' + money(it.pr * it.q)); });
       lines.push('');
       lines.push(t('Preču summa (ar PVN)') + ': ' + money(Cart.total()));
       lines.push(t('Pircējs') + ': ' + F('fname') + ' ' + F('lname') + ', ' + F('phone') + ', ' + F('email'));
       if (type === 'comp') lines.push(t('Uzņēmums') + ': ' + F('cname') + ', ' + t('reģ. nr.') + ' ' + F('creg') + (F('cvat') ? ', ' + t('PVN nr.') + ' ' + F('cvat') : '') + ', ' + F('caddr'));
-      lines.push(t('Saņemšana') + ': ' + (ship === 'del' ? t('piegāde uz adresi') + ' — ' + F('addr') + ', ' + F('city') + ', ' + F('zip') : t('saņemšana no piegādātāja noliktavas')));
+      lines.push(t('Saņemšana') + ': ' + (ship === 'del' ? t('piegāde uz adresi') + ': ' + F('addr') + ', ' + F('city') + ', ' + F('zip') : t('saņemšana no piegādātāja noliktavas')));
       lines.push(t('Apmaksa') + ': ' + (pay === 'esto' ? t('ESTO nomaksa') : t('bankas pārskaitījums pēc rēķina')));
       if (F('note')) lines.push(t('Komentārs') + ': ' + F('note'));
       lines.push(''); lines.push(t('Cenas ir pēc vietnes cenrāža šajā datumā; pieejamību un galīgo summu apstiprināsim rēķinā.'));   // rt9 D М-13
       var text = lines.join('\n');
-      var subj = t('Pasūtījums') + ' — ' + F('fname') + ' ' + F('lname') + ', ' + day;
+      var subj = t('Pasūtījums') + ': ' + F('fname') + ' ' + F('lname') + ', ' + day;
       // R11: a real confirmation (number, summary, what happens next); the order itself travels by e-mail (one primary button) or WhatsApp / Telegram
       coWho = { n: F('fname'), e: F('email') }; coText = text;
       coState('send');   // rt9 D Б-01: nothing has reached the shop yet
@@ -2028,7 +2028,7 @@
       $('#co-wa').href = waLink(text);
       $('#co-mail').onclick = $('#co-wa').onclick = coAsk;
       $('#co-tg').onclick = function () {   // Telegram takes no prefilled text: the order text goes to the clipboard, the chat opens in a new tab
-        try { navigator.clipboard.writeText(text).then(function () { msg(t('Pasūtījuma teksts nokopēts — ielīmējiet to Telegram čatā.')); }, function () {}); } catch (er) {}
+        try { navigator.clipboard.writeText(text).then(function () { msg(t('Pasūtījuma teksts nokopēts: ielīmējiet to Telegram čatā.')); }, function () {}); } catch (er) {}
         coAsk();
       };
       $('#co-form-wrap').hidden = true;
@@ -2045,13 +2045,13 @@
       $('#co-h').textContent = done ? t('Paldies') + (coWho.n ? ', ' + coWho.n : '') + '! ' + t('Pasūtījums nosūtīts') : t('Nosūtiet pasūtījumu veikalam');
       $('#co-lead').innerHTML = done
         ? esc(t('Pieejamību darba laikā precizēsim pie piegādātāja un rēķinu nosūtīsim uz')) + ' <b>' + esc(coWho.e) + '</b>. ' + esc(t('Ja atbilde nepienāk, zvaniet')) + ' <a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a>.'
-        : esc(t('Pasūtījums vēl nav nosūtīts. Teksts ir sagatavots — izvēlieties, kā to nosūtīt.')) + ' ' + esc(t('Rēķinu nosūtīsim uz')) + ' <b>' + esc(coWho.e) + '</b> ' + esc(t('pēc pieejamības pārbaudes.'));
+        : esc(t('Pasūtījums vēl nav nosūtīts. Teksts ir sagatavots: izvēlieties, kā to nosūtīt.')) + ' ' + esc(t('Rēķinu nosūtīsim uz')) + ' <b>' + esc(coWho.e) + '</b> ' + esc(t('pēc pieejamības pārbaudes.'));
       $('#co-ask').hidden = st !== 'ask';
       if (done) { Cart.set([]); var h = $('#co-h'); if (h) h.focus({ preventScroll: true }); w.scrollTo({ top: 0, behavior: 'smooth' }); }
     }
     function coAsk() { clearTimeout(coT); coT = setTimeout(function () { coState('ask'); }, 700); }
     $('#co-copy').onclick = function () {
-      var ok = function () { msg(t('Pasūtījuma teksts nokopēts — ielīmējiet to e-pastā vai čatā.')); coAsk(); };
+      var ok = function () { msg(t('Pasūtījuma teksts nokopēts: ielīmējiet to e-pastā vai čatā.')); coAsk(); };
       try { navigator.clipboard.writeText(coText).then(ok, function () { coAsk(); }); } catch (er) { coAsk(); }
     };
     $('#co-yes').onclick = function () { coState('done'); };
@@ -2145,8 +2145,8 @@
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(ph);
     w.addEventListener('resize', function () { clearTimeout(phT); phT = setTimeout(ph, 150); });
     // RU: the sale page kept its Latvian H1 and title
-    if (LANG === 'ru') { var tt0 = d.title.split(' — '); if (RU[d.title]) d.title = RU[d.title]; else if (tt0.length === 2 && RU[tt0[0]]) d.title = RU[tt0[0]] + ' — ' + tt0[1]; }   // RU page titles
-    if (PAGE === 'akcijas' && LANG === 'ru') { var h1 = $('#cat-h1'); if (h1) h1.textContent = t('Akcijas un atlaides'); d.title = t('Akcijas un atlaides') + ' — BUVVide.lv'; }
+    if (LANG === 'ru') { var tt0 = d.title.split(' | '); if (RU[d.title]) d.title = RU[d.title]; else if (tt0.length === 2 && RU[tt0[0]]) d.title = RU[tt0[0]] + ' | ' + tt0[1]; }   // RU page titles
+    if (PAGE === 'akcijas' && LANG === 'ru') { var h1 = $('#cat-h1'); if (h1) h1.textContent = t('Akcijas un atlaides'); d.title = t('Akcijas un atlaides') + ' | BUVVide.lv'; }
   })();
   /* ---- rt9 F: С-10 arrows on the product rails (desktop), С-13 the last row of the category grid completed by «Viss katalogs» ---- */
   (function () {
@@ -2187,6 +2187,7 @@
     w.addEventListener('resize', function () { clearTimeout(ft); ft = setTimeout(function () { fill(); $$('.rail').forEach(rup); }, 120); });
     w.addEventListener('load', function () { $$('.rail').forEach(rup); });
   })();
+  w.BVX = { card: card, reg: reg, getJSON: getJSON, t: t, enFill: enFill, catURL: catURL };
   Cart.badge();
   w.addEventListener('storage', function (e) { if (e.key === 'bv_cart') Cart.badge(); });
   if (PAGE === 'home') (function () {   // R16/J6: home blocks in the order / visibility set in «Veikala iestatījumi»
@@ -2261,7 +2262,7 @@
           var bb = $('.buybox');
           if (!bb) { if (n++ < 40) setTimeout(wait, 150); return; }
           if ($('.buybox__min', bb)) return;
-          bb.insertAdjacentHTML('beforeend', '<p class="buybox__min">' + icon('info') + '<span>' + esc(t('Minimālā pasūtījuma (preču) summa — 47 €. Mazāku pasūtījumu saskaņojiet pa tālruni')) +
+          bb.insertAdjacentHTML('beforeend', '<p class="buybox__min">' + icon('info') + '<span>' + esc(t('Minimālā pasūtījuma (preču) summa: 47 €. Mazāku pasūtījumu saskaņojiet pa tālruni')) +
             ' <a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a>.</span></p>');
         })();
       }).catch(function () {});
