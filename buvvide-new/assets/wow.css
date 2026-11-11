@@ -302,3 +302,16 @@ h1, h2, h3 { letter-spacing: -.02em; }
   .hdr.is-search .hdr__searchrow { display: block; }
   .hdr.is-up, .hdr.is-up .hdr__row, .hdr.is-up .hdr__searchrow { transform: none; opacity: 1; pointer-events: auto; }
 }
+
+/* 11.11 Gita: lielas bildes tipa aprakstā un kategorijas ievadā rāda mazas pa labi, teksts apiet apkārt; uzklikšķinot bilde palielinās.
+   Saīsinātajā aprakstā redzamas veselas 7 rindas, pēdējā pilnībā zem pārejas. */
+.tdesc__b img, .cintro__b img { float: right; width: auto; height: auto; max-width: min(220px, 42%); max-height: 150px; object-fit: contain;
+  margin: 2px 0 8px 16px; padding: 4px; background: #fff; border: 1px solid var(--line); border-radius: 10px; cursor: zoom-in; }
+.tdesc__b.is-open, .cintro__b.is-open { display: flow-root; }
+.tdesc .is-clamp { max-height: 11.2em; }
+.tdesc .is-clamp.is-fade::after { height: 3.2em; }
+.rzoom { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 24px;
+  background: rgba(8, 22, 15, .84); cursor: zoom-out; }
+.rzoom img { max-width: 100%; max-height: 100%; border-radius: 12px; background: #fff; box-shadow: 0 20px 60px rgba(0, 0, 0, .45); }
+.rzoom__x { position: absolute; top: 14px; right: 14px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: #fff;
+  color: var(--ink); font-size: 26px; line-height: 44px; cursor: pointer; }

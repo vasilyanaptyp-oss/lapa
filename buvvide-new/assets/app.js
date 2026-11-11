@@ -857,6 +857,18 @@
     var c = b.previousElementSibling, on = c.classList.toggle('is-open');
     c.classList.toggle('is-fade', !on); b.textContent = t(on ? 'Paslēpt' : 'Lasīt vairāk'); b.setAttribute('aria-expanded', on ? 'true' : 'false');
   });
+  // 11.11 Gita: a picture in a type / category description is shown small; a click opens it big (Escape, click or × closes)
+  d.addEventListener('click', function (e) {
+    var im = e.target.closest && e.target.closest('.tdesc__b img, .cintro__b img'); if (!im) return;
+    e.preventDefault();
+    var o = d.createElement('div'); o.className = 'rzoom'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-modal', 'true');
+    o.innerHTML = '<img alt=""><button class="rzoom__x" type="button" aria-label="' + t('Aizvērt') + '">×</button>';
+    var big = $('img', o); big.src = im.currentSrc || im.src; big.alt = im.alt || '';
+    var key = function (ev) { if (ev.key === 'Escape') close(); };
+    var close = function () { o.remove(); d.removeEventListener('keydown', key); d.body.style.overflow = ''; im.focus && im.focus(); };
+    o.addEventListener('click', close); d.addEventListener('keydown', key);
+    d.body.appendChild(o); d.body.style.overflow = 'hidden'; $('.rzoom__x', o).focus();
+  });
 
   /* В-04/М-02 (rt9 F): one spelling per parameter name and value inside a list, so the chips, the filters, the table and the counts
      agree: «960/860mm» = «860/960mm» (the commoner spelling wins), «IZMĒRI» = «Izmēri» = «izmēri» = one filter group */
