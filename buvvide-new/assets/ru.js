@@ -1,5 +1,6 @@
 /* RU interfeisa teksti (preču un kategoriju nosaukumi paliek latviski) */
 window.BV_RU = {
+"Minimālais pasūtījums": "Минимальный заказ",
 "Preces ar atlaidi": "Товары со скидкой",
 "Energoklase": "Энергокласс",
 "Visa sadaļa": "Весь раздел",

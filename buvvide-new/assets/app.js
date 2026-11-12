@@ -179,17 +179,26 @@
   var CATIMG = {"829": "img/16174ae0f1f04d_500.webp", "505": "img/da4089d2f1885a_500.webp", "31": "img/f078489591022e_500.webp", "188": "img/338828c48cd9d7_500.webp", "100": "img/b95e2265a1ae6f_500.webp", "1020": "img/21cb916e426e89_500.webp", "131": "img/ce61f3e2bd19ad_500.webp", "23": "img/3276d084c1c02f_500.webp", "43": "img/fbc0cbc55a4188_500.webp", "461": "img/cd4a3d80eed47d_500.webp", "208": "img/29f4ada19a12de_500.webp"};
   function loadTree() { return TREE ? Promise.resolve(TREE) : getJSON('data/tree.json').then(function (j) { Object.keys(CATIMG).forEach(function (k) { if (j.cats[k] && String(j.cats[k].img).indexOf('img/caticon_') !== 0) j.cats[k].img = CATIMG[k]; });   /* 08.11 Gita: her own cIcon pictures win for the top categories */ TREE = j; return j; }); }
 
+  /* 12.11 Gita: the product's minimum order (old shop minBuyAmount): «Minimālais pasūtījums N gab.», the cart never holds less */
+  var MB = {}, MBP = getJSON('data/mb.json').then(function (j) { MB = j || {}; return MB; }).catch(function () { return MB; });
+  function mbOf(p) { var n = Math.round(+(p && (p.mb || MB[p.id])) || 1); return n > 1 ? Math.min(999, n) : 1; }
+  function mbLine(p, u) { var m = mbOf(p); return m > 1 ? t('Minimālais pasūtījums') + ' ' + m + ' ' + (u ? unitLabPl(u.un) : t('gab.')) : ''; }
   /* ── cart ── */
   var Cart = {
     get: function () { return store('bv_cart') || []; },
     set: function (a) { store('bv_cart', a); Cart.badge(); },
     key: function (it) { return it.id + '|' + (it.v || ''); },
     add: function (p, q, v, vp) {
-      var a = Cart.get(), k = p.id + '|' + (v || ''), f = null;
+      var a = Cart.get(), k = p.id + '|' + (v || ''), f = null, m = mbOf(p);
       a.forEach(function (it) { if (Cart.key(it) === k) f = it; });
-      if (f) f.q = Math.min(999, f.q + q);
-      else a.push({ id: p.id, c: p.c, n: p.n, pr: vp != null ? vp : p.pr, o: vp != null ? null : (p.o || null), img: p.img, v: v || '', q: q, f: p.f || [], u: (!v && p.u) ? { ar: p.u.ar, ppm: p.u.ppm, un: p.u.un } : null });
+      if (f) { f.q = Math.min(999, Math.max(m, f.q + q)); if (m > 1) f.mb = m; }
+      else a.push({ id: p.id, c: p.c, n: p.n, pr: vp != null ? vp : p.pr, o: vp != null ? null : (p.o || null), img: p.img, v: v || '', q: Math.max(m, q), mb: m > 1 ? m : undefined, f: p.f || [], u: (!v && p.u) ? { ar: p.u.ar, ppm: p.u.ppm, un: p.u.un } : null });
       Cart.set(a);
+    },
+    norm: function () {   // carts saved before 12.11: lift lines below the product's minimum
+      var a = Cart.get(), ch = false;
+      a.forEach(function (it) { var m = mbOf(it); if (m > 1) { if (it.mb !== m) { it.mb = m; ch = true; } if (it.q < m) { it.q = m; ch = true; } } });
+      if (ch) Cart.set(a); return a;
     },
     count: function () { return Cart.get().reduce(function (s, it) { return s + it.q; }, 0); },
     total: function () { return Cart.get().reduce(function (s, it) { return s + it.q * it.pr; }, 0); },
@@ -351,6 +360,7 @@
       if (!p) return;
       if (p.hv) { location.href = prodURL(p) + '#izvele'; return; }   // has variants: choose first
       var rowEl = b.closest('tr, article, .card'), qIn = rowEl && rowEl.querySelector('.qty input'), q = qIn ? Math.max(1, Math.min(999, Math.round(+qIn.value) || 1)) : 1;
+      q = Math.max(q, mbOf(p));
       Cart.add(p, q);
       toast(p, q);
       b.classList.add('is-added');
@@ -789,9 +799,9 @@
     return s;
   }
   function qtyHTML(p, cls) {
-    var u = unitInfo(p);
-    return '<div class="qty' + (cls || '') + '"><button type="button" data-tq="-1" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input type="number" min="1" max="999" value="1" data-qid="' + p.id + '" aria-label="' + t('Daudzums') + '"><button type="button" data-tq="1" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
-      (u ? '<span class="m2" data-m2="' + p.id + '">= ' + m2(u.ar) + '</span>' : '');
+    var u = unitInfo(p), mq = mbOf(p);
+    return '<div class="qty' + (cls || '') + '"' + (mq > 1 ? ' title="' + esc(mbLine(p, u)) + '"' : '') + '><button type="button" data-tq="-1" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input type="number" min="' + mq + '" max="999" value="' + mq + '" data-qid="' + p.id + '" aria-label="' + t('Daudzums') + '"><button type="button" data-tq="1" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
+      (u ? '<span class="m2" data-m2="' + p.id + '">= ' + m2(u.ar * mq) + '</span>' : '');
   }
   function analyze(items, mixed, key) {
     var n = items.length, stat = {};
@@ -1272,10 +1282,10 @@
     });
     d.addEventListener('change', function (e) {   // R28: 1…999 whole pieces
       var s = e.target; if (!s.hasAttribute || !s.hasAttribute('data-qid')) return;
-      s.value = Math.max(1, Math.min(999, Math.round(+s.value) || 1)); updM2(s);
+      s.value = Math.max(+s.min || 1, Math.min(999, Math.round(+s.value) || 1)); updM2(s);
     });
     function updM2(inp) {
-      var p = P[inp.getAttribute('data-qid')], u = p && unitInfo(p), q = Math.max(1, Math.min(999, Math.round(+inp.value) || 1));
+      var p = P[inp.getAttribute('data-qid')], u = p && unitInfo(p), q = Math.max(+inp.min || 1, Math.min(999, Math.round(+inp.value) || 1));
       $$('[data-m2="' + inp.getAttribute('data-qid') + '"]').forEach(function (el) { el.textContent = u ? '= ' + m2(u.ar * q) : ''; });
     }
     d.addEventListener('click', function (e) {
@@ -1315,7 +1325,7 @@
       if (e.target.closest('[data-clearall]')) { S.sel = {}; S.pmin = S.pmax = null; changed(false); return; }
       if (e.target.closest('[data-showmore]')) { S.show += S.view === 'table' ? 50 : 24; render(true); return; }
       if ((x = e.target.closest('[data-tq]'))) {   // ± in a table row / card
-        var qi2 = x.parentNode.querySelector('input'); qi2.value = Math.max(1, Math.min(999, (+qi2.value || 1) + +x.getAttribute('data-tq'))); updM2(qi2); return;
+        var qi2 = x.parentNode.querySelector('input'); qi2.value = Math.max(+qi2.min || 1, Math.min(999, (+qi2.value || 1) + +x.getAttribute('data-tq'))); updM2(qi2); return;
       }
       if ((x = e.target.closest('th[data-s]'))) {   // sortable column header
         var sk = x.getAttribute('data-s');
@@ -1454,7 +1464,7 @@
     Promise.all([
       getJSON('data/pd/' + id + '.json').catch(function () { return null; }),
       cid ? getJSON('data/c/' + cid + '.json').catch(function () { return null; }) : Promise.resolve(null),
-      loadTree()
+      loadTree(), MBP
     ]).then(function (r) {   // R13: a link without &c= still gets its category list (same series, related rail)
       var c0 = !r[1] && r[0] && r[0].c;
       return c0 ? getJSON('data/c/' + c0 + '.json').catch(function () { return null; }).then(function (l) { r[1] = l; return r; }) : r;
@@ -1558,6 +1568,7 @@
         img: (det && det.images && det.images[0]) || (base && base.img) || '', f: (base && base.f) || (det && det.f) || [],
         prm: (det && det.params && det.params.length ? det.params : (base && base.prm) || []), brand: det && det.brand, code: det && det.code
       };
+      p.mb = mbOf({ id: id, mb: (det && det.mb) || (base && base.mb) });
       P[id] = p;
       var c = T.cats[p.c];
       setMeta(p.n + ' | BUVVide.lv', snippet((p.brand ? p.brand + '. ' : '') + (p.s || '') + ' ' + (p.n || '') + '. ' + t('Cena') + ': ' + (p.pr != null ? money(p.pr) + ' ' + t('ar PVN 21%') : t('Cena: zvaniet')) + '. ' + t('Piegāde visā Latvijā.'), 300), 'prece.html?id=' + id);
@@ -1647,8 +1658,9 @@
       } else {
         var calcOn = !!(pu && !variants.length);   // R12: «Man vajag … m²» → whole packs + the sum
         if (calcOn) h += '<div class="calc"><label class="calc__row" for="needm2"><span class="calc__l">' + t('Man vajag') + '</span><span class="calc__in"><input id="needm2" type="text" inputmode="decimal" autocomplete="off" placeholder="' + t('piem. 37') + '"><span>m²</span></span></label><p class="calc__out" id="pm2" aria-live="polite"></p></div>';
-        h += '<div class="buyrow"><div class="qty"><button type="button" data-q="-1" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input id="qty" type="number" min="1" max="999" value="1" aria-label="' + t('Daudzums') + '"><button type="button" data-q="1" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
-          '<button class="btn" type="button" id="buy">' + icon('cart') + t('Ielikt grozā') + '</button></div>' + (pu && !calcOn ? '<p class="m2 m2--pp" id="pm2">1 ' + esc(unitLab(pu.un)) + ' = ' + m2(pu.ar) + '</p>' : '');
+        h += '<div class="buyrow"><div class="qty"><button type="button" data-q="-1" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input id="qty" type="number" min="' + p.mb + '" max="999" value="' + p.mb + '" aria-label="' + t('Daudzums') + '"><button type="button" data-q="1" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
+          '<button class="btn" type="button" id="buy">' + icon('cart') + t('Ielikt grozā') + '</button></div>' + (pu && !calcOn ? '<p class="m2 m2--pp" id="pm2">1 ' + esc(unitLab(pu.un)) + ' = ' + m2(pu.ar) + '</p>' : '') +
+          (p.mb > 1 ? '<p class="buybox__ask buybox__mq">' + icon('info') + '<span>' + esc(mbLine(p, pu)) + '</span></p>' : '');   // 12.11 Gita: minimum order
       }
       h += '<a class="btn btn--wa btn--block buybox__wa" id="pwa" target="_blank" rel="noopener" href="' + waLink(t('Labdien! Vēlos pasūtīt') + ': ' + p.n + ' (ID ' + id + ')') + '"><svg class="wa-ico" aria-hidden="true"><use href="#i-wa"/></svg>' + t('Pasūtīt WhatsApp') + '</a>';
       if (p.pr != null) h += '<p class="buybox__avail">' + icon('clock') + '<span>' + t('Pieejamību un piegādes termiņu apstiprināsim pēc pasūtījuma.') + '</span></p>';   // rt9E:avail В-08
@@ -1826,25 +1838,26 @@
         rd.addEventListener('change', function () { if (rd.checked) pickVar(+rd.getAttribute('value')); });
       });
       // qty
-      $$('[data-q]').forEach(function (b) { b.addEventListener('click', function () { qty.value = Math.max(1, Math.min(999, (+qty.value || 1) + +b.getAttribute('data-q'))); }); });
+      var MQ = p.mb || 1;   // 12.11: never below the product's minimum order
+      $$('[data-q]').forEach(function (b) { b.addEventListener('click', function () { qty.value = Math.max(MQ, Math.min(999, (+qty.value || 1) + +b.getAttribute('data-q'))); }); });
       function ppM2() {   // R12: the line follows the quantity; with the m² calculator it also shows the sum
-        var u = unitInfo(p), el = $('#pm2'); if (!u || !el) return; var q = Math.max(1, Math.min(999, Math.round(+qty.value) || 1));
+        var u = unitInfo(p), el = $('#pm2'); if (!u || !el) return; var q = Math.max(MQ, Math.min(999, Math.round(+qty.value) || 1));
         var ul = q + ' ' + (q === 1 ? unitLab(u.un) : unitLabPl(u.un)), nd = $('#needm2');
         if (!nd) { el.textContent = ul + ' = ' + m2(u.ar * q); return; }
         var nv = parseFloat(String(nd.value).replace(',', '.')), big = nv > 0 && Math.ceil(nv / u.ar - 1e-9) > 999;
         el.innerHTML = '<b>' + esc(ul) + '</b> = ' + m2(u.ar * q) + ' · ' + t('kopā') + ' <b>' + money(q * p.pr) + '</b>' +
           (big ? '<span class="calc__max">' + t('Maks. 999: lielākam daudzumam zvaniet') + ' <a href="tel:' + SHOP.tel + '">' + SHOP.telH + '</a></span>' : '');
       }
-      if (qty) { qty.addEventListener('change', function () { qty.value = Math.max(1, Math.min(999, Math.round(+qty.value) || 1)); ppM2(); }); qty.addEventListener('input', ppM2); $$('[data-q]').forEach(function (b) { b.addEventListener('click', ppM2); }); }
+      if (qty) { qty.addEventListener('change', function () { qty.value = Math.max(MQ, Math.min(999, Math.round(+qty.value) || 1)); ppM2(); }); qty.addEventListener('input', ppM2); $$('[data-q]').forEach(function (b) { b.addEventListener('click', ppM2); }); }
       var nd0 = $('#needm2');   // R12: «Man vajag 37 m²» → 19 packs (rounded up to whole packs)
       if (nd0 && qty) {
         nd0.addEventListener('input', function () {
           var u = unitInfo(p), v = parseFloat(String(nd0.value).replace(',', '.'));
-          if (u && v > 0) qty.value = Math.max(1, Math.min(999, Math.ceil(v / u.ar - 1e-9)));
+          if (u && v > 0) qty.value = Math.max(MQ, Math.min(999, Math.ceil(v / u.ar - 1e-9)));
           ppM2();
         });
         ppM2();
-      }
+      } else if (qty && MQ > 1) ppM2();
       if (!$('#buy')) return;   // price on request: no cart row on this page
       function buyState() {   // rt9E:buystate С-20
         var n = Cart.get().reduce(function (s, it) { return s + (String(it.id) === String(p.id) ? it.q : 0); }, 0);
@@ -1865,7 +1878,7 @@
           }
           return;
         }
-        var q = Math.max(1, Math.min(999, Math.round(+qty.value) || 1)), v = vi >= 0 ? variants[vi] : null;
+        var q = Math.max(MQ, Math.min(999, Math.round(+qty.value) || 1)), v = vi >= 0 ? variants[vi] : null;
         var lab = v ? vlabel(v) : '';
         Cart.add(p, q, lab, v && v.price ? v.price : null);
         toast(p, q, lab); buyState();   // rt9E:buy2
@@ -1887,7 +1900,7 @@
   function cartPage() {
     var root = $('#cart');
     function draw() {
-      var a = Cart.get();
+      var a = Cart.norm();
       if (!a.length) {
         root.innerHTML = $('#cart-empty-tpl').innerHTML; trDom(root); cnStatic(root);
         $('#cart-h-n').textContent = '';
@@ -1899,9 +1912,9 @@
       a.forEach(function (it, i) {
         P[it.id] = P[it.id] || it;
         h += '<div class="cl__row"><a class="cl__img" href="' + prodURL(it) + '">' + (it.img ? timg(it.img, ' width="76" height="76"') : '') + '</a><div>' +
-          '<a class="cl__name" href="' + prodURL(it) + '">' + esc(it.n) + '</a>' + (it.v ? '<p class="cl__var">' + esc(it.v) + '</p>' : '') +
+          '<a class="cl__name" href="' + prodURL(it) + '">' + esc(it.n) + '</a>' + (it.v ? '<p class="cl__var">' + esc(it.v) + '</p>' : '') + (mbOf(it) > 1 ? '<p class="cl__var cl__mq">' + esc(mbLine(it, it.u)) + '</p>' : '') +
           '<p class="cl__unit">' + money(it.pr) + ' / ' + (it.u ? esc(unitLab(it.u.un)) : t('gab.')) + (it.o && it.o > it.pr ? ' · <s>' + money(it.o) + '</s>' : '') + (it.u ? ' · <b>' + money(it.u.ppm) + '/m²</b> · ' + it.q + ' ' + esc(it.q === 1 ? unitLab(it.u.un) : unitLabPl(it.u.un)) + ' = ' + m2(it.u.ar * it.q) : '') + '</p></div>' +
-          '<div class="cl__ctrl"><div class="qty qty--sm"><button type="button" data-cq="-1" data-i="' + i + '" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input type="number" min="1" max="999" value="' + it.q + '" data-cqi="' + i + '" aria-label="' + t('Daudzums') + '"><button type="button" data-cq="1" data-i="' + i + '" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
+          '<div class="cl__ctrl"><div class="qty qty--sm"><button type="button" data-cq="-1" data-i="' + i + '" aria-label="' + t('Mazāk') + '">' + icon('minus') + '</button><input type="number" min="' + mbOf(it) + '" max="999" value="' + it.q + '" data-cqi="' + i + '" aria-label="' + t('Daudzums') + '"><button type="button" data-cq="1" data-i="' + i + '" aria-label="' + t('Vairāk') + '">' + icon('plus') + '</button></div>' +
           '<span class="cl__sum">' + money(it.pr * it.q) + '</span><button class="cl__rm" type="button" data-rm="' + i + '">' + icon('trash') + t('Dzēst') + '</button></div></div>';
       });
       h += slistHTML('Slinkums pildīt pasūtījuma formu? Atsūtiet preču sarakstu') + '</div><aside class="summary"><h2>' + t('Kopsavilkums') + '</h2>' +
@@ -1926,7 +1939,7 @@
     }
     root.addEventListener('click', function (e) {
       var b, a = Cart.get();
-      if ((b = e.target.closest('[data-cq]'))) { var i = +b.getAttribute('data-i'); a[i].q = Math.max(1, Math.min(999, a[i].q + +b.getAttribute('data-cq'))); Cart.set(a); draw(); return; }
+      if ((b = e.target.closest('[data-cq]'))) { var i = +b.getAttribute('data-i'); a[i].q = Math.max(mbOf(a[i]), Math.min(999, a[i].q + +b.getAttribute('data-cq'))); Cart.set(a); draw(); return; }
       if ((b = e.target.closest('[data-rm]'))) {
         var k = +b.getAttribute('data-rm'), gone = a.splice(k, 1)[0]; Cart.set(a); draw();
         var el = $('#toast');
@@ -1937,16 +1950,17 @@
       }
       if ((b = e.target.closest('[data-blocked]'))) { e.preventDefault(); return; }
     });
+    MBP.then(function () { if (Cart.get().length) draw(); });   // 12.11: re-check minimums once data/mb.json is in
     root.addEventListener('change', function (e) {
       var i = e.target.getAttribute('data-cqi'); if (i == null) return;
-      var a = Cart.get(); a[+i].q = Math.max(1, Math.min(999, Math.round(+e.target.value) || 1)); Cart.set(a); draw();
+      var a = Cart.get(); a[+i].q = Math.max(mbOf(a[+i]), Math.min(999, Math.round(+e.target.value) || 1)); Cart.set(a); draw();
     });
     draw();
   }
 
   /* ═════════ CHECKOUT ═════════ */
   function checkoutPage() {
-    var a = Cart.get(), root = $('#checkout');
+    var a = Cart.norm(), root = $('#checkout');
     if (!a.length) { root.innerHTML = $('#cart-empty-tpl').innerHTML; trDom(root); cnStatic(root); return; }
     var type = 'priv', ship = 'del', pay = 'bank';
     var hasShip = a.some(function (it) { return (it.f || []).indexOf('ship') >= 0; });   // F5: delivery-only items
