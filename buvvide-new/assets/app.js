@@ -1667,12 +1667,14 @@
       var nts = (det && det.nt) || (base && base.nt) || [];
       nts.forEach(function (x) { if (!/Atlaide pēc/.test(x[0])) h += '<p class="buybox__ask' + (x[1] === 'g' ? ' is-g' : '') + '">' + icon(x[1] === 'g' ? 'truck' : 'info') + '<span>' + esc(t(x[0])) + '</span></p>'; });
       if (flags.indexOf('ask') >= 0) h += '<p class="buybox__ask">' + icon('percent') + '<span>' + t('Šai precei iespējama atlaide.') + ' <a target="_blank" rel="noopener" href="' + waLink(t('Labdien! Vai precei') + ' ' + p.n + ' (ID ' + id + ') ' + t('iespējama atlaide?')) + '">' + t('Jautāt cenu') + '</a></span></p>';
+      var pick = (p.prm || []).reduce(function (a, kv) { return /^saņemšana/i.test(String(kv[0])) && kv[1] ? String(kv[1]) : a; }, '');   // Gita 13.11: the pickup warehouse next to the buy button, as in the old shop
+      if (pick) h += '<p class="buybox__ask is-g buybox__pick">' + icon('store') + '<span><b>' + t('Saņemšana') + ':</b> ' + esc(pv(pick)) + '</span></p>';
       h += '</div>';   // buybox ends here: the info block goes BELOW the models and the buy button (Gita 06.11)
       h += serH;
       if (ksH) h += ksH.replace('class="kspec" id="specs"', 'class="kspec kspec--m" id="specs-m"');   // rt9E:ksm
       var perks = '<div class="perks" id="perks">' +
         '<div class="perk">' + icon('truck') + '<div><b>' + t('Piegāde') + '</b><span>' + (flags.indexOf('free') >= 0 ? t('Šai precei piegāde ir bez maksas. ') : flags.indexOf('ship') >= 0 ? t('Tikai ar maksas piegādi uz objektu vai adresi. ') : '') + t('Piegādājam visā Latvijā. Piegādes maksu aprēķinām pēc adreses un norādām rēķinā.') + '</span></div></div>' +
-        (flags.indexOf('ship') >= 0 ? '' : '<div class="perk">' + icon('store') + '<div><b>' + t('Saņemšana') + '</b><span>' + t('Var saņemt arī noliktavā, tad par piegādi nav jāmaksā. Katrai precei var būt sava noliktava; par gatavību paziņosim pa tālruni vai e-pastu.') + '</span></div></div>') +
+        (flags.indexOf('ship') >= 0 ? '' : '<div class="perk">' + icon('store') + '<div><b>' + t('Saņemšana') + '</b><span>' + (pick ? '<b>' + esc(pv(pick)) + '.</b> ' : '') + t('Var saņemt arī noliktavā, tad par piegādi nav jāmaksā. Katrai precei var būt sava noliktava; par gatavību paziņosim pa tālruni vai e-pastu.') + '</span></div></div>') +
         '<div class="perk">' + icon('bank') + '<div><b>' + t('Apmaksa') + '</b><span>' + t('Apmaksa uzreiz nav jāveic: vispirms precizējam pieejamību pie piegādātāja, tad nosūtām avansa rēķinu e-pastā.') + ' ' + t('Neapmaksāti rēķini pēc 3 darba dienām tiek anulēti.') + ' ' + t('Cenas norādītas eiro ar PVN 21%. Uzņēmumiem: PVN 0% precēm, uz kurām attiecas reversais PVN.') + '</span></div></div>' +
         /* rt9E:noret no return perk on the product page (Gita 06.11) */ '<div class="perk">' + icon('shield') + '<div><b>' + t('Garantija') + '</b><span>' + t('Likumā noteiktā vai ražotāja garantija; termiņš dažādām precēm atšķiras.') + '</span></div></div>' +
         '<div class="perk">' + icon('calendar') + '<div><b>' + t('ESTO nomaksa') + '</b><span>' + t('Privātpersonām: līdz 60 mēnešiem; izvēlieties, noformējot pasūtījumu.') + '</span>' +
