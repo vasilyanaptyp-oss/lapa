@@ -969,14 +969,14 @@
         .filter(function (x) { return x[2] >= 2 && x[2] <= 60; })
         .sort(function (a, b) { return (A.quick.indexOf(b[0]) >= 0 ? 1 : 0) - (A.quick.indexOf(a[0]) >= 0 ? 1 : 0) || b[1] - a[1]; }).slice(0, 8)
         .forEach(function (x) { S.facets.push({ k: x[0], label: lcap(pn(x[0])) }); });
-      var brands = {};   // 14.11 Gita: «Ražotājs» like in the old shop, whenever the list has 2+ brands
+      var brands = {};   // 14.11 Gita «Ražotājs ir būtisks filtrs», «Vecajā vienmēr augšā sēž»: shown whenever the list has a brand (one brand too, like the old shop)
       S.items.forEach(function (p) { if (p.b) brands[p.b] = 1; });
-      if (Object.keys(brands).length > 1) S.facets.push({ k: '__brand', label: t('Ražotājs') });
+      if (Object.keys(brands).length > 0) S.facets.push({ k: '__brand', label: t('Ražotājs') });
       var any = S.items.some(function (p) { return offerVals(p).length; });
       if (any) S.facets.unshift({ k: '__offer', label: t('Piedāvājumi') });
       // a quick-filter parameter must also be in the sidebar (same selection, two views)
       A.quick.forEach(function (k) { if (!S.facets.some(function (f) { return f.k === k; })) S.facets.push({ k: k, label: lcap(pn(k)) }); });
-      var frank = function (f) { return A.quick.indexOf(f.k) >= 0 ? A.quick.indexOf(f.k) : f.k === '__brand' ? 9 : f.k === '__cat' ? 10 : f.k === '__offer' ? 11 : 12; };   // Q18: the buyer's key parameters first
+      var frank = function (f) { return A.quick.indexOf(f.k) >= 0 ? A.quick.indexOf(f.k) : f.k === '__brand' ? -1 : f.k === '__cat' ? 10 : f.k === '__offer' ? 11 : 12; };   // Q18: the buyer's key parameters first; 14.11 Gita «Vecajā vienmēr augšā sēž»: Ražotājs above all
       S.facets = S.facets.map(function (f, i) { return [f, i]; }).sort(function (a, b) { return frank(a[0]) - frank(b[0]) || a[1] - b[1]; }).map(function (x) { return x[0]; });
     })();
 
@@ -1059,7 +1059,7 @@
         if (f.k === '__offer') vals.sort(function (a, b) { return OFFERS.map(function (o) { return o[0]; }).indexOf(a) - OFFERS.map(function (o) { return o[0]; }).indexOf(b); });
         else if (f.k === '__cat' || f.k === '__type') vals.sort(function (a, b) { return (counts[b] || 0) - (counts[a] || 0) || natCmp(valLabel(f, a), valLabel(f, b)); });
         else vals.sort(natCmp);
-        var sel = S.sel[f.k] || [], isOpen = open[f.k] != null ? open[f.k] : sel.length > 0;   // Gita 31.10 + 08.11 «Parametrus labāk sakļaut»: groups load collapsed (headings visible), a group with a choice opens
+        var sel = S.sel[f.k] || [], isOpen = open[f.k] != null ? open[f.k] : (sel.length > 0 || f.k === '__brand');   // 14.11: Ražotājs loads open, like the old shop; Gita 31.10 + 08.11 «Parametrus labāk sakļaut»: groups load collapsed (headings visible), a group with a choice opens
         // R26: a long list shows 6 values (the chosen ones first) + «Rādīt visus», so every group heading stays in sight
         var many = vals.length > 8 && !S.fall[f.k], limit = 6;
         if (many && sel.length) vals = vals.filter(function (v) { return sel.indexOf(v) >= 0; }).concat(vals.filter(function (v) { return sel.indexOf(v) < 0; }));
