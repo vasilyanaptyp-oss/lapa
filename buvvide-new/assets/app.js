@@ -157,7 +157,7 @@
     return x.localeCompare(y, 'lv', { numeric: true, sensitivity: 'base' });
   }
   function trDom(r) { if (LANG !== 'ru') return; $$('[data-t]', r).forEach(function (e) { var k = e.getAttribute('data-t') || e.textContent.trim(); if (RU[k]) e.textContent = RU[k]; }); }   // R10
-  var _cache = {}, DATA_V = '20261107a';   // bump when site/data changes: force-cache would keep old product files
+  var _cache = {}, DATA_V = '20261114a';   // bump when site/data changes: force-cache would keep old product files
   function getJSON(u) {
     if (!_cache[u]) _cache[u] = fetch(u + (u.indexOf('?') < 0 ? '?' : '&') + 'dv=' + DATA_V, { cache: 'force-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
     return _cache[u];
@@ -942,6 +942,7 @@
       if (k === '__type') return p.g || (p.prm || []).reduce(function (a, kv) { return kv[0] === 'Preces tips' ? kv[1] : a; }, '') || '';
       if (k === '__cat') return String(p.c);
       if (k === '__offer') return null;
+      if (k === '__brand') return p.b || '';   // 14.11 Gita «Kategoriju filtros Ražotājs pazudis»: p.b from add_brand.py
       for (var i = 0; i < (p.prm || []).length; i++) if (p.prm[i][0] === k) return p.prm[i][1];
       return '';
     }
@@ -968,11 +969,14 @@
         .filter(function (x) { return x[2] >= 2 && x[2] <= 60; })
         .sort(function (a, b) { return (A.quick.indexOf(b[0]) >= 0 ? 1 : 0) - (A.quick.indexOf(a[0]) >= 0 ? 1 : 0) || b[1] - a[1]; }).slice(0, 8)
         .forEach(function (x) { S.facets.push({ k: x[0], label: lcap(pn(x[0])) }); });
+      var brands = {};   // 14.11 Gita: «Ražotājs» like in the old shop, whenever the list has 2+ brands
+      S.items.forEach(function (p) { if (p.b) brands[p.b] = 1; });
+      if (Object.keys(brands).length > 1) S.facets.push({ k: '__brand', label: t('Ražotājs') });
       var any = S.items.some(function (p) { return offerVals(p).length; });
       if (any) S.facets.unshift({ k: '__offer', label: t('Piedāvājumi') });
       // a quick-filter parameter must also be in the sidebar (same selection, two views)
       A.quick.forEach(function (k) { if (!S.facets.some(function (f) { return f.k === k; })) S.facets.push({ k: k, label: lcap(pn(k)) }); });
-      var frank = function (f) { return A.quick.indexOf(f.k) >= 0 ? A.quick.indexOf(f.k) : f.k === '__cat' ? 10 : f.k === '__offer' ? 11 : 12; };   // Q18: the buyer's key parameters first
+      var frank = function (f) { return A.quick.indexOf(f.k) >= 0 ? A.quick.indexOf(f.k) : f.k === '__brand' ? 9 : f.k === '__cat' ? 10 : f.k === '__offer' ? 11 : 12; };   // Q18: the buyer's key parameters first
       S.facets = S.facets.map(function (f, i) { return [f, i]; }).sort(function (a, b) { return frank(a[0]) - frank(b[0]) || a[1] - b[1]; }).map(function (x) { return x[0]; });
     })();
 
