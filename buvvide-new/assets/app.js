@@ -1681,7 +1681,7 @@
       }
       h += '<a class="btn btn--wa btn--block buybox__wa" id="pwa" target="_blank" rel="noopener" href="' + waLink(t('Labdien! Vēlos pasūtīt') + ': ' + p.n + ' (ID ' + id + ')') + '"><svg class="wa-ico" aria-hidden="true"><use href="#i-wa"/></svg>' + t('Pasūtīt WhatsApp') + '</a>';
       var oo = det && det.oo;   // 15.11 Gita: «Uz pasūtījumu» from the product (old shop inc.onorder.php wording)
-      if (oo) h += '<p class="buybox__avail buybox__oo">' + icon('truck') + '<span><b>' + esc(ooText(oo)) + '</b></span></p>';
+      if (oo) h += '<p class="buybox__avail buybox__oo">' + icon('clock') + '<span><b>' + esc(ooText(oo)) + '</b></span></p>';
       else if (p.pr != null) h += '<p class="buybox__avail">' + icon('clock') + '<span>' + t('Pieejamību un piegādes termiņu apstiprināsim pēc pasūtījuma.') + '</span></p>';   // rt9E:avail В-08
       var nts = (det && det.nt) || (base && base.nt) || [];
       nts.forEach(function (x) { if (!/Atlaide pēc/.test(x[0])) h += '<p class="buybox__ask' + (x[1] === 'g' ? ' is-g' : '') + '">' + icon(x[1] === 'g' ? 'truck' : 'info') + '<span>' + esc(t(x[0])) + '</span></p>'; });
