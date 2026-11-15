@@ -20,6 +20,19 @@
   } catch (e) {}
   var RU = w.BV_RU || {};
   function t(s) { return LANG === 'ru' && RU[s] ? RU[s] : s; }
+  // 15.11 Gita «Uz pasūtījumu jaunajā web … atspoguļotos apmeklētājiem?»: same text as the old shop (cms_dp/includes/inc.onorder.php bvoo_text)
+  function ooText(oo) {
+    var a = +oo[0] || 0, b = +oo[1] || 0, x;
+    if (a > 0 && b > 0 && a > b) { x = a; a = b; b = x; }
+    var r = (a > 0 && b > 0 && a !== b) ? a + '–' + b : (a || b ? String(a || b) : ''), n = Math.max(a, b), single = !a || !b || a === b;
+    if (LANG === 'ru') {
+      if (!r) return 'Под заказ';
+      var m10 = n % 10, m100 = n % 100;
+      return 'Под заказ: доставка ' + r + ' ' + (m10 === 1 && m100 !== 11 ? 'рабочий день' : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'рабочих дня' : 'рабочих дней'));
+    }
+    if (!r) return 'Uz pasūtījumu';
+    return 'Uz pasūtījumu: piegāde ' + r + ' ' + (single && n % 10 === 1 && n % 100 !== 11 ? 'darba dienā' : 'darba dienās');
+  }
   function lcap(s) { s = String(s || '').trim(); if (s.length > 2 && s === s.toUpperCase()) s = s.charAt(0) + s.slice(1).toLowerCase(); return s.charAt(0).toUpperCase() + s.slice(1); }   // Q17
   function pv(v) {   // rt9E:pv В-03 common parameter values and model words in RU (ir → есть, metāls → металл, Kreisā → Левая)
     var m = LANG === 'ru' && w.BV_RUVAL; if (!m || v == null) return v;
@@ -157,7 +170,7 @@
     return x.localeCompare(y, 'lv', { numeric: true, sensitivity: 'base' });
   }
   function trDom(r) { if (LANG !== 'ru') return; $$('[data-t]', r).forEach(function (e) { var k = e.getAttribute('data-t') || e.textContent.trim(); if (RU[k]) e.textContent = RU[k]; }); }   // R10
-  var _cache = {}, DATA_V = '20261114a';   // bump when site/data changes: force-cache would keep old product files
+  var _cache = {}, DATA_V = '20261115a';   // bump when site/data changes: force-cache would keep old product files
   function getJSON(u) {
     if (!_cache[u]) _cache[u] = fetch(u + (u.indexOf('?') < 0 ? '?' : '&') + 'dv=' + DATA_V, { cache: 'force-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
     return _cache[u];
@@ -1667,7 +1680,9 @@
           (p.mb > 1 ? '<p class="buybox__ask buybox__mq">' + icon('info') + '<span>' + esc(mbLine(p, pu)) + '</span></p>' : '');   // 12.11 Gita: minimum order
       }
       h += '<a class="btn btn--wa btn--block buybox__wa" id="pwa" target="_blank" rel="noopener" href="' + waLink(t('Labdien! Vēlos pasūtīt') + ': ' + p.n + ' (ID ' + id + ')') + '"><svg class="wa-ico" aria-hidden="true"><use href="#i-wa"/></svg>' + t('Pasūtīt WhatsApp') + '</a>';
-      if (p.pr != null) h += '<p class="buybox__avail">' + icon('clock') + '<span>' + t('Pieejamību un piegādes termiņu apstiprināsim pēc pasūtījuma.') + '</span></p>';   // rt9E:avail В-08
+      var oo = det && det.oo;   // 15.11 Gita: «Uz pasūtījumu» from the product (old shop inc.onorder.php wording)
+      if (oo) h += '<p class="buybox__avail buybox__oo">' + icon('truck') + '<span><b>' + esc(ooText(oo)) + '</b></span></p>';
+      else if (p.pr != null) h += '<p class="buybox__avail">' + icon('clock') + '<span>' + t('Pieejamību un piegādes termiņu apstiprināsim pēc pasūtījuma.') + '</span></p>';   // rt9E:avail В-08
       var nts = (det && det.nt) || (base && base.nt) || [];
       nts.forEach(function (x) { if (!/Atlaide pēc/.test(x[0])) h += '<p class="buybox__ask' + (x[1] === 'g' ? ' is-g' : '') + '">' + icon(x[1] === 'g' ? 'truck' : 'info') + '<span>' + esc(t(x[0])) + '</span></p>'; });
       if (flags.indexOf('ask') >= 0) h += '<p class="buybox__ask">' + icon('percent') + '<span>' + t('Šai precei iespējama atlaide.') + ' <a target="_blank" rel="noopener" href="' + waLink(t('Labdien! Vai precei') + ' ' + p.n + ' (ID ' + id + ') ' + t('iespējama atlaide?')) + '">' + t('Jautāt cenu') + '</a></span></p>';
