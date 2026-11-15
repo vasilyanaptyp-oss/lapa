@@ -20,7 +20,7 @@
   } catch (e) {}
   var RU = w.BV_RU || {};
   function t(s) { return LANG === 'ru' && RU[s] ? RU[s] : s; }
-  // 15.11 Gita «Uz pasūtījumu jaunajā web … atspoguļotos apmeklētājiem?»: same text as the old shop (cms_dp/includes/inc.onorder.php bvoo_text)
+  // 15.11 Gita «Uz pasūtījumu jaunajā web … atspoguļotos apmeklētājiem?»; 09:42 «noņem vārdu piegāde. Piegāde un Uz pasūtījumu ir 2 dažādas lietas»
   function ooText(oo) {
     var a = +oo[0] || 0, b = +oo[1] || 0, x;
     if (a > 0 && b > 0 && a > b) { x = a; a = b; b = x; }
@@ -28,10 +28,10 @@
     if (LANG === 'ru') {
       if (!r) return 'Под заказ';
       var m10 = n % 10, m100 = n % 100;
-      return 'Под заказ: доставка ' + r + ' ' + (m10 === 1 && m100 !== 11 ? 'рабочий день' : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'рабочих дня' : 'рабочих дней'));
+      return 'Под заказ: ' + r + ' ' + (m10 === 1 && m100 !== 11 ? 'рабочий день' : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'рабочих дня' : 'рабочих дней'));
     }
     if (!r) return 'Uz pasūtījumu';
-    return 'Uz pasūtījumu: piegāde ' + r + ' ' + (single && n % 10 === 1 && n % 100 !== 11 ? 'darba dienā' : 'darba dienās');
+    return 'Uz pasūtījumu: ' + r + ' ' + (single && n % 10 === 1 && n % 100 !== 11 ? 'darba dienā' : 'darba dienās');
   }
   function lcap(s) { s = String(s || '').trim(); if (s.length > 2 && s === s.toUpperCase()) s = s.charAt(0) + s.slice(1).toLowerCase(); return s.charAt(0).toUpperCase() + s.slice(1); }   // Q17
   function pv(v) {   // rt9E:pv В-03 common parameter values and model words in RU (ir → есть, metāls → металл, Kreisā → Левая)
