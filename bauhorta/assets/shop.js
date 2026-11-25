@@ -15,7 +15,10 @@
   var PR = D.products, byId = {};
   PR.forEach(function (p) { byId[p.id] = p; });
   var FORMS = D.forms, ACC = D.acc;
-  var ACC_SHORT = { oeffner: 'Fensteröffner', dachfenster: 'Dachfenster', tueren: 'Tür & Fenster', bewaesserung: 'Bewässerung', hochbeete: 'Hochbeet', boden: 'Boden & Wege', regale: 'Zubehör' };
+  // promotions from tools/promos.json (build_shop.py): set price and gift with every greenhouse
+  var PROMO = D.promo || {}, SETP = PROMO.sets || {}, GIFT = PROMO.gift || { on: 0, by: {} };
+  function giftOf(p) { return GIFT.on && p && p.k === 'gewaechshaus' ? GIFT.by[p.id] : null; }
+  var ACC_SHORT = { oeffner: 'Fensteröffner', dachfenster: 'Dachfenster', tueren: 'Tür & Fenster', bewaesserung: 'Bewässerung', hochbeete: 'Hochbeet', boden: 'Wege & Netze', regale: 'Zubehör' };
   var FORM_SHORT = { bogen: 'Rundbogen', spitz: 'Spitzbogen', haus: 'Satteldach', schmal: 'Schmal', holz: 'Holz' };
 
   /* ---------- product helpers ---------- */
@@ -63,7 +66,28 @@
     if (ex) ex.qty += qty || 1;
     else cart.push({ key: key, id: p.id, sku: v.s, name: p.n, sub: varSub(p, v), price: v.p, img: p.img, url: p.url, qty: qty || 1 });
     cartSave();
-    if (!silent) toast(p.n + (varSub(p, v) ? ', ' + varSub(p, v) : ''));
+    if (!silent) toast(p.n + (varSub(p, v) ? ', ' + varSub(p, v) : '') + (giftOf(p) ? ' + ' + giftShort(p) : ''));
+  }
+  function giftLines() {
+    var out = [], idx = {};
+    cart.forEach(function (c) {
+      var g = giftOf(byId[c.id]); if (!g) return;
+      g.items.forEach(function (it) {
+        var k = it.s;
+        if (idx[k] == null) { idx[k] = out.length; out.push({ gift: 1, name: it.n, sub: it.l, sku: it.s, img: it.img, url: it.url, value: it.p, qty: 0 }); }
+        out[idx[k]].qty += c.qty * (it.q || 1);
+      });
+    });
+    return out;
+  }
+  function giftHTML(g, big) {
+    var img = '<img src="' + B + esc(g.img) + '" alt="" loading="lazy">';
+    return '<div class="ci gift' + (big ? ' big' : '') + '">' + (g.url ? '<a href="' + B + esc(g.url) + '">' + img + '</a>' : '<span>' + img + '</span>') +
+      '<div><span class="ci-n"><span class="gift-badge sm">' + esc(GIFT.badge || 'Gratis dazu') + '</span><b>' + esc(g.name) + '</b></span>' + (g.sub ? '<small>' + esc(g.sub) + '</small>' : '') +
+      '<div class="ln"><span class="gq">' + g.qty + '&nbsp;×</span>' + (g.value != null ? '<s class="num">' + eur(g.value * g.qty) + '</s>' : '') + '<span class="p num">' + eur(0) + '</span></div></div></div>';
+  }
+  function giftTip() {
+    return GIFT.on && GIFT.tip && cart.length && !giftLines().length ? '<p class="gift-tip">' + esc(GIFT.tip) + ' <a href="' + B + 'gewaechshaeuser.html">Gewächshäuser</a></p>' : '';
   }
   function cartTotal() { return cart.reduce(function (s, c) { return s + c.price * c.qty; }, 0); }
   function cartCount() { return cart.reduce(function (s, c) { return s + c.qty; }, 0); }
@@ -83,7 +107,7 @@
       $('#cartFoot').style.display = 'none';
     } else {
       $('#cartFoot').style.display = '';
-      body.innerHTML = cart.map(function (c, i) { return lineHTML(c, i, false); }).join('');
+      body.innerHTML = cart.map(function (c, i) { return lineHTML(c, i, false); }).join('') + giftLines().map(function (g) { return giftHTML(g, false); }).join('') + giftTip();
     }
     if (PAGE === 'kasse') renderKasse();
   }
@@ -223,7 +247,7 @@
     var v = st && bySku(p, st) && vs.indexOf(bySku(p, st)) >= 0 ? bySku(p, st) : (vs.indexOf(defaultV(p)) >= 0 ? defaultV(p) : vs.slice().sort(function (a, b) { return a.p - b.p; })[0]);
     if (!v) return '';
     cardState[p.id] = v.s;
-    var badges = '<span class="badge">' + esc(FORM_SHORT[p.f] || '') + '</span>' + (p.fund ? '<span class="badge l">mit Fundament</span>' : '') + (p.new ? '<span class="badge d">Neu</span>' : '');
+    var badges = '<span class="badge">' + esc(FORM_SHORT[p.f] || '') + '</span>' + (p.fund ? '<span class="badge l">mit Fundament</span>' : '') + (p.new ? '<span class="badge d">Neu</span>' : '') + (giftOf(p) ? '<span class="badge g">' + esc(GIFT.badge || 'Gratis dazu') + '</span>' : '');
     var sizes = [], seen = {};
     vs.forEach(function (x) { var g = x.a.groesse; if (g != null && !seen[g]) { seen[g] = 1; sizes.push(x); } });
     sizes.sort(function (a, b) { return (a.L || 0) - (b.L || 0); });
@@ -243,7 +267,13 @@
       '<div class="opts' + (seg ? '' : ' one') + '">' + sel + seg + '</div>' +
       '<div class="price-row"><div><div class="price num">' + eur(v.p) + (v.op ? ' <s class="old">' + eur(v.op) + '</s>' : '') + '</div><div class="price-note">inkl. MwSt., zzgl. Versand</div></div>' + (v.A ? '<span class="area">' + dnum(v.A) + ' m²</span>' : '') + '</div>' +
       '<div class="avail' + (av === 'Lieferzeit auf Anfrage' ? ' req' : '') + '"><i></i>' + av + '</div>' +
+      (giftOf(p) ? '<p class="gift-line">' + icon('check') + '<span>' + esc(giftShort(p)) + '</span></p>' : '') +
       '<div class="acts"><button class="btn btn-lime" type="button" data-add>' + icon('cart-plus') + 'In den Warenkorb</button><a class="btn-icon" href="' + purl(p, v) + '" aria-label="Details zu ' + esc(p.n) + '">' + icon('eye') + '</a></div></div></article>';
+  }
+  function giftShort(p) {
+    var g = giftOf(p); if (!g) return '';
+    var hasWin = g.items.some(function (it) { return /Dachfenster/.test(it.n); });
+    return (GIFT.badge || 'Gratis dazu') + ': ' + (hasWin ? 'Dachfenster mit Öffner + Bewässerung' : 'Bewässerung SPIDER 2');
   }
   function accCard(p, vs) {
     vs = vs || priced(p);
@@ -258,12 +288,15 @@
   }
   function setCard(p, big) {
     var v = defaultV(p); if (!v) return '';
+    var sp = SETP[p.id], pend = p.pend || v.p == null;
     cardState[p.id] = v.s;
     var items = (p.items || []), show = items.slice(0, big ? 6 : 4);
     return '<article class="scard' + (big ? ' big' : '') + '" data-id="' + p.id + '"><a class="ph' + (p.iw ? ' white' : '') + '" href="' + purl(p) + '"><img src="' + B + (big ? p.imgL : p.img) + '" alt="' + esc(p.n) + '" loading="lazy"><span class="tagl">' + esc(p.tag || 'Set') + '</span></a>' +
       '<div class="bd"><h3><a href="' + purl(p) + '">' + esc(p.n) + '</a></h3><ul>' + show.map(function (x) { return '<li>' + icon('check') + '<span>' + esc(x) + '</span></li>'; }).join('') + (items.length > show.length ? '<li class="more">+ ' + (items.length - show.length) + ' weitere Teile</li>' : (items.length > 3 ? '<li class="more m3">+ ' + (items.length - 3) + ' weitere Teile</li>' : '')) + '</ul>' +
-      '<div class="price-row"><div><div class="price num">' + eur(v.p) + (v.op ? ' <s class="old">' + eur(v.op) + '</s>' : '') + '</div><div class="price-note">inkl. MwSt., zzgl. Versand</div></div></div>' +
-      '<div class="acts"><button class="btn btn-lime" type="button" data-add>' + icon('cart-plus') + 'In den Warenkorb</button><a class="btn btn-ghost" href="' + purl(p) + '">Details</a></div></div></article>';
+      (pend ? '<div class="price-row"><div><div class="price num pend">Setpreis folgt</div><div class="price-note">Einzelpreise zusammen ' + (sp && !sp.full ? 'ab ' : '') + (sp ? eur(sp.sum) : '') + '</div></div></div>' +
+        '<div class="acts"><a class="btn btn-lime" href="' + purl(p) + '">Set ansehen</a></div></div></article>' :
+      '<div class="price-row"><div><div class="price num">' + eur(v.p) + (sp && sp.save ? ' <s class="old">' + eur(sp.sum) + '</s>' : (v.op ? ' <s class="old">' + eur(v.op) + '</s>' : '')) + '</div><div class="price-note">' + (sp && sp.save ? 'Sie sparen ' + eur(sp.save) + ' · ' : '') + 'inkl. MwSt., zzgl. Versand</div></div></div>' +
+      '<div class="acts"><button class="btn btn-lime" type="button" data-add>' + icon('cart-plus') + 'In den Warenkorb</button><a class="btn btn-ghost" href="' + purl(p) + '">Details</a></div></div></article>');
   }
   function wireCards(root, rerender) {
     root.addEventListener('change', function (e) {
@@ -405,7 +438,7 @@
     var WIDTHS = uniq([].concat.apply([], all.map(function (p) { return p.v.map(function (v) { return v.W; }); })).filter(Boolean)).sort(function (a, b) { return a - b; });
     var LENS = uniq([].concat.apply([], all.map(function (p) { return p.v.map(function (v) { return v.L ? Math.round(v.L) : null; }); })).filter(Boolean)).sort(function (a, b) { return a - b; });
     function vOk(p, v, skip) {
-      if (v.p == null) return false;
+      if (v.p == null) return !!p.pend && F.pmin == null && F.pmax == null && !F.w.length && !F.l.length && !F.t.length;
       if (skip !== 'w' && F.w.length && !(v.W && F.w.some(function (w) { return Math.abs(w - v.W) < 0.01; }))) return false;
       if (skip !== 'l' && F.l.length && !(v.L && F.l.indexOf(Math.round(v.L)) >= 0)) return false;
       if (skip !== 't' && F.t.length && !(v.t && F.t.indexOf(v.t) >= 0)) return false;
@@ -546,13 +579,13 @@
         b.classList.toggle('na', !w || w.p == null);
       });
       $$('[data-optlabel]').forEach(function (el) { el.textContent = valLabel(p, el.dataset.optlabel, a[el.dataset.optlabel]); });
-      $('#pvPrice').textContent = eur(v && v.p);
+      $('#pvPrice').textContent = p.pend ? 'Setpreis folgt' : eur(v && v.p);
       var old = $('#pvOld'); old.hidden = !(v && v.op); old.textContent = v && v.op ? eur(v.op) : '';
       var sk = $('#pvSku'); var real = v && realSku(v.s); sk.hidden = !real; if (real) $('span', sk).textContent = v.s;
       var av = $('#pvAvail'), at = v && v.av && /Anfrage/.test(v.av) ? 'Lieferzeit auf Anfrage' : (v && v.av && /Lager/.test(v.av) ? 'Auf Lager' : 'Verfügbar');
       av.lastChild.textContent = at; av.classList.toggle('req', at === 'Lieferzeit auf Anfrage');
-      $('#pvAdd').disabled = !(v && v.p != null);
-      $('#pvStickyPrice').textContent = eur(v && v.p); $('#pvStickyLabel').textContent = v ? varSub(p, v) : '';
+      if ($('#pvAdd')) $('#pvAdd').disabled = !(v && v.p != null);
+      if ($('#pvSticky')) { $('#pvStickyPrice').textContent = eur(v && v.p); $('#pvStickyLabel').textContent = v ? varSub(p, v) : ''; }
       // spec rows that depend on the variant
       var rows = $$('#pvSpecs tr');
       rows.forEach(function (r) {
@@ -574,11 +607,11 @@
     });
     $$('[data-pq]').forEach(function (b) { b.addEventListener('click', function () { qty = Math.max(1, Math.min(99, qty + (+b.dataset.pq))); $('#pvQty').textContent = qty; }); });
     function add() { cartAdd(p, v, qty); }
-    $('#pvAdd').addEventListener('click', add);
-    $('[data-stickyadd]').addEventListener('click', add);
+    if ($('#pvAdd')) $('#pvAdd').addEventListener('click', add);
+    if ($('[data-stickyadd]')) $('[data-stickyadd]').addEventListener('click', add);
     // sticky buy bar on phones once the buy box is out of view
     var sticky = $('#pvSticky'), buy = $('#pvBuy');
-    if ('IntersectionObserver' in window) {
+    if (sticky && 'IntersectionObserver' in window) {
       new IntersectionObserver(function (en) { var show = !en[0].isIntersecting; sticky.classList.toggle('on', show); sticky.setAttribute('aria-hidden', !show); }).observe(buy);
     }
     render(false);
@@ -593,7 +626,7 @@
       return;
     }
     $('#ckTitle').textContent = 'Warenkorb'; $('#orderSubmit').innerHTML = icon('mail') + 'Bestellung per E-Mail senden';
-    el.innerHTML = cart.map(function (c, i) { return lineHTML(c, i, true); }).join('');
+    el.innerHTML = cart.map(function (c, i) { return lineHTML(c, i, true); }).join('') + giftLines().map(function (g) { return giftHTML(g, true); }).join('') + giftTip();
     var t = cartTotal();
     sum.innerHTML = '<div class="row"><span>Zwischensumme (' + cartCount() + ' Artikel)</span><b class="num">' + eur(t) + '</b></div><div class="row"><span>Versand nach Deutschland</span><span>nach PLZ, vor der Zahlung</span></div>' +
       '<div class="row tot"><span>Gesamt inkl. MwSt.<small>zzgl. Versand</small></span><b class="num">' + eur(t) + '</b></div><div class="row vat"><span>darin enthalten 19&nbsp;% MwSt.</span><span class="num">' + eur(t - t / 1.19) + '</span></div>';
@@ -615,6 +648,7 @@
       if (cart.length) {
         lines.push('Bestellung:');
         cart.forEach(function (c) { lines.push('- ' + c.qty + ' x ' + c.name + (c.sub ? ', ' + c.sub : '') + (realSku(c.sku) ? ' (Art.-Nr. ' + c.sku + ')' : '') + ': ' + eur(c.price * c.qty)); });
+        giftLines().forEach(function (g) { lines.push('- ' + g.qty + ' x ' + (GIFT.badge || 'Gratis dazu') + ': ' + g.name + (g.sub ? ', ' + g.sub : '') + (realSku(g.sku) ? ' (Art.-Nr. ' + g.sku + ')' : '') + ': ' + eur(0)); });
         lines.push('Zwischensumme inkl. MwSt.: ' + eur(cartTotal()), '');
       }
       lines.push('Name: ' + $('#f-name').value.trim(), 'E-Mail: ' + $('#f-mail').value.trim());
