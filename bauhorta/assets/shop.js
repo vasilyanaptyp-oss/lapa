@@ -262,7 +262,7 @@
     var spec = (p.w ? '<span>' + icon('ruler') + dnum(p.w) + ' m breit</span>' : '') + (p.h ? '<span>' + esc(p.h) + ' hoch</span>' : '') + (p.snow ? '<span>' + icon('snow') + esc(p.snow) + '</span>' : '');
     var av = v.av && /Anfrage/.test(v.av) ? 'Lieferzeit auf Anfrage' : (v.av && /Lager/.test(v.av) ? 'Auf Lager' : 'Verfügbar');
     return '<article class="card" data-id="' + p.id + '">' +
-      '<a class="ph' + (p.iw ? ' white' : '') + '" href="' + purl(p, v) + '" aria-label="' + esc(p.n) + ' ansehen"><img src="' + B + p.img + '" alt="Gewächshaus ' + esc(p.n) + '" loading="lazy"><span class="badges">' + badges + '</span></a>' +
+      '<a class="ph' + (p.iw ? ' white' : '') + '" href="' + purl(p, v) + '" aria-label="' + esc(p.n) + ' ansehen"><img src="' + B + p.img + '" alt="' + esc(p.n) + '" loading="lazy"><span class="badges">' + badges + '</span></a>' +
       '<div class="bd"><h3><a href="' + purl(p, v) + '">' + esc(p.n) + '</a></h3><div class="spec">' + spec + '</div>' +
       '<div class="opts' + (seg ? '' : ' one') + '">' + sel + seg + '</div>' +
       '<div class="price-row"><div><div class="price num">' + eur(v.p) + (v.op ? ' <s class="old">' + eur(v.op) + '</s>' : '') + '</div><div class="price-note">inkl. MwSt., zzgl. Versand</div></div>' + (v.A ? '<span class="area">' + dnum(v.A) + ' m²</span>' : '') + '</div>' +
@@ -547,7 +547,7 @@
       if (F.sort === 'name') list.sort(function (a, b) { return a.n.localeCompare(b.n, 'de'); });
       if (F.sort === 'area') list.sort(function (a, b) { var A = function (p) { return Math.max.apply(null, matchVs(p).map(function (v) { return v.A || 0; })); }; return A(b) - A(a); });
       grid.classList.toggle('sets', KIND === 'set');
-      grid.innerHTML = list.map(card).join('') || '<div class="lp-empty"><p>Zu dieser Auswahl gibt es leider nichts.</p><button class="btn btn-ghost" type="button" data-ak="all" id="emptyReset">Filter zurücksetzen</button></div>';
+      grid.innerHTML = list.map(card).join('') || '<div class="lp-empty"><p>Für diese Auswahl haben wir leider keine passenden Artikel.</p><button class="btn btn-ghost" type="button" data-ak="all" id="emptyReset">Filter zurücksetzen</button></div>';
       var er = $('#emptyReset'); if (er) er.addEventListener('click', function () { F.form = []; F.w = []; F.l = []; F.t = []; F.sub = []; F.fit = ''; F.pmin = F.pmax = null; update(); });
       $('#resultNote').textContent = list.length + (list.length === 1 ? ' Artikel' : ' Artikel') + (F.l.length || F.w.length || F.t.length ? ', Preis für die gewählte Größe' : '');
       $('#filterApply').textContent = list.length + ' Ergebnisse anzeigen';
