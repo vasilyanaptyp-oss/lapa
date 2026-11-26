@@ -26,7 +26,7 @@ const P = [
   { id: 'garda', cat: 'tavoli', tags: ['allungabile', 'rotondo'], name: 'Garda', sub: 'Tavolo ovale allungabile', size: '140–190–240 × 90 cm', price: 1150, mark: 'Novità', g: 3, wood: true },
   { id: 'fabio', cat: 'tavoli', tags: ['allungabile', 'rotondo'], name: 'Fabio', sub: 'Tavolo rotondo allungabile', size: 'Ø 100, allungabile fino a 200 cm', price: 1080, mark: 'Novità', g: 3, wood: true },
   { id: 'finn', cat: 'tavoli', tags: ['fisso'], name: 'Finn', sub: 'Tavolo fisso con base in ferro', size: 'da 120 × 80 cm, piano 4 cm', price: 770, g: 3, wood: true },
-  { id: 'frankfurt', cat: 'tavoli', tags: ['allungabile'], name: 'Frankfurt', sub: 'Tavolo da pranzo grande allungabile', size: 'rovere massello naturale', price: 932, g: 3, wood: true },
+  { id: 'frankfurt', cat: 'tavoli', tags: ['allungabile'], name: 'Frankfurt', sub: 'Grande tavolo da pranzo allungabile', size: 'rovere massello naturale', price: 932, g: 3, wood: true },
   { id: 'oreo', cat: 'tavoli', tags: ['fisso', 'rotondo'], name: 'Oreo', sub: 'Tavolo rotondo con base centrale', size: 'Ø 120 cm, piano 2,5 cm', price: 999, g: 1, wood: true },
   { id: 'ginevra', cat: 'tavoli', tags: ['allungabile', 'rotondo'], name: 'Ginevra', sub: 'Tavolo rotondo allungabile', size: 'rovere naturale', price: 659, g: 2, wood: true },
   { id: 'verke', cat: 'tavoli', tags: ['allungabile'], name: 'Verke', sub: 'Tavolo piccolo allungabile', size: '110 × 70 o 120 × 80 cm', price: 423, g: 2, wood: true },
@@ -39,23 +39,23 @@ const P = [
   { id: 'mario', cat: 'sedie', tags: ['imbottita'], name: 'Mario morbida', sub: 'Sedia in rovere, seduta imbottita', size: 'L 47 × P 43 × H 75 cm', price: 185, g: 2, wood: true, fabric: true },
   { id: 'polo', cat: 'sedie', tags: ['legno'], name: 'Polo rigida', sub: 'Sedia tutta in rovere massello', size: 'L 44 × P 49 × H 80 cm', price: 155, g: 3, wood: true },
   { id: 'borys', cat: 'sedie', tags: ['imbottita'], name: 'Borys fumoso', sub: 'Sedia in rovere, seduta in tessuto', size: 'rovere fumoso', price: 185, g: 3, wood: true, fabric: true },
-  { id: 'sydney', cat: 'sedie', tags: ['imbottita'], name: 'Sydney', sub: 'Sedia in legno massiccio, imbottita', size: 'tessuto lavabile', price: 210, mark: 'Novità', g: 2, wood: true, fabric: true },
+  { id: 'sydney', cat: 'sedie', tags: ['imbottita'], name: 'Sydney', sub: 'Sedia in legno massello, imbottita', size: 'tessuto lavabile', price: 210, mark: 'Novità', g: 2, wood: true, fabric: true },
   { id: 'garda-sedia', cat: 'sedie', tags: ['imbottita'], name: 'Garda', sub: 'Sedia in rovere e tessuto bouclé', size: 'design moderno', price: 285, mark: 'Novità', g: 2, wood: true, fabric: true },
   { id: 'dallas-soft', cat: 'sedie', tags: ['imbottita'], name: 'Dallas Soft', sub: 'Seduta e schienale imbottiti', size: 'rovere naturale', price: 230, mark: 'Novità', g: 3, wood: true, fabric: true },
   { id: 'tor', cat: 'sedie', tags: ['imbottita', 'braccioli'], name: 'Tor naturale', sub: 'Sedia con braccioli in legno chiaro', size: 'seduta imbottita', price: 199, g: 2, wood: true, fabric: true },
-  { id: 'chester', cat: 'sedie', tags: ['legno', 'braccioli'], name: 'Chester', sub: 'Sedia con braccioli arrotondata', size: 'tutta in rovere', price: 198, g: 2, wood: true },
+  { id: 'chester', cat: 'sedie', tags: ['legno', 'braccioli'], name: 'Chester', sub: 'Sedia arrotondata con braccioli', size: 'tutta in rovere', price: 198, g: 2, wood: true },
   { id: 'madrid', cat: 'sedie', tags: ['imbottita', 'braccioli'], name: 'Madrid', sub: 'Sedia arrotondata, tessuto antimacchia', size: 'rovere massello', price: 265, mark: 'Novità', g: 2, wood: true, fabric: true },
   { id: 'hyuge', cat: 'sedie', tags: ['imbottita'], name: 'Hyuge', sub: 'Poltroncina per ristoranti e hotel', size: 'velluto o tessuto lavabile', price: 177, g: 3, wood: true, fabric: true },
   // sgabelli
   { id: 'polo-sgabello', cat: 'sgabelli', tags: [], name: 'Polo M', sub: 'Sgabello da bar in rovere massello', size: 'seduta a 74 cm', price: 245, g: 1, wood: true, fabric: true },
   { id: 'mario-sgabello', cat: 'sgabelli', tags: [], name: 'Mario M', sub: 'Sgabello con schienale, seduta morbida', size: 'salvaspazio', price: 240, g: 2, wood: true, fabric: true },
-  { id: 'forte-sgabello', cat: 'sgabelli', tags: [], name: 'Forte fumè', sub: 'Sgabello imbottito in rovere fumè', size: 'seduta imbottita', price: 249, g: 2, wood: true, fabric: true },
+  { id: 'forte-sgabello', cat: 'sgabelli', tags: [], name: 'Forte fumoso', sub: 'Sgabello imbottito in rovere fumoso', size: 'seduta imbottita', price: 249, g: 2, wood: true, fabric: true },
   // divani
   { id: 'albert', cat: 'divani', tags: [], name: 'Albert', sub: 'Panca contract su misura', size: 'capitonné', price: 430, g: 1, fabric: true },
   { id: 'grei', cat: 'divani', tags: [], name: 'Grei', sub: 'Divanetto imbottito su misura', size: 'per ristoranti e bar', price: 450, g: 1, fabric: true },
   { id: 'lauren', cat: 'divani', tags: [], name: 'Lauren', sub: 'Divano contract da ristorante', size: 'su misura', price: 538, g: 1, fabric: true },
   // credenze e orologi
-  { id: 'asti-tv', cat: 'credenze', tags: [], name: 'TV Asti', sub: 'Mobile TV in rovere massiccio', size: 'rovere naturale', price: 1270, g: 3, wood: true },
+  { id: 'asti-tv', cat: 'credenze', tags: [], name: 'TV Asti', sub: 'Mobile TV in rovere massello', size: 'rovere naturale', price: 1270, g: 3, wood: true },
   { id: 'asti-credenza', cat: 'credenze', tags: [], name: 'Asti 2 m', sub: 'Credenza in legno massello', size: 'larghezza 2 m', price: 2200, g: 1, wood: true },
   { id: 'orologio-5', cat: 'credenze', tags: ['orologi'], name: 'Orologio 5', sub: 'Orologio da parete in legno', size: 'diametro a scelta', price: 200, g: 2 }
 ];
@@ -63,9 +63,9 @@ const byId = Object.fromEntries(P.map(p => [p.id, p]));
 const CHIPS = {
   tavoli: [['all', 'Tutti'], ['allungabile', 'Allungabili'], ['rotondo', 'Rotondi e ovali'], ['fisso', 'Fissi'], ['horeca', 'Per locali']],
   sedie: [['all', 'Tutte'], ['legno', 'In legno'], ['imbottita', 'Imbottite'], ['braccioli', 'Con braccioli']],
-  credenze: [['all', 'Tutto'], ['orologi', 'Orologi']]
+  credenze: [['all', 'Tutti'], ['orologi', 'Orologi']]
 };
-const MORE = { tavoli: 'Tutti i 32 tavoli', sedie: 'Tutte le sedie e poltroncine', sgabelli: 'Tutti gli sgabelli', divani: 'Tutti i divani e le panche', credenze: 'Credenze e orologi' };
+const MORE = { tavoli: 'Tutti i 32 tavoli', sedie: 'Tutte le sedie e le poltroncine', sgabelli: 'Tutti gli sgabelli', divani: 'Tutti i divani e le panche', credenze: 'Credenze e orologi' };
 
 /* ---------- state ---------- */
 let mode = store.get('mc_mode', 'casa');
@@ -201,7 +201,7 @@ function openProduct(id) {
   if (cur.wood) {
     $('#pmSwWrap').hidden = false;
     $('#pmSw').innerHTML = WOOD.map(w => '<button data-w="' + w[0] + '" aria-pressed="' + (w[0] === curWood) + '" aria-label="' + w[1] + '" style="background-image:url(' + IMG + 'sw-' + w[0] + '.webp)"></button>').join('');
-    $('#pmSwl').textContent = 'Finitura: ' + WOOD[0][1] + (cur.alt ? ' · scegli «Fumoso» per vedere le foto' : '');
+    $('#pmSwl').textContent = 'Finitura: ' + WOOD[0][1] + (cur.alt ? ' · scegli «Fumoso» per vederne le foto' : '');
   } else { $('#pmSwWrap').hidden = true; }
   renderModalPrice();
   openLayer($('#pm'));
@@ -242,7 +242,7 @@ function cartTotal() { return cart.reduce((s, l) => s + l.price * l.q, 0); }
 function renderCart() {
   const body = $('#cartBody'), foot = $('#cartFoot');
   if (!cart.length) { body.innerHTML = '<p class="empty-state">Il carrello è vuoto.<br>Inizia da un tavolo o dai campioni.</p>'; foot.innerHTML = '<a class="btn btn-green" href="#prodotti" data-close-go>Vai al catalogo</a>'; foot.querySelector('[data-close-go]').addEventListener('click', () => closeLayers(true)); return; }
-  body.innerHTML = cart.map((l, i) => '<div class="line"><img src="' + IMG + l.img + '.webp" alt=""><div><b>' + l.name + '</b><small>' + l.opt + '</small><div class="qty"><button data-dq="' + i + '" data-d="-1" aria-label="Meno">−</button><span>' + l.q + '</span><button data-dq="' + i + '" data-d="1" aria-label="Più">+</button></div></div><div class="r">' + eur(l.price * l.q) + '<button class="rm" data-rm="' + i + '">Rimuovi</button></div></div>').join('');
+  body.innerHTML = cart.map((l, i) => '<div class="line"><img src="' + IMG + l.img + '.webp" alt=""><div><b>' + l.name + '</b><small>' + l.opt + '</small><div class="qty"><button data-dq="' + i + '" data-d="-1" aria-label="Diminuisci">−</button><span>' + l.q + '</span><button data-dq="' + i + '" data-d="1" aria-label="Aumenta">+</button></div></div><div class="r">' + eur(l.price * l.q) + '<button class="rm" data-rm="' + i + '">Rimuovi</button></div></div>').join('');
   const t = cartTotal();
   const ship = t >= 3000 ? 'Consegna gratuita in Italia' : 'Mancano ' + eur(3000 - t) + ' alla consegna gratuita';
   foot.innerHTML = '<div class="totrow big"><span>Totale (prezzi da listino)</span><span>' + eur(t) + '</span></div><div class="note">' + ship + '</div><button class="btn btn-green" id="checkout">Ordina <svg><use href="#i-arrow"/></svg></button><button class="btn btn-line" id="toQuote" style="height:44px">Preferisco un preventivo</button>';
@@ -271,7 +271,7 @@ function addToQuote(id, wood, q, silent) {
 function renderQuote() {
   const body = $('#quoteBody');
   if (!quote.length) { body.innerHTML = '<p class="empty-state">Nessun modello nel preventivo.<br>Passa a «HoReCa» e premi «Preventivo» sui modelli.</p>'; return; }
-  body.innerHTML = quote.map((l, i) => '<div class="line"><img src="' + IMG + l.img + '.webp" alt=""><div><b>' + l.name + '</b><small>' + l.opt + '</small><div class="qty"><button data-qq="' + i + '" data-d="-1" aria-label="Meno">−</button><span>' + l.q + '</span><button data-qq="' + i + '" data-d="1" aria-label="Più">+</button></div></div><div class="r">pz<button class="rm" data-qr="' + i + '">Rimuovi</button></div></div>').join('');
+  body.innerHTML = quote.map((l, i) => '<div class="line"><img src="' + IMG + l.img + '.webp" alt=""><div><b>' + l.name + '</b><small>' + l.opt + '</small><div class="qty"><button data-qq="' + i + '" data-d="-1" aria-label="Diminuisci">−</button><span>' + l.q + '</span><button data-qq="' + i + '" data-d="1" aria-label="Aumenta">+</button></div></div><div class="r">pz<button class="rm" data-qr="' + i + '">Rimuovi</button></div></div>').join('');
 }
 $('#quoteBody').addEventListener('click', e => {
   const d = e.target.closest('[data-qq]'); if (d) { const l = quote[+d.dataset.qq]; l.q = Math.max(1, l.q + +d.dataset.d); saveQuote(); renderQuote(); return; }
@@ -354,7 +354,7 @@ $('#swGrid').addEventListener('click', e => {
   const b = e.target.closest('[data-sw]'); if (!b) return;
   $$('#swGrid [data-sw]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
   const w = WOOD.find(x => x[0] === b.dataset.sw);
-  const big = $('#swBig'); big.querySelector('img').src = IMG + 'sw-' + w[0] + '.webp'; big.querySelector('img').alt = 'Campione ' + w[1];
+  const big = $('#swBig'); big.querySelector('img').src = IMG + 'sw-' + w[0] + '.webp'; big.querySelector('img').alt = 'Campione della finitura ' + w[1];
   big.querySelector('b').textContent = w[1]; big.querySelector('p').textContent = w[2];
 });
 
